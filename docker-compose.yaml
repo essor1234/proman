@@ -1,0 +1,96 @@
+version: "3.9"
+
+services:
+  # 🧠 Database
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: promandb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - promannet
+
+  # 👤 Account Management Service
+  account_service:
+    build: ./server/account_management_service
+    container_name: account_service
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
+    depends_on:
+      - postgres
+    networks:
+      - promannet
+
+  # 📁 Folder and File Management Service
+  file_service:
+    build: ./server/folder_and_file_management_service
+    container_name: file_service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
+    depends_on:
+      - postgres
+    networks:
+      - promannet
+
+  # 👥 Group Service
+  group_service:
+    build: ./server/group_service
+    container_name: group_service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
+    depends_on:
+      - postgres
+    networks:
+      - promannet
+
+  # 📊 Project Service
+  project_service:
+    build: ./server/project_service
+    container_name: project_service
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
+    depends_on:
+      - postgres
+    networks:
+      - promannet
+
+  # 🚪 Gateway (entry point)
+  gateway:
+    build: ./server/gate_way
+    container_name: gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - ACCOUNT_SERVICE_URL=http://account_service:8000
+      - FILE_SERVICE_URL=http://file_service:8000
+      - GROUP_SERVICE_URL=http://group_service:8000
+      - PROJECT_SERVICE_URL=http://project_service:8000
+    depends_on:
+      - account_service
+      - file_service
+      - group_service
+      - project_service
+    networks:
+      - promannet
+
+volumes:
+  postgres_data:
+
+networks:
+  promannet:
+    driver: bridge
