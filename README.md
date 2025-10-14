@@ -193,10 +193,10 @@ Each microservice follows a consistent structure:
 cd path/to/project
 
 # Create virtual environment
-python -m venv venv
+python -m venv proman
 
 # Activate virtual environment
-venv\Scripts\activate
+proman\Scripts\activate
 ```
 
 #### For macOS/Linux:
@@ -205,10 +205,10 @@ venv\Scripts\activate
 cd path/to/project
 
 # Create virtual environment
-python3 -m venv venv
+python3 -m venv proman
 
 # Activate virtual environment
-source venv/bin/activate
+source proman/bin/activate
 ```
 
 ### Step 2: Install Dependencies
