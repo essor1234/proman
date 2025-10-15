@@ -1,4 +1,5 @@
-version: "3.9"
+# 🧱 Docker Compose configuration for ProMan Project
+# Each microservice runs independently and connects through a shared network (promannet)
 
 services:
   # 🧠 Database
@@ -43,9 +44,9 @@ services:
     networks:
       - promannet
 
-  # 👥 Group Service
+  # 👥 Group Management Service
   group_service:
-    build: ./server/group_service
+    build: ./server/group_management_service
     container_name: group_service
     ports:
       - "8003:8000"
@@ -56,9 +57,9 @@ services:
     networks:
       - promannet
 
-  # 📊 Project Service
+  # 📊 Project Management Service
   project_service:
-    build: ./server/project_service
+    build: ./server/project_management_service
     container_name: project_service
     ports:
       - "8004:8000"
@@ -69,7 +70,7 @@ services:
     networks:
       - promannet
 
-  # 🚪 Gateway (entry point)
+  # 🚪 API Gateway (Entry point)
   gateway:
     build: ./server/gate_way
     container_name: gateway
@@ -88,9 +89,11 @@ services:
     networks:
       - promannet
 
+# 🧩 Persistent volume for PostgreSQL data
 volumes:
   postgres_data:
 
+# 🌐 Shared Docker network for inter-service communication
 networks:
   promannet:
     driver: bridge
