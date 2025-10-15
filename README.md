@@ -486,6 +486,9 @@ The `main` branch is **protected** to ensure stability:
 git checkout main
 git pull origin main
 
+# If the branch already exist
+git checkout feature/yourname-feature-description
+## ELSE-------------------------------------------
 # Create your feature branch
 git checkout -b feature/yourname-feature-description
 ```
