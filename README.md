@@ -55,10 +55,10 @@ gate_way/
 
 **Responsibilities:**
 - User registration and login
-- Password hashing and authentication
-- JWT token generation and validation
+- Password hashing and authentication 
+- JWT token generation and validation (Not yet)
 - User profile CRUD operations
-- Role and permission management
+- Role and permission management (Not yet)
 - Session management
 
 **Directory Structure:**
@@ -84,11 +84,11 @@ account_management_service/
 
 **Responsibilities:**
 - File upload and download
-- Folder creation and hierarchy management
-- File metadata storage and retrieval
-- Storage quota management
-- File versioning and access control
-- File search and filtering
+- Folder creation and hierarchy management (Not yet)
+- File metadata storage and retrieval 
+- Storage quota management (Not yet)
+- File versioning and access control (Not yet)
+- File search and filtering (Not yet)
 
 **Directory Structure:**
 ```
@@ -112,12 +112,12 @@ folder_and_file_management_service/
 **Mission:** Manages user groups, team collaboration, and group-based permissions.
 
 **Responsibilities:**
-- Group creation and management
+- Group creation and management 
 - Member invitation and management
-- Group roles and permissions
-- Group activity tracking
+- Group roles and permissions (Not yet)
+- Group activity tracking (Not yet)
 - Access control for group resources
-- Group metadata and settings
+- Group metadata and settings (Not yet)
 
 **Directory Structure:**
 ```
@@ -142,11 +142,11 @@ group_service/
 
 **Responsibilities:**
 - Project CRUD operations
-- Project metadata management
-- Project member and role assignment
-- Project status and timeline tracking
+- Project metadata management (Not yet)
+- Project member and role assignment 
+- Project status and timeline tracking (Not yet)
 - Project-resource associations
-- Project search and filtering
+- Project search and filtering (Not yet)
 
 **Directory Structure:**
 ```
@@ -474,6 +474,7 @@ The `main` branch is **protected** to ensure stability:
 ### 📝 Standard Git Workflow
 
 #### 1️⃣ Create Your Feature Branch
+
 ```bash
 # Start from the latest main
 git checkout main
@@ -482,6 +483,7 @@ git pull origin main
 # Create your feature branch
 git checkout -b feature/yourname-feature-description
 ```
+
 
 #### 2️⃣ Make Your Changes
 ```bash
