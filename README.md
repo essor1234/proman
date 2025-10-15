@@ -182,7 +182,13 @@ Each microservice follows a consistent structure:
 | **main.py** | Application entry point that initializes the FastAPI app and registers routes. |
 
 ---
-
+## Clone Project
+```bash
+# Step 1: Pick Your DIR to save to project
+# Step 2 run cmd in that folder Or head your cmd to that folder
+# Step 3: Clone the project
+git clone https://github.com/essor1234/proman.git
+```
 ## 🐍 Python Environment Setup
 
 ### Step 1: Create a Virtual Environment
