@@ -199,10 +199,10 @@ git clone https://github.com/essor1234/proman.git
 cd path/to/project
 
 # Create virtual environment
-python -m venv proman
+python -m venv promanenv
 
 # Activate virtual environment
-proman\Scripts\activate
+promanenv\Scripts\activate
 ```
 
 #### For macOS/Linux:
@@ -211,10 +211,10 @@ proman\Scripts\activate
 cd path/to/project
 
 # Create virtual environment
-python3 -m venv proman
+python3 -m venv promanenv
 
 # Activate virtual environment
-source proman/bin/activate
+source promanenv/bin/activate
 ```
 
 ### Step 2: Install Dependencies
