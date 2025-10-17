@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log In</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <style>
+        body {
+            background-color: #ea6b66;
+            
+            margin: 0;
+        }
+
+        .buttonHome {
+            color: black;
+            background-color: white;
+
+            height: 30px;
+            width: 60px;
+
+            border: none;
+
+            margin: 30px;
+
+            cursor: pointer;
+
+            transition: 300ms;
+        }
+
+        .buttonHome:hover {
+            border-radius: 15px;
+
+            opacity: 70%;
+        }
+
+        .formRegister {
+            background-color: white;
+
+            width: max-content;
+            height: max-content;
+
+            padding: 30px;
+            margin: auto;
+        }
+
+        .labelCreateAccount {
+            display: block;
+            text-align: center;
+        }
+
+        .labelEmail {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputEmail {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .labelUsername {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputUsername {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .labelPassword {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputPassword {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .buttonRegister {
+            color: white;
+            background-color: #ea6b66;
+
+            width: 100%;
+            height: 30px;
+
+            display: block;
+            margin: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            border: none;
+
+            transition: 300ms;
+
+            cursor: pointer;
+        }
+
+        .buttonRegister:hover {
+            border-radius: 15px;
+
+            opacity: 70%;
+        }
+
+        .linkLogIn {
+            display: block;
+            text-align: right;
+            text-decoration: underline;
+            color: #ea6b66;
+
+            cursor: pointer;
+        }
+
+        .linkLogIn:hover {
+            opacity: 70%;
+        }
+    </style>
+</head>
+<body>
+    <button class="buttonHome" onclick="location.href='home.html'">HOME</button>
+
+    <form class="formRegister">
+        <label class="labelCreateAccount">Create an account</label>
+        
+        <label class="labelEmail">Email</label>
+        <input class="inputEmail" type="text" placeholder="Enter your Email" required>
+
+        <label class="labelUsername">Username</label>
+        <input class="inputUsername" type="text" placeholder="Enter your Username" required>
+
+        <label class="labelPassword">Password</label>
+        <input class="inputPassword" type="password" placeholder="Enter your Password" required>
+
+        <button class="buttonRegister" type="submit">Register</button>
+
+        <label class="linkLogIn" onclick="location.href='login.html'">Already have an account? Log in</label>
+    </form>
+
+    <script>
+        
+    </script>
+</body>
+</html>
