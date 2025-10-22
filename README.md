@@ -55,10 +55,10 @@ gate_way/
 
 **Responsibilities:**
 - User registration and login
-- Password hashing and authentication
-- JWT token generation and validation
+- Password hashing and authentication 
+- JWT token generation and validation (Not yet)
 - User profile CRUD operations
-- Role and permission management
+- Role and permission management (Not yet)
 - Session management
 
 **Directory Structure:**
@@ -84,11 +84,11 @@ account_management_service/
 
 **Responsibilities:**
 - File upload and download
-- Folder creation and hierarchy management
-- File metadata storage and retrieval
-- Storage quota management
-- File versioning and access control
-- File search and filtering
+- Folder creation and hierarchy management (Not yet)
+- File metadata storage and retrieval 
+- Storage quota management (Not yet)
+- File versioning and access control (Not yet)
+- File search and filtering (Not yet)
 
 **Directory Structure:**
 ```
@@ -112,12 +112,12 @@ folder_and_file_management_service/
 **Mission:** Manages user groups, team collaboration, and group-based permissions.
 
 **Responsibilities:**
-- Group creation and management
+- Group creation and management 
 - Member invitation and management
-- Group roles and permissions
-- Group activity tracking
+- Group roles and permissions (Not yet)
+- Group activity tracking (Not yet)
 - Access control for group resources
-- Group metadata and settings
+- Group metadata and settings (Not yet)
 
 **Directory Structure:**
 ```
@@ -142,11 +142,11 @@ group_service/
 
 **Responsibilities:**
 - Project CRUD operations
-- Project metadata management
-- Project member and role assignment
-- Project status and timeline tracking
+- Project metadata management (Not yet)
+- Project member and role assignment 
+- Project status and timeline tracking (Not yet)
 - Project-resource associations
-- Project search and filtering
+- Project search and filtering (Not yet)
 
 **Directory Structure:**
 ```
@@ -182,7 +182,13 @@ Each microservice follows a consistent structure:
 | **main.py** | Application entry point that initializes the FastAPI app and registers routes. |
 
 ---
-
+## Clone Project
+```bash
+# Step 1: Pick Your DIR to save to project
+# Step 2 run cmd in that folder Or head your cmd to that folder
+# Step 3: Clone the project
+git clone https://github.com/essor1234/proman.git
+```
 ## 🐍 Python Environment Setup
 
 ### Step 1: Create a Virtual Environment
@@ -193,10 +199,10 @@ Each microservice follows a consistent structure:
 cd path/to/project
 
 # Create virtual environment
-python -m venv venv
+python -m venv promanenv
 
 # Activate virtual environment
-venv\Scripts\activate
+promanenv\Scripts\activate
 ```
 
 #### For macOS/Linux:
@@ -205,10 +211,10 @@ venv\Scripts\activate
 cd path/to/project
 
 # Create virtual environment
-python3 -m venv venv
+python3 -m venv promanenv
 
 # Activate virtual environment
-source venv/bin/activate
+source promanenv/bin/activate
 ```
 
 ### Step 2: Install Dependencies
@@ -474,14 +480,19 @@ The `main` branch is **protected** to ensure stability:
 ### 📝 Standard Git Workflow
 
 #### 1️⃣ Create Your Feature Branch
+
 ```bash
 # Start from the latest main
 git checkout main
 git pull origin main
 
+# If the branch already exist
+git checkout feature/yourname-feature-description
+## ELSE-------------------------------------------
 # Create your feature branch
 git checkout -b feature/yourname-feature-description
 ```
+
 
 #### 2️⃣ Make Your Changes
 ```bash

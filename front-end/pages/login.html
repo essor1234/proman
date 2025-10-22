@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log In</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <style>
+        body {
+            background-color: #67ab9f;
+            
+            margin: 0;
+        }
+
+        .buttonHome {
+            color: black;
+            background-color: white;
+
+            height: 30px;
+            width: 60px;
+
+            border: none;
+
+            margin: 30px;
+
+            cursor: pointer;
+
+            transition: 300ms;
+        }
+
+        .buttonHome:hover {
+            border-radius: 15px;
+
+            opacity: 70%;
+        }
+
+        .formLogIn {
+            background-color: white;
+
+            height: max-content;
+            width: max-content;
+
+            padding: 30px;
+            margin: auto;
+        }
+
+        .labelWelcome {
+            display: block;
+            text-align: center;
+        }
+
+        .labelExcited {
+            display: block;
+            text-align: center;
+
+            margin-bottom: 10px;
+        }
+
+        .labelEmail {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputEmail {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .labelUsername {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputUsername {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .labelPassword {
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+        .inputPassword {
+            width: 300px;
+            height: 30px;
+
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+
+        .linkForgot {
+            display: block;
+            text-align: right;
+            text-decoration: underline;
+            color: #67ab9f;
+
+            margin-bottom: 10px;
+
+            cursor: pointer;
+
+            transition: 300ms;
+        }
+
+        .linkForgot:hover {
+            opacity: 70%;
+        }
+
+        .buttonLogIn {
+            color: white;
+            background-color: #67ab9f;
+
+            height: 30px;
+            width: 100%;
+
+            border: none;
+
+            display: block;
+            
+            margin: auto;
+            margin-bottom: 10px;
+
+            cursor: pointer;
+
+            transition: 300ms;
+        }
+
+        .buttonLogIn:hover {
+            border-radius: 15px;
+            
+            opacity: 70%;
+        }
+
+        .linkRegister {
+            display: block;
+            text-align: right;
+            text-decoration: underline;
+            color: #67ab9f;
+
+            cursor: pointer;
+        }
+
+        .linkRegister:hover {
+            opacity: 70%;
+        }
+    </style>
+</head>
+<body>
+    <button class="buttonHome" onclick="location.href='home.html'">HOME</button>
+
+    <form class="formLogIn">
+        <label class="labelWelcome">Welcome back!</label>
+        <label class="labelExcited">We're so excited to see you again!</label>
+        
+        <label class="labelEmail">Email</label>
+        <input class="inputEmail" type="text" placeholder="Enter your Email" required>
+
+        <label class="labelUsername">Username</label>
+        <input class="inputUsername" type="text" placeholder="Enter your Username" required>
+
+        <label class="labelPassword">Password</label>
+        <input class="inputPassword" type="password" placeholder="Enter your Password" required>
+
+        <label class="linkForgot">Forgot your password?</label>
+
+        <button class="buttonLogIn" type="submit">Log In</button>
+
+        <label class="linkRegister" onclick="location.href='register.html'">Need an account? Register</label>
+    </form>
+
+    <script>
+        
+    </script>
+</body>
+</html>
