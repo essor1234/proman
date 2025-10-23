@@ -43,6 +43,10 @@ services:
       - postgres
     networks:
       - promannet
+    volumes:
+      - ./server/folder_and_file_management_service:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  # Dev mode
+    
 
   # 👥 Group Management Service
   group_service:
@@ -88,10 +92,12 @@ services:
       - project_service
     networks:
       - promannet
+    
 
 # 🧩 Persistent volume for PostgreSQL data
 volumes:
   postgres_data:
+  
 
 # 🌐 Shared Docker network for inter-service communication
 networks:
