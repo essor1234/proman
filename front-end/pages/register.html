@@ -8,19 +8,27 @@
     
     <style>
         body {
-            background-color: #ea6b66;
+            background-image: url('https://winnie2802.github.io/Website-Visualization/backgroundImage.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: black;
             
             margin: 0;
+            
+            font-family: Arial;
         }
 
-        .buttonHome {
-            color: black;
+        .homeButton {
+            font-size: 20px;
+            font-weight: bold;
+
             background-color: white;
 
-            height: 30px;
-            width: 60px;
+            width: 120px;
+            height: 60px;
 
             border: none;
+            border-radius: 30px;
 
             margin: 30px;
 
@@ -28,131 +36,196 @@
 
             transition: 300ms;
         }
-
-        .buttonHome:hover {
-            border-radius: 15px;
-
-            opacity: 70%;
+        .homeButton:hover {
+            color: white;
+            background-color: #ea6b66;
         }
 
-        .formRegister {
+        .registerForm {
             background-color: white;
 
             width: max-content;
             height: max-content;
+            
+            margin: auto;
 
             padding: 30px;
-            margin: auto;
         }
 
-        .labelCreateAccount {
+        .createAccountLabel {
+            font-size: 20px;
+            font-weight: bold;
+            
             display: block;
+            
             text-align: center;
         }
 
-        .labelEmail {
+        .emailLabel {
+            font-size: 18px;
+
             display: block;
 
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
 
-        .inputEmail {
-            width: 300px;
+        .emailInput {
+            font-size: 16px;
+
+            width: 600px;
             height: 30px;
 
+            margin-top: 10px;
+
             padding-left: 10px;
-            margin-bottom: 10px;
         }
 
-        .labelUsername {
+        .usernameLabel {
+            font-size: 18px;
+
             display: block;
 
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
 
-        .inputUsername {
-            width: 300px;
+        .usernameInput {
+            font-size: 16px;
+
+            width: 600px;
             height: 30px;
 
+            margin-top: 10px;
+
             padding-left: 10px;
-            margin-bottom: 10px;
         }
 
-        .labelPassword {
+        .container {
+            display: flex;
+
+            justify-content: space-between;
+        }
+        .passwordLabel {
+            font-size: 18px;
+
             display: block;
 
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
+        .showLabel {
+            font-size: 16px;
 
-        .inputPassword {
-            width: 300px;
+            color: #ea6b66;
+
+            display: block;
+
+            margin-top: 20px;
+
+            align-content: end;
+
+            cursor: pointer;
+
+            visibility: hidden;
+        }
+        .showLabel.visible {
+            visibility: visible;
+        }
+        .passwordInput {
+            font-size: 16px;
+
+            width: 600px;
             height: 30px;
 
-            padding-left: 10px;
-            margin-bottom: 10px;
-        }
+            margin-top: 10px;
 
-        .buttonRegister {
+            padding-left: 10px;
+        }
+        
+        .registerButton {
+            font-size: 16px;
+            font-weight: bold;
+            
             color: white;
             background-color: #ea6b66;
 
             width: 100%;
             height: 30px;
 
-            display: block;
-            margin: auto;
-            margin-top: 10px;
-            margin-bottom: 10px;
-
             border: none;
 
-            transition: 300ms;
+            display: block;
+            
+            margin: auto;
+            margin-top: 20px;
 
             cursor: pointer;
+
+            transition: 0.3s;
         }
-
-        .buttonRegister:hover {
-            border-radius: 15px;
-
+        .registerButton:hover {
             opacity: 70%;
         }
 
-        .linkLogIn {
+        .loginLink {
+            font-size: 16px;
+
+            color: #ea6b66;
+            
             display: block;
             text-align: right;
-            text-decoration: underline;
-            color: #ea6b66;
+
+            margin-top: 10px;
 
             cursor: pointer;
         }
-
-        .linkLogIn:hover {
-            opacity: 70%;
+        .loginLink:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <button class="buttonHome" onclick="location.href='home.html'">HOME</button>
+    <button class="homeButton" onclick="location.href='home.html'">HOME</button>
 
-    <form class="formRegister">
-        <label class="labelCreateAccount">Create an account</label>
+    <form class="registerForm">
+        <label class="createAccountLabel">Create an account</label>
         
-        <label class="labelEmail">Email</label>
-        <input class="inputEmail" type="text" placeholder="Enter your Email" required>
+        <label class="emailLabel">Email</label>
+        <input class="emailInput" type="text" placeholder="Enter your Email" required>
 
-        <label class="labelUsername">Username</label>
-        <input class="inputUsername" type="text" placeholder="Enter your Username" required>
+        <label class="usernameLabel">Username</label>
+        <input class="usernameInput" type="text" placeholder="Enter your Username" required>
 
-        <label class="labelPassword">Password</label>
-        <input class="inputPassword" type="password" placeholder="Enter your Password" required>
+        <div class="container">
+            <label class="passwordLabel">Password</label>
+            <label id="setVisible" class="showLabel">Show</label>
+        </div>    
+        <input id="password" class="passwordInput" type="password" placeholder="Enter your Password" required>
 
-        <button class="buttonRegister" type="submit">Register</button>
+        <button class="registerButton" type="submit">Register</button>
 
-        <label class="linkLogIn" onclick="location.href='login.html'">Already have an account? Log in</label>
+        <label class="loginLink" onclick="location.href='login.html'">Already have an account? Log in</label>
     </form>
 
     <script>
+        const password   = document.getElementById('password');
+        const setVisible = document.getElementById('setVisible');
         
+        password.addEventListener('input', () => {
+            if (password.value.length > 0) {
+                setVisible.classList.add('visible');
+            } else {
+                setVisible.classList.remove('visible');
+            }
+        });
+
+        setVisible.addEventListener('click', () => {
+            if (password.type === 'password') {
+                password.type = 'text';
+                setVisible.textContent = 'Hide';
+            } else {
+                password.type = 'password';
+                setVisible.textContent = 'Show';
+            }
+        });
     </script>
 </body>
 </html>

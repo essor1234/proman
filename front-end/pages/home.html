@@ -8,36 +8,46 @@
     
     <style>
         body {
-            background-color: #67ab9f;
+            background-image: url('https://winnie2802.github.io/Website-Visualization/backgroundImage.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: black;
+            
+            height: 10000px;
+            
+            margin: 0;
+            
+            font-family: Arial;
         }
 
-        .buttonLogIn {
-            color: black;
+        .loginButton {
+            font-size: 20px;
+            font-weight: bold;
+
             background-color: white;
 
-            height: 30px;
-            width: 60px;
+            width: 120px;
+            height: 60px;
 
             border: none;
+            border-radius: 30px;
             
-            margin: 30px;
-
-            float: right;
+            position: fixed;
+            top: 30px;
+            right: 30px;
 
             cursor: pointer;
             
-            transition: 300ms;
+            transition: 0.3s;
         }
-
-        .buttonLogIn:hover {
-            border-radius: 15px;
-
-            opacity: 70%;
+        .loginButton:hover {
+            color: white;
+            background-color: #67ab9f;
         }
     </style>
 </head>
 <body>
-    <button class="buttonLogIn" onclick="location.href='login.html'">Log In</button>
+    <button class="loginButton" onclick="location.href='login.html'">Log In</button>
 
     <script>
         
