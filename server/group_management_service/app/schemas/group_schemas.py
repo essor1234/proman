@@ -43,11 +43,11 @@ class GroupUpdate(BaseModel):
 # === OUTPUT SCHEMAS ===
 
 class GroupResponse(BaseModel):
-    id: str  # Stored as string in SQLite
+    id: UUID4
     name: str
     description: Optional[str] = None
     visibility: GroupVisibility
-    owner_id: str  # Stored as string in SQLite
+    owner_id: UUID4
     member_count: int = Field(..., ge=0)
     created_at: datetime
     updated_at: datetime
@@ -63,17 +63,6 @@ class GroupListResponse(BaseModel):
     page: int = Field(..., ge=1)
     size: int = Field(..., ge=1, le=100)
     has_more: bool
-
-    class Config:
-        from_attributes = True
-
-
-# Response including member profiles
-from app.schemas.membership_schemas import MemberWithProfile
-
-
-class GroupWithMembersResponse(GroupResponse):
-    members: List[MemberWithProfile]
 
     class Config:
         from_attributes = True

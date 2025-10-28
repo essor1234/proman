@@ -35,14 +35,11 @@ class GroupRepository:
         Returns:
             Created Group object
         """
-        # Convert owner_id to string to match SQLite storage
-        owner_id_str = str(owner_id) if not isinstance(owner_id, str) else owner_id
-        
         group = Group(
             name=name,
             description=description,
             visibility=visibility,
-            owner_id=owner_id_str
+            owner_id=str(owner_id)
         )
         
         self.db.add(group)

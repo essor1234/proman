@@ -8,8 +8,6 @@ from ..repositories.membership_repository import MembershipRepository
 from ..schemas.group_schemas import GroupCreate, GroupUpdate
 from ..models.group import Group
 from ..models.membership import MembershipRole, MembershipStatus
-from fastapi import status
-from app.utils.account_client import get_user_by_id
 
 
 class GroupController:
@@ -18,7 +16,7 @@ class GroupController:
         self.group_repo = GroupRepository(db)
         self.membership_repo = MembershipRepository(db)
     
-    def create_group(self, group_data: GroupCreate, owner_id: UUID) -> dict:
+    def create_group(self, group_data: GroupCreate, owner_id: UUID) -> Group:
         """
         Create a new group with the current user as owner.
         Automatically creates owner membership.
@@ -39,17 +37,7 @@ class GroupController:
             status=MembershipStatus.ACTIVE
         )
         
-        # Return as dict with member_count
-        return {
-            "id": group.id,
-            "name": group.name,
-            "description": group.description,
-            "visibility": group.visibility,
-            "owner_id": group.owner_id,
-            "member_count": 1,  # Just created with owner
-            "created_at": group.created_at,
-            "updated_at": group.updated_at,
-        }
+        return group
     
     def list_user_groups(
         self, 
@@ -71,33 +59,15 @@ class GroupController:
             search=search
         )
         
-        # Convert groups to dicts with member_count
-        group_list = []
-        for group in groups:
-            member_count = self.membership_repo.count_members(group.id)
-            group_list.append({
-                "id": group.id,
-                "name": group.name,
-                "description": group.description,
-                "visibility": group.visibility,
-                "owner_id": group.owner_id,
-                "member_count": member_count,
-                "created_at": group.created_at,
-                "updated_at": group.updated_at,
-            })
-        
-        pages = (total + size - 1) // size
-        
         return {
-            "groups": group_list,
+            "items": groups,
             "total": total,
             "page": page,
             "size": size,
-            "pages": pages,
-            "has_more": total > (page * size)
+            "pages": (total + size - 1) // size
         }
     
-    def get_group(self, group_id: UUID, user_id: UUID) -> dict:
+    def get_group(self, group_id: UUID, user_id: UUID) -> Group:
         """
         Get group details.
         User must be a member or group must be public.
@@ -120,25 +90,14 @@ class GroupController:
                 detail="You don't have access to this group"
             )
         
-        member_count = self.membership_repo.count_members(group_id)
-        
-        return {
-            "id": group.id,
-            "name": group.name,
-            "description": group.description,
-            "visibility": group.visibility,
-            "owner_id": group.owner_id,
-            "member_count": member_count,
-            "created_at": group.created_at,
-            "updated_at": group.updated_at,
-        }
+        return group
     
     def update_group(
         self, 
         group_id: UUID, 
         group_data: GroupUpdate, 
         user_id: UUID
-    ) -> dict:
+    ) -> Group:
         """
         Update group information.
         Only owner or admins can update.
@@ -164,18 +123,7 @@ class GroupController:
         update_data = group_data.model_dump(exclude_unset=True)
         updated_group = self.group_repo.update(group_id, **update_data)
         
-        member_count = self.membership_repo.count_members(group_id)
-        
-        return {
-            "id": updated_group.id,
-            "name": updated_group.name,
-            "description": updated_group.description,
-            "visibility": updated_group.visibility,
-            "owner_id": updated_group.owner_id,
-            "member_count": member_count,
-            "created_at": updated_group.created_at,
-            "updated_at": updated_group.updated_at,
-        }
+        return updated_group
     
     def delete_group(self, group_id: UUID, user_id: UUID) -> None:
         """
@@ -264,50 +212,3 @@ class GroupController:
             "created_at": group.created_at,
             "owner_id": group.owner_id
         }
-
-    def get_group_with_members(self, group_id: UUID, user_id: UUID, token: str | None = None) -> dict:
-        """
-        Return group details plus a list of members enriched with user profile data
-        fetched from the Account Management Service.
-
-        Note: This will forward the caller's JWT token if provided. If the account
-        service returns a 401 when trying to fetch a user, that error will be
-        propagated. Other upstream/network errors will be treated as missing user
-        info for that member (user=None) to keep the group response available.
-        """
-        group_dict = self.get_group(group_id, user_id)
-
-        # Get memberships for the group
-        memberships = self.membership_repo.list_members(group_id)
-
-        members_with_profiles = []
-        for m in memberships:
-            user_profile = None
-            try:
-                user_profile = get_user_by_id(str(m.user_id), token=token)
-            except Exception as e:
-                # If it's an HTTPException and it's an auth problem, propagate it
-                try:
-                    from fastapi import HTTPException
-
-                    if isinstance(e, HTTPException) and e.status_code == status.HTTP_401_UNAUTHORIZED:
-                        raise
-                except Exception:
-                    # Any other exception: treat as missing profile and continue
-                    user_profile = None
-
-            members_with_profiles.append({
-                "membership": {
-                    "id": str(m.id),
-                    "group_id": str(m.group_id),
-                    "user_id": str(m.user_id),
-                    "role": m.role.value if hasattr(m.role, 'value') else m.role,
-                    "joined_at": m.joined_at
-                },
-                "user": user_profile
-            })
-
-        # Build response dict compatible with GroupWithMembersResponse
-        group_dict["members"] = members_with_profiles
-
-        return group_dict
