@@ -3,28 +3,25 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
-
 # This is the Pydantic schema for API *responses*.
-
-class ProjectCreate(BaseModel):
+class GroupCreate(BaseModel):
     name: str
-    groupId: int | None = None
 
-class Project(ProjectCreate):
+class Group(GroupCreate):
     id: int
     model_config = ConfigDict(from_attributes=True)
 
 # These are used to create the links between objects.
-class ProjectMemberCreate(BaseModel):
+
+class UserGroupCreate(BaseModel):
     userId: int
-    projectId: int
+    groupId: int
     role: str
 
-class ProjectMember(ProjectMemberCreate):
+class UserGroup(UserGroupCreate):
     model_config = ConfigDict(from_attributes=True)
 
 
-
-class ProjectUpdate(BaseModel):
+class GroupUpdate(BaseModel):
     name: Optional[str] = None
-    groupId: Optional[int] = None
+
