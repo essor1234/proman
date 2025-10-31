@@ -51,7 +51,7 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
     if db_user is None:
-         raise HTTPException(status_code=404, detail="Group not found")
+         raise HTTPException(status_code=404, detail="User not found")
     
     db.delete(db_user)
     db.commit()

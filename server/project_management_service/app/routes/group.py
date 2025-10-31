@@ -16,6 +16,7 @@ router = APIRouter(
 )
 
 # POST ENDPOINT (CREATE)
+
 @router.post("/", response_model=Group)
 def create_group(group: GroupCreate, db: Session = Depends(get_db)):
     db_group = GroupModel(name=group.name)
@@ -24,8 +25,8 @@ def create_group(group: GroupCreate, db: Session = Depends(get_db)):
     db.refresh(db_group)
     return db_group
 
-@router.post("/users", response_model=UserGroup)
-def add_user_in_group(user_group: UserGroupCreate, db: Session = Depends(get_db)):
+@router.post("/members", response_model=UserGroup)
+def add_member_in_group(user_group: UserGroupCreate, db: Session = Depends(get_db)):
     # Check if user exists
     user = db.query(UserModel).filter(UserModel.id == user_group.userId).first()
     if not user:
@@ -57,6 +58,7 @@ def add_user_in_group(user_group: UserGroupCreate, db: Session = Depends(get_db)
     return db_user_group
 
 # GET ENDPOINT (READ)
+
 @router.get("/", response_model=list[Group])
 def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     groups = db.query(GroupModel).offset(skip).limit(limit).all()
@@ -69,7 +71,16 @@ def read_group(group_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Group not found")
     return group
 
+@router.get("/{group_id}/members", response_model=list[UserGroup])
+def read_members_in_groups(group_id: int, db:Session = Depends(get_db)):
+    group= db.query(GroupModel).filter(GroupModel.id == group_id).first()
+    if group is None:
+        raise HTTPException(status_code=404, detail=f"Group with id {group_id} not found")
+    members = db.query(UserGroupModel).filter(UserGroupModel.groupId == group_id).all()
+    return members
+
 # PUT ENDPOINT (UPDATE)
+
 @router.put("/",response_model=Group)
 def update_group(group_id: int, group: GroupUpdate ,db: Session = Depends(get_db)):
     db_group = db.query(GroupModel).filter(GroupModel.id == group_id).first()
@@ -83,6 +94,7 @@ def update_group(group_id: int, group: GroupUpdate ,db: Session = Depends(get_db
     return db_group
 
 #DELETE ENDPOINT (DELETE)
+
 @router.delete("/{group_id}", response_model=Group)
 def delete_group(group_id: int, db: Session = Depends(get_db)):
     db_group = db.query(GroupModel).filter(GroupModel.id == group_id).first()
@@ -92,3 +104,14 @@ def delete_group(group_id: int, db: Session = Depends(get_db)):
     db.delete(db_group)
     db.commit()
     return db_group
+
+@router.delete("/{group_id}/members/{user_id}", response_model=UserGroup)
+def delete_member_in_group(group_id:int,user_id: int, db:Session = Depends(get_db)):
+    db_group_member = db.query(UserGroupModel).filter(UserGroupModel.groupId == group_id,
+        UserGroupModel.userId == user_id
+    ).first()
+    if db_group_member is None:
+        raise HTTPException(status_code=404, detail="Membership for this user in this group not found")
+    db.delete(db_group_member)
+    db.commit()
+    return db_group_member
