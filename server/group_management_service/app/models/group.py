@@ -4,15 +4,20 @@ from sqlalchemy.orm import relationship
 import uuid
 import enum
 from datetime import datetime
+from typing import List, TYPE_CHECKING # Added imports for proper type hinting
 
-# Use standard String for SQLite (no native UUID support)
+# --- Conditional UUID Setup ---
 try:
     from sqlalchemy.dialects.postgresql import UUID
     use_uuid = True
-except:
+except ImportError:
     use_uuid = False
 
 from ..core.database import Base
+
+# Optional: For type hinting if Membership is defined elsewhere
+if TYPE_CHECKING:
+    from .membership import Membership
 
 
 class GroupVisibility(str, enum.Enum):
@@ -52,8 +57,13 @@ class Group(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # Relationships (optional - uncomment if you want ORM relationships)
-    # memberships = relationship("Membership", back_populates="group", cascade="all, delete-orphan")
+    # 🔗 Relationships: One-to-Many
+    # This creates the list of Membership objects accessible via group.memberships
+    memberships: relationship[List["Membership"]] = relationship( # <-- UNCOMMENTED/FINALIZED
+        "Membership", 
+        back_populates="group", 
+        cascade="all, delete-orphan"
+    )
     
     def __repr__(self):
         return f"<Group(id={self.id}, name={self.name}, owner_id={self.owner_id})>"
