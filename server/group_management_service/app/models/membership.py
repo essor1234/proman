@@ -1,17 +1,22 @@
-from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey
+from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint # <-- ADD UniqueConstraint
 from sqlalchemy.orm import relationship
 import uuid
 import enum
 from datetime import datetime
+from typing import TYPE_CHECKING # For type checking if Group is in another file
 
 # Use standard String for SQLite (no native UUID support)
 try:
     from sqlalchemy.dialects.postgresql import UUID
     use_uuid = True
-except:
+except ImportError:
     use_uuid = False
 
 from ..core.database import Base
+
+# Optional: For type hinting if Group is defined elsewhere
+if TYPE_CHECKING:
+    from .group import Group
 
 
 class MembershipRole(str, enum.Enum):
@@ -32,19 +37,6 @@ class Membership(Base):
     """
     Membership model representing a user's membership in a group.
     Links users to groups with roles and status.
-    
-    NOTE: This model only stores user_id (UUID reference).
-    To get actual user details (name, email, etc.), you need to:
-    1. Create services/user_service.py to call the auth service API
-    2. Use user_id to fetch user data from auth service
-    
-    Example:
-        # In controller or route:
-        from ..services.user_service import UserService
-        
-        membership = membership_repo.get_membership(group_id, user_id)
-        user_details = await UserService.get_user_by_id(membership.user_id, token)
-        # Now you have: {id, username, email, full_name, etc.}
     """
     __tablename__ = "memberships"
     
@@ -74,54 +66,13 @@ class Membership(Base):
         nullable=False
     )
     
-    # NOTE: user_id and invited_by are just UUID references!
-    # They don't contain actual user data (name, email, etc.)
-    # 
-    # TO GET USER DATA FROM AUTH SERVICE:
-    # ===================================
-    # 1. Create: services/user_service.py
-    #    - This will call auth service API to fetch user details
-    # 
-    # 2. In your controller/route, import and use:
-    #    from ..services.user_service import UserService
-    #    
-    #    # Fetch single user
-    #    user = await UserService.get_user_by_id(membership.user_id, token)
-    #    
-    #    # Fetch multiple users (for listing members)
-    #    user_ids = [m.user_id for m in memberships]
-    #    users = await UserService.get_users_by_ids(user_ids, token)
-    # 
-    # 3. Example in route:
-    #    @router.get("/groups/{group_id}/members-with-details")
-    #    async def get_members_with_details(
-    #        group_id: UUID,
-    #        current_user: dict = Depends(get_current_user),
-    #        db: Session = Depends(get_db)
-    #    ):
-    #        # Get memberships (only has user_id)
-    #        memberships = membership_repo.list_members(group_id)
-    #        
-    #        # Fetch actual user data from auth service
-    #        user_ids = [m.user_id for m in memberships]
-    #        users = await UserService.get_users_by_ids(user_ids, current_user["token"])
-    #        
-    #        # Combine membership + user data
-    #        result = []
-    #        for membership in memberships:
-    #            user = next((u for u in users if u["id"] == str(membership.user_id)), None)
-    #            result.append({
-    #                "membership": membership.to_dict(),
-    #                "user": user
-    #            })
-    #        return result
-    
     # Timestamps
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # Relationships (optional - uncomment if you want ORM relationships)
-    # group = relationship("Group", back_populates="memberships")
+    # 🔗 Relationship: Many-to-One
+    # The 'group' property provides the ORM linkage back to the Group object.
+    group: relationship["Group"] = relationship("Group", back_populates="memberships") # <-- UNCOMMENTED/ADDED
     
     def __repr__(self):
         return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id}, role={self.role})>"
@@ -139,9 +90,8 @@ class Membership(Base):
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
     
-    class Config:
-        # Ensure unique membership per user per group
-        __table_args__ = (
-            # Uncomment if using PostgreSQL
-            # UniqueConstraint('group_id', 'user_id', name='unique_group_user'),
-        )
+    # 🔑 Data Integrity Constraint
+    # Ensures only one Membership exists for a given user in a given group.
+    __table_args__ = ( # <-- UNCOMMENTED AND APPLIED
+        UniqueConstraint('group_id', 'user_id', name='unique_group_user'),
+    )
