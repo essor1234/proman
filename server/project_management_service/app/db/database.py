@@ -1,7 +1,6 @@
-<<<<<<< HEAD
+
 from typing import Optional
-=======
->>>>>>> 9b531b90200acffe58234a05dcb4bba6385491a5
+
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +15,7 @@ sessionLocal= sessionmaker(autocommit=False, autoflush=False,bind=engine)
 
 Base = declarative_base()
 
-<<<<<<< HEAD
+
 
 def get_db():
     db=sessionLocal()
@@ -25,8 +24,7 @@ def get_db():
     finally:
         db.close()
 
-=======
->>>>>>> 9b531b90200acffe58234a05dcb4bba6385491a5
+
 class User(Base):
     __tablename__ = "users"
 
