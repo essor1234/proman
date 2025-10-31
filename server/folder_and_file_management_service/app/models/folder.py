@@ -1,7 +1,7 @@
+from ..schemas.folder import FolderBase 
 
 
-class Folder:
-    def __init__(self, id: str, name: str, path: str, date_created: str):
-        self.id = id
-        self.name = name
-        self.path = path
+class FolderDB(FolderBase, table=True):
+    """Database schema for Folder entity."""
+    __tablename__ = "folders"
+

@@ -1,7 +1,6 @@
+from ..schemas.folderFile import FolderFileBase
 
 
-
-class FolderFile:
-    def __init__(self, id: str, folderId, fileId):
-        self.folderId = folderId
-        self.fileId = fileId
+class FolderFileDB(FolderFileBase, table=True):
+    """Database schema for Folder-File association."""
+    __tablename__ = "folder_files"

@@ -1,6 +1,8 @@
 
 
-
+"""
+Relation with Project Manager
+"""
 class FolderManager:
     def __init__(self, id: str, folderId: str, projectid: str):
         self.id = id
