@@ -1,12 +1,12 @@
-# 🧱 Docker Compose configuration for ProMan Project
-# Each microservice runs independently and connects through a shared network (promannet)
-
+# docker-compose.yaml
 services:
-  # 🧠 Database
+  # -------------------------------------------------
+  # PostgreSQL – ONLY started in prod profile
+  # -------------------------------------------------
   postgres:
     image: postgres:15
     container_name: postgres_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -17,64 +17,83 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - promannet
+    profiles: ["prod"]
 
-  # 👤 Account Management Service
+  # -------------------------------------------------
+  # Account Management Service
+  # -------------------------------------------------
   account_service:
     build: ./server/account_management_service
     container_name: account_service
     ports:
       - "8001:8000"
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
-    depends_on:
-      - postgres
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////app/data/account.db}
+    volumes:
+      - ./server/account_management_service:/app
+      - ./data:/app/data  # ← SQLite file on host: ./data/account.db
     networks:
       - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles: ["dev", "prod"]
 
-  # 📁 Folder and File Management Service
+  # -------------------------------------------------
+  # Folder & File Management Service
+  # -------------------------------------------------
   file_service:
     build: ./server/folder_and_file_management_service
     container_name: file_service
     ports:
       - "8002:8000"
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
-    depends_on:
-      - postgres
-    networks:
-      - promannet
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////app/data/file.db}
     volumes:
       - ./server/folder_and_file_management_service:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  # Dev mode
-    
+      - ./data:/app/data  # ← SQLite file on host: ./data/file.db
+    networks:
+      - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles: ["dev", "prod"]
 
-  # 👥 Group Management Service
+  # -------------------------------------------------
+  # Group Management Service
+  # -------------------------------------------------
   group_service:
     build: ./server/group_management_service
     container_name: group_service
     ports:
       - "8003:8000"
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
-    depends_on:
-      - postgres
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////app/data/group.db}
+    volumes:
+      - ./server/group_management_service:/app
+      - ./data:/app/data  # ← SQLite file on host: ./data/group.db
     networks:
       - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles: ["dev", "prod"]
 
-  # 📊 Project Management Service
+  # -------------------------------------------------
+  # Project Management Service
+  # -------------------------------------------------
   project_service:
     build: ./server/project_management_service
     container_name: project_service
     ports:
       - "8004:8000"
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/promandb
-    depends_on:
-      - postgres
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////app/data/project.db}
+    volumes:
+      - ./server/project_management_service:/app
+      - ./data:/app/data  # ← SQLite file on host: ./data/project.db
     networks:
       - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles: ["dev", "prod"]
 
-  # 🚪 API Gateway (Entry point)
+  # -------------------------------------------------
+  # API Gateway (entry point)
+  # -------------------------------------------------
   gateway:
     build: ./server/gate_way
     container_name: gateway
@@ -92,14 +111,17 @@ services:
       - project_service
     networks:
       - promannet
-    
+    profiles: ["dev", "prod"]
 
-# 🧩 Persistent volume for PostgreSQL data
+# -------------------------------------------------
+# Persistent volumes
+# -------------------------------------------------
 volumes:
-  postgres_data:
-  
+  postgres_data:  # Only used in prod
 
-# 🌐 Shared Docker network for inter-service communication
+# -------------------------------------------------
+# Shared network
+# -------------------------------------------------
 networks:
   promannet:
     driver: bridge

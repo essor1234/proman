@@ -11,7 +11,7 @@ from app.controllers.folderFile import (
 )
 from app.schemas.folderFile import FolderFileBase
 
-router = APIRouter()
+router = APIRouter(tags=["folder_file_management"])
 
 
 # -------------------------------------------------
