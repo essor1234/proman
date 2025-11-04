@@ -45,3 +45,4 @@ def delete_file_logic(file_id: int, db: Session):
         raise HTTPException(status_code=404, detail="File not found")
     db.delete(db_file)
     db.commit()
+

@@ -1,17 +1,12 @@
-
-
-from typing import Optional
-from datetime import datetime, timezone
+# app/schemas/folderFile.py
 from sqlmodel import SQLModel, Field
-
-
+from typing import Optional
 
 
 class FolderFileBase(SQLModel):
-    """Association schema for Folder and File entities."""
+    """Association table: many-to-many Folder ↔ File."""
     folderId: int = Field(..., foreign_key="folders.id", primary_key=True)
     fileId: int = Field(..., foreign_key="files.id", primary_key=True)
 
-    
-    class config:
-        from_attributes = True
+    class Config:
+        from_attributes = True  # ← Fixed: capital C

@@ -2,7 +2,7 @@
 from typing import Optional
 from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field
-from folderFile import FolderFile
+from .folderFile import FolderFileBase
 
 
 class FolderBase(SQLModel):
@@ -18,7 +18,7 @@ class FolderCreate(FolderBase):
 class FolderRead(FolderBase):
     """For GET requests—user receives these."""
     id: Optional[int] = None
-    file_links: Optional[list[FolderFile]] = []
+    file_links: Optional[list[FolderFileBase]] = []
     class Config:
         from_attributes = True
 

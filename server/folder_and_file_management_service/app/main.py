@@ -5,6 +5,7 @@ from sqlmodel import Session
 from app.core.database import create_db_and_tables, get_db
 from app.models.file import FileDB  # Ensures table is registered
 from app.routes.file import router as file_router  # Your router
+from app.routes.folder import router as folder_router  # Your folder router
 
 app = FastAPI(
     title="File API Test",
@@ -33,7 +34,7 @@ def read_root():
 # Include File Routes under /api/v1
 # ------------------------------------------------------------------
 app.include_router(file_router, prefix="/api/v1")
-
+app.include_router(folder_router, prefix="/api/v1")
 
 # ------------------------------------------------------------------
 # Health Check with DB Validation
