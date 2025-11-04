@@ -21,6 +21,8 @@ services:
   # 👤 Account Management Service
   account_service:
     build: ./server/account_management_service
+    volumes:
+    - ./server/account_management_service/data:/app/data
     container_name: account_service
     ports:
       - "8001:8000"
