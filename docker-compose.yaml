@@ -3,132 +3,132 @@ services:
   # -------------------------------------------------
   # PostgreSQL – ONLY started in prod profile
   # -------------------------------------------------
-  postgres:
-    image: postgres:15
-    container_name: postgres_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: promandb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - promannet
-    profiles: ["prod"]
+postgres:
+  image: postgres:15
+  container_name: postgres_db
+  restart: unless-stopped
+  environment:
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: promandb
+  ports:
+    - "5432:5432"
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+  networks:
+    - promannet
+  profiles: ["prod"]
 
-  # -------------------------------------------------
-  # Account Management Service
-  # -------------------------------------------------
-  account_service:
-    build: ./server/account_management_service
-    volumes:
-    - ./server/account_management_service/data:/app/data
-    container_name: account_service
-    ports:
-      - "8001:8000"
-    environment:
-      DATABASE_URL: ${DB_FILE}
-    volumes:
-      - ./server/account_management_service:/app
-      - ./data:/data                     # ← DB at ./data/account.db
-    networks:
-      - promannet
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    restart: unless-stopped
-    profiles: ["dev", "prod"]
+# -------------------------------------------------
+# Account Management Service
+# -------------------------------------------------
+account_service:
+  build: ./server/account_management_service
+  # volumes:
+  # - ./server/account_management_service/data:/app/data
+  container_name: account_service
+  ports:
+    - "8001:8000"
+  environment:
+    DATABASE_URL: ${DB_FILE}
+  volumes:
+    - ./server/account_management_service:/app
+    - ./data:/data                     # ← DB at ./data/account.db
+  networks:
+    - promannet
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  restart: unless-stopped
+  profiles: ["dev", "prod"]
 
-  # -------------------------------------------------
-  # Folder & File Management Service
-  # -------------------------------------------------
-  file_service:
-    build: ./server/folder_and_file_management_service
-    container_name: file_service
-    ports:
-      - "8002:8000"
-    environment:
-      DATABASE_URL: sqlite:////data/folder_and_file.db
-    volumes:
-      - ./server/folder_and_file_management_service:/app
-      - ./data:/data                     # ← DB at ./data/folder_and_file.db
-    networks:
-      - promannet
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    restart: unless-stopped
-    profiles: ["dev", "prod"]
+# -------------------------------------------------
+# Folder & File Management Service
+# -------------------------------------------------
+file_service:
+  build: ./server/folder_and_file_management_service
+  container_name: file_service
+  ports:
+    - "8002:8000"
+  environment:
+    DATABASE_URL: sqlite:////data/folder_and_file.db
+  volumes:
+    - ./server/folder_and_file_management_service:/app
+    - ./data:/data                     # ← DB at ./data/folder_and_file.db
+  networks:
+    - promannet
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  restart: unless-stopped
+  profiles: ["dev", "prod"]
 
-  # -------------------------------------------------
-  # Group Management Service
-  # -------------------------------------------------
-  group_service:
-    build: ./server/group_management_service
-    container_name: group_service
-    ports:
-      - "8003:8000"
-    environment:
-      DATABASE_URL: sqlite:////data/group.db
-    volumes:
-      - ./server/group_management_service:/app
-      - ./data:/data                     # ← DB at ./data/group.db
-    networks:
-      - promannet
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    restart: unless-stopped
-    profiles: ["dev", "prod"]
+# -------------------------------------------------
+# Group Management Service
+# -------------------------------------------------
+group_service:
+  build: ./server/group_management_service
+  container_name: group_service
+  ports:
+    - "8003:8000"
+  environment:
+    DATABASE_URL: sqlite:////data/group.db
+  volumes:
+    - ./server/group_management_service:/app
+    - ./data:/data                     # ← DB at ./data/group.db
+  networks:
+    - promannet
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  restart: unless-stopped
+  profiles: ["dev", "prod"]
 
-  # -------------------------------------------------
-  # Project Management Service
-  # -------------------------------------------------
-  project_service:
-    build: ./server/project_management_service
-    container_name: project_service
-    ports:
-      - "8004:8000"
-    environment:
-      DATABASE_URL: sqlite:////data/project.db
-    volumes:
-      - ./server/project_management_service:/app
-      - ./data:/data                     # ← DB at ./data/project.db
-    networks:
-      - promannet
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    restart: unless-stopped
-    profiles: ["dev", "prod"]
+# -------------------------------------------------
+# Project Management Service
+# -------------------------------------------------
+project_service:
+  build: ./server/project_management_service
+  container_name: project_service
+  ports:
+    - "8004:8000"
+  environment:
+    DATABASE_URL: sqlite:////data/project.db
+  volumes:
+    - ./server/project_management_service:/app
+    - ./data:/data                     # ← DB at ./data/project.db
+  networks:
+    - promannet
+  command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  restart: unless-stopped
+  profiles: ["dev", "prod"]
 
-  # -------------------------------------------------
-  # API Gateway (entry point)
-  # -------------------------------------------------
-  gateway:
-    build: ./server/gate_way
-    container_name: gateway
-    ports:
-      - "8000:8000"
-    environment:
-      ACCOUNT_SERVICE_URL: http://account_service:8000
-      FILE_SERVICE_URL: http://file_service:8000
-      GROUP_SERVICE_URL: http://group_service:8000
-      PROJECT_SERVICE_URL: http://project_service:8000
-    depends_on:
-      - account_service
-      - file_service
-      - group_service
-      - project_service
-    networks:
-      - promannet
-    restart: unless-stopped
-    profiles: ["dev", "prod"]
+# -------------------------------------------------
+# API Gateway (entry point)
+# -------------------------------------------------
+gateway:
+  build: ./server/gate_way
+  container_name: gateway
+  ports:
+    - "8000:8000"
+  environment:
+    ACCOUNT_SERVICE_URL: http://account_service:8000
+    FILE_SERVICE_URL: http://file_service:8000
+    GROUP_SERVICE_URL: http://group_service:8000
+    PROJECT_SERVICE_URL: http://project_service:8000
+  depends_on:
+    - account_service
+    - file_service
+    - group_service
+    - project_service
+  networks:
+    - promannet
+  restart: unless-stopped
+  profiles: ["dev", "prod"]
 
 # -------------------------------------------------
 # Persistent volumes
 # -------------------------------------------------
 volumes:
-  postgres_data:
+postgres_data:
 
 # -------------------------------------------------
 # Shared network
 # -------------------------------------------------
 networks:
-  promannet:
-    driver: bridge
+promannet:
+  driver: bridge
