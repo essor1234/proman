@@ -2,17 +2,17 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from core.database import get_db
-from core.security import get_current_user
-from controllers.membership_controller import MembershipController
-from schemas.membership_schemas import (
+from app.core.database import get_db
+from app.core.security import get_current_user
+from app.controllers.membership_controller import MembershipController
+from app.schemas.membership_schemas import (
     InvitationCreate,
     MembershipResponse
 )
 
 router = APIRouter(prefix="/groups/{group_id}", tags=["invitations"])
 
-
+# Invite
 @router.post(
     "/invite",
     response_model=MembershipResponse,
