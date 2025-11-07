@@ -1,6 +1,10 @@
 
 
 
+"""
+Relation with User management
+"""
+
 class SharedFile:
     def __init__(self, id: str, fileId: str, sharedWith: str, sharedAt: str):
         self.id = id

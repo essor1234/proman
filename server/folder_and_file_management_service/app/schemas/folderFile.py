@@ -1,7 +1,11 @@
+# app/schemas/folderFile.py
+from sqlmodel import SQLModel
+from typing import Optional
 
 
+class FolderFileBase(SQLModel):
+    folderId: int
+    fileId: int
 
-class FolderFile:
-    def __init__(self, id: str, folderId, fileId):
-        self.folderId = folderId
-        self.fileId = fileId
+    class Config:
+        from_attributes = True
