@@ -19,8 +19,10 @@ app = FastAPI(title="ProMan", version="1.0")
 # CREATE TABLES AFTER MODELS ARE IMPORTED
 @app.on_event("startup")
 def on_startup():
-    SQLModel.metadata.create_all(engine)  # ← NOW it creates the file
-    print(f"DB file: {engine.url}")
+    import pathlib
+    pathlib.Path("/data").mkdir(parents=True, exist_ok=True)  # ← create if missing
+    SQLModel.metadata.create_all(engine)
+    print(f"DB ready → {engine.url}")
 
 
 @app.get("/")
@@ -41,21 +43,25 @@ def health(db: Session = Depends(get_db)):
         link_cnt = db.exec(select(func.count()).select_from(FolderFileDB)).one()
         return {
             "status": "healthy",
+            "database": str(db.bind.url),   # ← ADD THIS
             "files": file_cnt,
             "folders": folder_cnt,
             "links": link_cnt,
         }
     except Exception as e:
         return {"status": "unhealthy", "error": str(e)}
-
-
+    
+    
 @app.get("/debug/db-path")
 def debug_db_path():
     import os
-    path = "/app/folder_and_file.db"
+    url = str(engine.url)
+    db_path = url.replace("sqlite://", "")  # → /data/folder_and_file.db
     return {
-        "current_directory": os.getcwd(),
-        "db_file_exists": os.path.exists(path),
-        "db_file_path": os.path.abspath(path),
-        "database_url": str(engine.url),
+        "DATABASE_URL": os.getenv("DATABASE_URL"),
+        "engine.url": url,
+        "container_db_path": db_path,
+        "exists_in_container": os.path.exists(db_path),
+        "size_bytes": os.path.getsize(db_path) if os.path.exists(db_path) else None,
+        "host_db_path": f"./data/{os.path.basename(db_path)}",  # ← correct
     }
