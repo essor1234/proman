@@ -6,4 +6,4 @@ from ..schemas.file import FileBase  # ← Reuse from schema!
 class FileDB(FileBase, table=True):
     __tablename__ = "files"
 
-    folder_links: List["FolderFileDB"] = Relationship(back_populates="file")
+    folder_links: List["FolderFileDB"] = Relationship(back_populates="file") # type: ignore

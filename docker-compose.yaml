@@ -28,7 +28,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      DATABASE_URL: sqlite:////data/account.db
+      DATABASE_URL: ${DB_FILE}
     volumes:
       - ./server/account_management_service:/app
       - ./data:/data                     # ← DB at ./data/account.db
