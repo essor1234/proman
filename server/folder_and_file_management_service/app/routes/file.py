@@ -1,29 +1,40 @@
 # app/routes/file.py
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from fastapi import APIRouter, Depends, status
+
 from app.core.database import get_db
-from app.schemas.file import FileCreate, FileRead
-from app.models.file import FileDB
+from app.controllers.file import (
+    create_file_logic,
+    get_file_logic,
+    list_files_logic,
+    update_file_logic,
+    delete_file_logic,
+)
+from app.schemas.file import FileCreate, FileRead, FileUpdate
 
-router = APIRouter()
+router = APIRouter(prefix="/files", tags=["files"])
 
-@router.post("/files/", response_model=FileRead)
-def create_file(file_in: FileCreate, db: Session = Depends(get_db)):
-    # Validate via FileCreate, map to DB model
-    db_file = FileDB(**file_in.dict())
-    db.add(db_file)
-    db.commit()
-    db.refresh(db_file)
-    return db_file  # Auto-serializes to FileRead
 
-@router.get("/files/{file_id}", response_model=FileRead)
-def read_file(file_id: int, db: Session = Depends(get_db)):
-    db_file = db.get(FileDB, file_id)
-    if not db_file:
-        raise HTTPException(status_code=404, detail="File not found")
-    return db_file
+@router.post("/", response_model=FileRead, status_code=status.HTTP_201_CREATED)
+def create_file(file_in: FileCreate, db=Depends(get_db)):
+    return create_file_logic(file_in, db)
 
-@router.get("/files/", response_model=list[FileRead])
-def list_files(db: Session = Depends(get_db)):
-    files = db.exec(select(FileDB)).all()
-    return files
+
+@router.get("/{file_id}", response_model=FileRead)
+def read_file(file_id: int, db=Depends(get_db)):
+    return get_file_logic(file_id, db)
+
+
+@router.get("/", response_model=list[FileRead])
+def list_files(skip: int = 0, limit: int = 100, db=Depends(get_db)):
+    return list_files_logic(db, skip, limit)
+
+
+@router.patch("/{file_id}", response_model=FileRead)
+def update_file(file_id: int, file_up: FileUpdate, db=Depends(get_db)):
+    return update_file_logic(file_id, file_up, db)
+
+
+@router.delete("/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_file(file_id: int, db=Depends(get_db)):
+    delete_file_logic(file_id, db)
+    return None
