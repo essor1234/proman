@@ -31,7 +31,7 @@ account_service:
   ports:
     - "8001:8000"
   environment:
-    DATABASE_URL: ${DB_FILE}
+    DATABASE_URL: ${DB_ACCOUNT}
   volumes:
     - ./server/account_management_service:/app
     - ./data:/data                     # ← DB at ./data/account.db
@@ -50,7 +50,7 @@ file_service:
   ports:
     - "8002:8000"
   environment:
-    DATABASE_URL: sqlite:////data/folder_and_file.db
+    DATABASE_URL: ${DB_FILE}
   volumes:
     - ./server/folder_and_file_management_service:/app
     - ./data:/data                     # ← DB at ./data/folder_and_file.db
@@ -69,7 +69,7 @@ group_service:
   ports:
     - "8003:8000"
   environment:
-    DATABASE_URL: sqlite:////data/group.db
+    DATABASE_URL: ${DB_GROUP}
   volumes:
     - ./server/group_management_service:/app
     - ./data:/data                     # ← DB at ./data/group.db
@@ -88,7 +88,7 @@ project_service:
   ports:
     - "8004:8000"
   environment:
-    DATABASE_URL: sqlite:////data/project.db
+    DATABASE_URL: ${DB_PROJECT}
   volumes:
     - ./server/project_management_service:/app
     - ./data:/data                     # ← DB at ./data/project.db
