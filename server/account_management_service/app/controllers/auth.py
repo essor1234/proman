@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from sqlmodel import Session, select
-from models.user import User
-from core.db import engine
-from core.security import hash_password, verify_password
+from app.models.user import User
+from app.core.db import engine
+from app.core.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
