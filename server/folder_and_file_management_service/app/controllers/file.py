@@ -25,6 +25,10 @@ def list_files_logic(db: Session, skip: int = 0, limit: int = 100) -> list[FileR
     files = db.exec(stmt).all()
     return [FileRead.from_orm(f) for f in files]
 
+def get_files_by_user_logic(user_id: int, db: Session) -> list[FileRead]:
+    stmt = select(FileDB).where(FileDB.userid == user_id)
+    files = db.exec(stmt).all()
+    return [FileRead.from_orm(f) for f in files]
 
 def update_file_logic(file_id: int, file_up: FileUpdate, db: Session) -> FileRead:
     db_file = db.get(FileDB, file_id)

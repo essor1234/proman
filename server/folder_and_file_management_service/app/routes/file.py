@@ -8,6 +8,7 @@ from app.controllers.file import (
     list_files_logic,
     update_file_logic,
     delete_file_logic,
+    get_files_by_user_logic,
 )
 from app.schemas.file import FileCreate, FileRead, FileUpdate
 
@@ -22,6 +23,10 @@ def create_file(file_in: FileCreate, db=Depends(get_db)):
 @router.get("/{file_id}", response_model=FileRead)
 def read_file(file_id: int, db=Depends(get_db)):
     return get_file_logic(file_id, db)
+
+@router.get("/user/{user_id}", response_model=list[FileRead])
+def read_files_by_user(user_id: int, db=Depends(get_db)):
+    return get_files_by_user_logic(user_id, db)
 
 
 @router.get("/", response_model=list[FileRead])

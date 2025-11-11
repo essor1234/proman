@@ -8,6 +8,7 @@ from sqlmodel import SQLModel, Field
 class FileBase(SQLModel):
     """Base schema for File entity."""
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    userid: int = Field(..., index=True)
     name: str = Field(..., min_length=1, max_length=255)
     size: int = Field(..., gt=0)
     path: str = Field(..., min_length=1)
