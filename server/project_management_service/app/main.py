@@ -3,10 +3,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from core.database import engine, Base
+from app.core.database import engine, Base
 
 # Import the router objects from your route files
-from routes import user, group, project
+from app.routes import user, group, project
 
 # This line tells SQLAlchemy to create all tables defined in your models
 # that inherit from Base if they don't already exist.

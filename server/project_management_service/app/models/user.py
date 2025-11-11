@@ -7,7 +7,7 @@ SQLAlchemy ORM models for User entity.
 
 from sqlalchemy import Column, Integer, String  # Column types
 from sqlalchemy.orm import relationship  # For foreign key relationships
-from core.database import Base  # Inherit from Base for table creation
+from app.core.database import Base  # Inherit from Base for table creation
 
 class User(Base):
     """

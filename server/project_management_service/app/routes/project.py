@@ -5,9 +5,9 @@ FastAPI routes for Project CRUD + member.
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from core.database import get_db
-from schemas.project import Project, ProjectCreate, ProjectMember, ProjectMemberCreate, ProjectUpdate
-from repositories.project import (
+from app.core.database import get_db
+from app.schemas.project import Project, ProjectCreate, ProjectMember, ProjectMemberCreate, ProjectUpdate
+from app.repositories.project import (
     create_project, add_member, get_projects, get_project, get_members,
     update_project, delete_project, remove_member
 )

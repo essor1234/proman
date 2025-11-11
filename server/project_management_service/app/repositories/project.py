@@ -4,8 +4,8 @@ Repository layer for Project & ProjectMember operations.
 """
 
 from sqlalchemy.orm import Session
-from models.project import Project as ProjectModel, ProjectMember as ProjectMemberModel
-from schemas.project import ProjectCreate, ProjectMemberCreate, ProjectUpdate
+from app.models.project import Project as ProjectModel, ProjectMember as ProjectMemberModel
+from app.schemas.project import ProjectCreate, ProjectMemberCreate, ProjectUpdate
 
 # CREATE
 def create_project(db: Session, project: ProjectCreate):
