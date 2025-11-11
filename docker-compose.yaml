@@ -23,8 +23,6 @@ services:
   # -------------------------------------------------
   account_service:
     build: ./server/account_management_service
-    volumes:
-    - ./server/account_management_service/data:/app/data
     container_name: account_service
     ports:
       - "8001:8000"
@@ -32,6 +30,7 @@ services:
       DATABASE_URL: ${DB_ACCOUNT}
     volumes:
       - ./server/account_management_service:/app
+      - ./server/account_management_service/data:/app/data
       - ./data:/data
     networks:
       - promannet
