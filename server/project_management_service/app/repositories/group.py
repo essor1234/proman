@@ -6,8 +6,8 @@ Repository layer for Group & UserGroup (member) operations.
 """
 
 from sqlalchemy.orm import Session
-from models.group import Group as GroupModel, UserGroup as UserGroupModel
-from schemas.group import Group, GroupCreate, GroupUpdate, UserGroup, UserGroupCreate
+from app.models.group import Group as GroupModel, UserGroup as UserGroupModel
+from app.schemas.group import Group, GroupCreate, GroupUpdate, UserGroup, UserGroupCreate
 
 #CREATE
 def create_group(db:Session, group:GroupCreate):
