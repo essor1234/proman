@@ -7,8 +7,8 @@ Repository layer for User CRUD operations.
 """
 
 from sqlalchemy.orm import Session
-from models.user import User as UserModel
-from schemas.user import UserCreate, UserUpdate
+from app.models.user import User as UserModel
+from app.schemas.user import UserCreate, UserUpdate
 
 # CREATE
 def create_user(db: Session, user: UserCreate):
