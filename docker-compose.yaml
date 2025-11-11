@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 # docker-compose.yaml
+=======
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
 services:
   # -------------------------------------------------
   # PostgreSQL – ONLY started in prod profile
@@ -30,10 +33,17 @@ services:
     ports:
       - "8001:8000"
     environment:
+<<<<<<< HEAD
       DATABASE_URL: ${DB_FILE}
     volumes:
       - ./server/account_management_service:/app
       - ./data:/data                     # ← DB at ./data/account.db
+=======
+      DATABASE_URL: ${DB_ACCOUNT}
+    volumes:
+      - ./server/account_management_service:/app
+      - ./data:/data
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
     networks:
       - promannet
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -49,10 +59,17 @@ services:
     ports:
       - "8002:8000"
     environment:
+<<<<<<< HEAD
       DATABASE_URL: sqlite:////data/folder_and_file.db
     volumes:
       - ./server/folder_and_file_management_service:/app
       - ./data:/data                     # ← DB at ./data/folder_and_file.db
+=======
+      DATABASE_URL: ${DB_FILE}
+    volumes:
+      - ./server/folder_and_file_management_service:/app
+      - ./data:/data
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
     networks:
       - promannet
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -68,10 +85,17 @@ services:
     ports:
       - "8003:8000"
     environment:
+<<<<<<< HEAD
       DATABASE_URL: sqlite:////data/group.db
     volumes:
       - ./server/group_management_service:/app
       - ./data:/data                     # ← DB at ./data/group.db
+=======
+      DATABASE_URL: ${DB_GROUP}
+    volumes:
+      - ./server/group_management_service:/app
+      - ./data:/data
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
     networks:
       - promannet
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -87,10 +111,17 @@ services:
     ports:
       - "8004:8000"
     environment:
+<<<<<<< HEAD
       DATABASE_URL: sqlite:////data/project.db
     volumes:
       - ./server/project_management_service:/app
       - ./data:/data                     # ← DB at ./data/project.db
+=======
+      DATABASE_URL: ${DB_PROJECT}
+    volumes:
+      - ./server/project_management_service:/app
+      - ./data:/data
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
     networks:
       - promannet
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -120,6 +151,7 @@ services:
     restart: unless-stopped
     profiles: ["dev", "prod"]
 
+<<<<<<< HEAD
 # -------------------------------------------------
 # Persistent volumes
 # -------------------------------------------------
@@ -129,6 +161,11 @@ volumes:
 # -------------------------------------------------
 # Shared network
 # -------------------------------------------------
+=======
+volumes:
+  postgres_data:
+
+>>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
 networks:
   promannet:
     driver: bridge
