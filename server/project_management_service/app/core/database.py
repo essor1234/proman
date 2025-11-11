@@ -3,7 +3,7 @@ from sqlalchemy import create_engine  # Creates DB connection engine
 from sqlalchemy.orm import sessionmaker, declarative_base  # Session factory & base class
 
 # Database URL: SQLite file-based DB (in-memory for dev, persistent file)
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:////data/project.db"
 
 # Create engine with SQLite-specific args (allows multi-thread access)
 engine = create_engine(

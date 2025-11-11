@@ -7,7 +7,7 @@ SQLAlchemy ORM models for Group & UserGroup (junction table).
 
 from sqlalchemy import Column, Integer, String, ForeignKey  # ForeignKey for relations
 from sqlalchemy.orm import relationship
-from core.database import Base
+from app.core.database import Base
 
 class Group(Base):
     """
