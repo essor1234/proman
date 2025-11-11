@@ -30,9 +30,9 @@ app.add_middleware(
 )
 
 # Include the routers from the other files
-app.include_router(user.router)
-app.include_router(group.router)
-app.include_router(project.router)
+app.include_router(user.router,prefix="/users")
+app.include_router(group.router,prefix="/groups")
+app.include_router(project.router,prefix="/projects")
 
 @app.get("/", tags=["Root"])
 def read_root():
