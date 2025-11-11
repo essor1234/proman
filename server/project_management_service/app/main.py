@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from db.database import engine, Base
+from core.database import engine, Base
 
 # Import the router objects from your route files
 from routes import user, group, project

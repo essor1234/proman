@@ -83,5 +83,3 @@ class ProjectMember(Base):
 
     user = relationship("User", back_populates="projects")
     project = relationship("Project", back_populates="members")
-
-

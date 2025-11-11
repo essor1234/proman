@@ -1,117 +1,66 @@
-# In routes/group.py
 
-from fastapi import APIRouter, Depends, HTTPException
+"""
+FastAPI routes for Group CRUD + member.
+- Thin: only HTTP logic, delegates to repository.
+"""
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from db.database import (
-    get_db, 
-    Group as GroupModel, 
-    User as UserModel, 
-    UserGroup as UserGroupModel
-)
+from core.database import get_db
 from schemas.group import Group, GroupCreate, UserGroup, UserGroupCreate, GroupUpdate
-
-router = APIRouter(
-    prefix="/groups",
-    tags=["Groups"]
+from repositories.group import (
+    create_group, add_member, get_groups, get_group, get_members,
+    update_group, delete_group, remove_member
 )
 
-# POST ENDPOINT (CREATE)
+router = APIRouter(prefix="/groups", tags=["Groups"])
 
-@router.post("/", response_model=Group)
-def create_group(group: GroupCreate, db: Session = Depends(get_db)):
-    db_group = GroupModel(name=group.name)
-    db.add(db_group)
-    db.commit()
-    db.refresh(db_group)
-    return db_group
+@router.post("/", response_model=Group, status_code=status.HTTP_201_CREATED)
+def create(group: GroupCreate, db: Session = Depends(get_db)):
+    return create_group(db, group)
 
 @router.post("/members", response_model=UserGroup)
-def add_member_in_group(user_group: UserGroupCreate, db: Session = Depends(get_db)):
-    # Check if user exists
-    user = db.query(UserModel).filter(UserModel.id == user_group.userId).first()
-    if not user:
-        raise HTTPException(status_code=404, detail=f"User with id {user_group.userId} not found")
-    
-    # Check if group exists
-    group = db.query(GroupModel).filter(GroupModel.id == user_group.groupId).first()
-    if not group:
-        raise HTTPException(status_code=404, detail=f"Group with id {user_group.groupId} not found")
-
-    # Check if this relationship already exists
-    db_user_group_check = db.query(UserGroupModel).filter(
-        UserGroupModel.userId == user_group.userId,
-        UserGroupModel.groupId == user_group.groupId
-    ).first()
-    
-    if db_user_group_check:
-        raise HTTPException(status_code=400, detail="User is already in this group")
-    
-    # Create the new association
-    db_user_group = UserGroupModel(
-        userId=user_group.userId,
-        groupId=user_group.groupId,
-        role=user_group.role
-    )
-    db.add(db_user_group)
-    db.commit()
-    db.refresh(db_user_group)
-    return db_user_group
-
-# GET ENDPOINT (READ)
+def add_user(member: UserGroupCreate, db: Session = Depends(get_db)):
+    try:
+        return add_member(db, member)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/", response_model=list[Group])
-def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    groups = db.query(GroupModel).offset(skip).limit(limit).all()
-    return groups
+def read_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_groups(db, skip, limit)
 
 @router.get("/{group_id}", response_model=Group)
-def read_group(group_id: int, db: Session = Depends(get_db)):
-    group = db.query(GroupModel).filter(GroupModel.id == group_id).first()
-    if group is None:
+def read_one(group_id: int, db: Session = Depends(get_db)):
+    group = get_group(db, group_id)
+    if not group:
         raise HTTPException(status_code=404, detail="Group not found")
     return group
 
 @router.get("/{group_id}/members", response_model=list[UserGroup])
-def read_members_in_groups(group_id: int, db:Session = Depends(get_db)):
-    group= db.query(GroupModel).filter(GroupModel.id == group_id).first()
-    if group is None:
-        raise HTTPException(status_code=404, detail=f"Group with id {group_id} not found")
-    members = db.query(UserGroupModel).filter(UserGroupModel.groupId == group_id).all()
-    return members
+def read_members(group_id: int, db: Session = Depends(get_db)):
+    group = get_group(db, group_id)
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    return get_members(db, group_id)
 
-# PUT ENDPOINT (UPDATE)
-
-@router.put("/",response_model=Group)
-def update_group(group_id: int, group: GroupUpdate ,db: Session = Depends(get_db)):
-    db_group = db.query(GroupModel).filter(GroupModel.id == group_id).first()
-    if db_group is None:
-         raise HTTPException(status_code=404, detail="Group not found")
-    
-    db_group.name=group.name if group.name is not None else db_group.name
-    
-    db.commit()
-    db.refresh(db_group)
-    return db_group
-
-#DELETE ENDPOINT (DELETE)
+@router.put("/{group_id}", response_model=Group)
+def update(group_id: int, update: GroupUpdate, db: Session = Depends(get_db)):
+    updated = update_group(db, group_id, update)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Group not found")
+    return updated
 
 @router.delete("/{group_id}", response_model=Group)
-def delete_group(group_id: int, db: Session = Depends(get_db)):
-    db_group = db.query(GroupModel).filter(GroupModel.id == group_id).first()
-    if db_group is None:
-         raise HTTPException(status_code=404, detail="Group not found")
-    
-    db.delete(db_group)
-    db.commit()
-    return db_group
+def remove(group_id: int, db: Session = Depends(get_db)):
+    deleted = delete_group(db, group_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Group not found")
+    return deleted
 
 @router.delete("/{group_id}/members/{user_id}", response_model=UserGroup)
-def delete_member_in_group(group_id:int,user_id: int, db:Session = Depends(get_db)):
-    db_group_member = db.query(UserGroupModel).filter(UserGroupModel.groupId == group_id,
-        UserGroupModel.userId == user_id
-    ).first()
-    if db_group_member is None:
-        raise HTTPException(status_code=404, detail="Membership for this user in this group not found")
-    db.delete(db_group_member)
-    db.commit()
-    return db_group_member
+def remove_user(group_id: int, user_id: int, db: Session = Depends(get_db)):
+    deleted = remove_member(db, group_id, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="member not found")
+    return deleted

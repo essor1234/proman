@@ -1,118 +1,65 @@
-# In routes/project.py
 
-from fastapi import APIRouter, Depends, HTTPException
+"""
+FastAPI routes for Project CRUD + member.
+"""
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from db.database import(
-    get_db, 
-    Project as ProjectModel, 
-    User as UserModel, 
-    ProjectMember as ProjectMemberModel
-)
+from core.database import get_db
 from schemas.project import Project, ProjectCreate, ProjectMember, ProjectMemberCreate, ProjectUpdate
-
-router = APIRouter(
-    prefix="/projects",
-    tags=["Projects"]
+from repositories.project import (
+    create_project, add_member, get_projects, get_project, get_members,
+    update_project, delete_project, remove_member
 )
 
-# POST ENDPOINT (CREATE)
+router = APIRouter(prefix="/projects", tags=["Projects"])
 
-@router.post("/", response_model=Project)
-def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
-    db_project = ProjectModel(name=project.name)
-    db.add(db_project)
-    db.commit()
-    db.refresh(db_project)
-    return db_project
+@router.post("/", response_model=Project, status_code=status.HTTP_201_CREATED)
+def create(project: ProjectCreate, db: Session = Depends(get_db)):
+    return create_project(db, project)
 
 @router.post("/members", response_model=ProjectMember)
-def add_member_to_project(project_member:ProjectMemberCreate, db:Session = Depends(get_db)):
-     # Check if user exists
-    user = db.query(UserModel).filter(UserModel.id == project_member.userId).first()
-    if not user:
-        raise HTTPException(status_code=404, detail=f"User with id {project_member.userId} not found")
-    
-    # Check if group exists
-    project = db.query(ProjectModel).filter(ProjectModel.id == project_member.projectId).first()
-    if not project:
-        raise HTTPException(status_code=404, detail=f"Project with id {project_member.projectId} not found")
-    # Check if this relationship already exists
-    db_project_member_check = db.query(ProjectMemberModel).filter(
-        ProjectMemberModel.userId == project_member.userId,
-        ProjectMemberModel.projectId == project_member.projectId
-    ).first()
-    
-    if db_project_member_check:
-        raise HTTPException(status_code=400, detail="User is already in this group")
-    
-    # Create the new association
-    db_project_member = ProjectMemberModel(
-        userId=project_member.userId,
-        projectId=project_member.projectId,
-        role=project_member.role
-    )
-    db.add(db_project_member)
-    db.commit()
-    db.refresh(db_project_member)
-    return db_project_member
-
-
-# GET ENDPOINT (READ)
+def add_user(project_member: ProjectMemberCreate, db: Session = Depends(get_db)):
+    try:
+        return add_member(db, project_member)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/", response_model=list[Project])
-def read_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    projects = db.query(ProjectModel).offset(skip).limit(limit).all()
-    return projects
+def read_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_projects(db, skip, limit)
 
 @router.get("/{project_id}", response_model=Project)
-def read_project(project_id: int, db: Session = Depends(get_db)):
-    project = db.query(ProjectModel).filter(ProjectModel.id == project_id).first()
-    if project is None:
-        raise HTTPException(status_code=404, detail=f"Project with id {project_id} not found")
+def read_one(project_id: int, db: Session = Depends(get_db)):
+    project = get_project(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
     return project
 
-@router.get("/{project_id}/members",response_model=list[ProjectMember])
-def read_members_in_project(project_id:int, db: Session = Depends(get_db)):
-    project = db.query(ProjectModel).filter(ProjectModel.id == project_id).first()
-    if project is None:
-        raise HTTPException(status_code=404, detail=f"Project with id {project_id} not found")
-    members = db.query(ProjectMemberModel).filter(ProjectMemberModel.projectId == project_id).all()
-    return members
-
-#POST ENDPOINT (UPDATE)
+@router.get("/{project_id}/members", response_model=list[ProjectMember])
+def read_members(project_id: int, db: Session = Depends(get_db)):
+    project = get_project(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return get_members(db, project_id)
 
 @router.put("/{project_id}", response_model=Project)
-def update_project(project_id:int, project: ProjectUpdate, db:Session = Depends(get_db)):
-    db_project = db.query(ProjectModel).filter(ProjectModel.id == project_id).first()
-    if db_project is None:
+def update(project_id: int, update: ProjectUpdate, db: Session = Depends(get_db)):
+    updated = update_project(db, project_id, update)
+    if not updated:
         raise HTTPException(status_code=404, detail="Project not found")
-    
-    db_project.name=project.name if project.name is not None else db_project.name
-    db_project.groupId=project.groupId if project.groupId is not None else db_project.groupId
+    return updated
 
-
-    db.commit()
-    db.refresh(db_project)
-    return db_project
-
-#DELETE ENDPOINT (DELETE)
 @router.delete("/{project_id}", response_model=Project)
-def delete_project(project_id: int, db: Session = Depends(get_db)):
-    db_project = db.query(ProjectModel).filter(ProjectModel.id == project_id).first()
-    if db_project is None:
-         raise HTTPException(status_code=404, detail="Project not found")
-    
-    db.delete(db_project)
-    db.commit()
-    return db_project
+def remove(project_id: int, db: Session = Depends(get_db)):
+    deleted = delete_project(db, project_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return deleted
 
 @router.delete("/{project_id}/members/{user_id}", response_model=ProjectMember)
-def delete_member_in_project(project_id: int, user_id: int, db: Session = Depends(get_db)):
-    db_project_member = db.query(ProjectMemberModel).filter(ProjectMemberModel.projectId == project_id,
-        ProjectMemberModel.userId == user_id
-    ).first()
-    if db_project_member is None:
-        raise HTTPException(status_code=404, detail="Membership for this user in this project not found")
-    db.delete(db_project_member)
-    db.commit()
-    return db_project_member
+def remove_user(project_id: int, user_id: int, db: Session = Depends(get_db)):
+    deleted = remove_member(db, project_id, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Project_member not found")
+    return deleted
