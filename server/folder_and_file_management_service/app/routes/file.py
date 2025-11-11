@@ -49,9 +49,7 @@ def create_file(
 def read_file(file_id: int, db=Depends(get_db)):
     return get_file_logic(file_id, db)
 
-@router.get("/user/{user_id}", response_model=list[FileRead])
-def read_files_by_user(user_id: int, db=Depends(get_db)):
-    return get_files_by_user_logic(user_id, db)
+
 
 
 
