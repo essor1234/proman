@@ -5,6 +5,17 @@ from app.schemas.file import FileCreate, FileRead, FileUpdate, FileDelete
 from app.models.file import FileDB
 
 
+
+"""
+TODO: Add get_account_user_logic to create_file_logic to verify user existence before file creation.
+"""
+def create_file_logic_with_userid(file_in: FileCreate, db: Session) -> FileRead:
+    db_file = FileDB(**file_in.model_dump())
+    db.add(db_file)
+    db.commit()
+    db.refresh(db_file)
+    return FileRead.from_orm(db_file)
+
 def create_file_logic(file_in: FileCreate, db: Session) -> FileRead:
     db_file = FileDB(**file_in.model_dump())
     db.add(db_file)

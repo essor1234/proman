@@ -12,6 +12,7 @@ from app.models.folderFile import FolderFileDB
 from app.routes.file import router as file_router
 from app.routes.folder import router as folder_router
 from app.routes.folderFile import router as folder_file_router
+from app.routes.testing import router as testing_router
 
 app = FastAPI(title="ProMan", version="1.0")
 
@@ -33,6 +34,8 @@ def read_root():
 app.include_router(file_router, prefix="/api/v1")
 app.include_router(folder_router, prefix="/api/v1")
 app.include_router(folder_file_router, prefix="/api/v1")
+app.include_router(testing_router, prefix="/api/v1/")
+
 
 
 @app.get("/health")

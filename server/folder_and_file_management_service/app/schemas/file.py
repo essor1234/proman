@@ -17,7 +17,7 @@ class FileBase(SQLModel):
 
 class FileCreate(FileBase):
     """For POST requests—user provides these."""
-    model_config = {"deferred": ["id", "date_created"]} 
+    model_config = {"deferred": ["id", "date_created", "path", "userid"]} 
 
 class FileRead(FileBase):
     """For GET requests—user receives these."""
