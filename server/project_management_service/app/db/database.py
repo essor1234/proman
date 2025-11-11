@@ -1,3 +1,6 @@
+
+from typing import Optional
+
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +14,16 @@ engine= create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread"
 sessionLocal= sessionmaker(autocommit=False, autoflush=False,bind=engine)
 
 Base = declarative_base()
+
+
+
+def get_db():
+    db=sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 class User(Base):
     __tablename__ = "users"
@@ -70,5 +83,3 @@ class ProjectMember(Base):
 
     user = relationship("User", back_populates="projects")
     project = relationship("Project", back_populates="members")
-
-
