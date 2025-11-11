@@ -1,7 +1,7 @@
 # ---- Base Image ----
 FROM python:3.11-slim
 
-# ---- Work Directory ----
+# ---- Working Directory ----
 WORKDIR /app
 
 # ---- Environment Variables ----
@@ -17,11 +17,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# ---- Copy Application ----
+# ---- Copy Application Code ----
 COPY ./app /app
 
-# ---- Expose Port ----
+# ---- Expose FastAPI Port ----
 EXPOSE 8000
 
-# ---- Command ----
+# ---- Start the App ----
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
