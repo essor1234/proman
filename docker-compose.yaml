@@ -1,7 +1,5 @@
 <<<<<<< HEAD
 # docker-compose.yaml
-=======
->>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
 services:
   # -------------------------------------------------
   # PostgreSQL – ONLY started in prod profile
@@ -69,7 +67,7 @@ services:
     volumes:
       - ./server/folder_and_file_management_service:/app
       - ./data:/data
->>>>>>> 5fe1148cb369cdd968fce80cf24f3255495a2b2f
+    restart: unless-stopped
     networks:
       - promannet
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
