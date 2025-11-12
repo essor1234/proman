@@ -34,7 +34,7 @@ def read_root():
 app.include_router(file_router, prefix="/api/v1")
 app.include_router(folder_router, prefix="/api/v1")
 app.include_router(folder_file_router, prefix="/api/v1")
-app.include_router(testing_router, prefix="/api/v1/")
+app.include_router(testing_router, prefix="/api/v1")
 
 
 

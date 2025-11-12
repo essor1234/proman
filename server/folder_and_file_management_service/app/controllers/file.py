@@ -1,20 +1,45 @@
 from http.client import HTTPException
+from fastapi.params import Depends
 from sqlmodel import SQLModel, Field, Session, select
 
 from app.schemas.file import FileCreate, FileRead, FileUpdate, FileDelete
 from app.models.file import FileDB
-
+from app.controllers.getAccountController import get_account_user_logic
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 
 """
 TODO: Add get_account_user_logic to create_file_logic to verify user existence before file creation.
 """
-def create_file_logic_with_userid(file_in: FileCreate, db: Session) -> FileRead:
-    db_file = FileDB(**file_in.model_dump())
+
+security = HTTPBearer()  # Accepts `Authorization: Bearer <token>`
+
+
+def create_file_logic_with_userid(file_in: FileCreate, current_user_id: int, db: Session) -> FileRead:
+    # Validate user exists in Account Service
+    get_account_user_logic(current_user_id)
+
+    # EXCLUDE userid from input (even if client sent it)
+    data = file_in.model_dump(exclude={"userid"})  # ← THIS IS KEY
+
+    db_file = FileDB(
+        **data,
+        userid=current_user_id  # ← ONLY source of truth
+    )
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
     return FileRead.from_orm(db_file)
+
+def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    # TODO: Replace with real JWT decode
+    # For testing: accept any token that is a number
+    try:
+        user_id = int(token)
+        return user_id
+    except:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 def create_file_logic(file_in: FileCreate, db: Session) -> FileRead:
     db_file = FileDB(**file_in.model_dump())
