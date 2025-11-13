@@ -1,8 +1,9 @@
+from typing import Optional
+
+from pydantic import Field
+from app.models.folderManager import FolderManagerBase
 
 
-
-class FolderManager:
-    def __init__(self, id: str, folderId: str, projectid: str):
-        self.id = id
-        self.folderId = folderId
-        self.projectid = projectid
+class FolderManager(FolderManagerBase, table=True):
+    __tablename__ = "folder_managers"
+    id: Optional[int] = Field(default=None, primary_key=True)
