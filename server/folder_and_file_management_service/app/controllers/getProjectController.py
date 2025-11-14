@@ -12,13 +12,16 @@ def get_project_logic(project_id: str) -> dict:
     Validate that a project exists in Project Service
     Returns basic project info
     """
-    url = f"{PROJECT_SERVICE_URL}/projects/{project_id}"
+    # url = f"{PROJECT_SERVICE_URL}/projects/{project_id}"
+    url = f"{PROJECT_SERVICE_URL}/projects/projects/{project_id}"
+
     print(f"[Folder Service] Calling Project Service → {url}")
 
     for attempt in range(1, 7):
         try:
             response = httpx.get(url, timeout=10.0)
-            print(f"[Folder Service] Project Status: {response.status_code}")
+            # print(f"[Folder Service] Project Status: {response.status_code}")
+            print(f"[Folder Service] Project Response: {response.status_code} | {response.text}")
 
             if response.status_code == 404:
                 raise HTTPException(status_code=404, detail="Project not found")

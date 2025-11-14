@@ -1,21 +1,14 @@
+# app/schemas/folderManager.py
 
 from typing import Optional
-from datetime import datetime, timezone
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel
 
-
-"""
-Relation with Project Manager
-"""
 class FolderManagerBase(SQLModel):
-    """Schema for FolderManager entity."""
-    id: Optional[int] = Field(default=None, primary_key=True, index=True)
-    folderId: str = Field(..., min_length=1, max_length=255)
-    projectid: str = Field(..., min_length=1, max_length=255)   
-
+    folderId: int  # ← MUST BE int (FK to folders.id)
+    projectid: str
 
 class FolderManagerCreate(FolderManagerBase):
-    pass  # client must send projectid
+    pass
 
 class FolderManagerRead(FolderManagerBase):
     id: int

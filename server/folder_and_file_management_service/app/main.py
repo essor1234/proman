@@ -6,7 +6,7 @@ from app.core.database import engine, get_db  # ← engine only
 
 # IMPORT MODELS FIRST
 from app.models.file import FileDB
-from app.models.folder import FolderDB
+# from app.models.folder import FolderDB
 from app.models.folderFile import FolderFileDB
 
 from app.routes.file import router as file_router
@@ -38,21 +38,21 @@ app.include_router(testing_router, prefix="/api/v1")
 
 
 
-@app.get("/health")
-def health(db: Session = Depends(get_db)):
-    try:
-        file_cnt = db.exec(select(func.count()).select_from(FileDB)).one()
-        folder_cnt = db.exec(select(func.count()).select_from(FolderDB)).one()
-        link_cnt = db.exec(select(func.count()).select_from(FolderFileDB)).one()
-        return {
-            "status": "healthy",
-            "database": str(db.bind.url),   # ← ADD THIS
-            "files": file_cnt,
-            "folders": folder_cnt,
-            "links": link_cnt,
-        }
-    except Exception as e:
-        return {"status": "unhealthy", "error": str(e)}
+# @app.get("/health")
+# def health(db: Session = Depends(get_db)):
+#     try:
+#         file_cnt = db.exec(select(func.count()).select_from(FileDB)).one()
+#         folder_cnt = db.exec(select(func.count()).select_from(FolderDB)).one()
+#         link_cnt = db.exec(select(func.count()).select_from(FolderFileDB)).one()
+#         return {
+#             "status": "healthy",
+#             "database": str(db.bind.url),   # ← ADD THIS
+#             "files": file_cnt,
+#             "folders": folder_cnt,
+#             "links": link_cnt,
+#         }
+#     except Exception as e:
+#         return {"status": "unhealthy", "error": str(e)}
     
     
 @app.get("/debug/db-path")
