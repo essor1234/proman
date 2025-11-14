@@ -8,6 +8,7 @@ from sqlmodel import SQLModel, Field
 class FileBase(SQLModel):
     """Base schema for File entity."""
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    userid: int = Field(..., index=True) # Get from account service
     name: str = Field(..., min_length=1, max_length=255)
     size: int = Field(..., gt=0)
     path: str = Field(..., min_length=1)
@@ -16,7 +17,7 @@ class FileBase(SQLModel):
 
 class FileCreate(FileBase):
     """For POST requests—user provides these."""
-    model_config = {"deferred": ["id", "date_created"]} 
+    model_config = {"deferred": ["id", "date_created", "path", "userid"]} 
 
 class FileRead(FileBase):
     """For GET requests—user receives these."""

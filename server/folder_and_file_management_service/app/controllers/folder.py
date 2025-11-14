@@ -1,10 +1,32 @@
-# app/controllers/folder.py
 from sqlmodel import Session, select
-from fastapi import HTTPException, status
-
-from app.models.folder import FolderDB
+from fastapi import HTTPException
+from ..models.folder import FolderDB
 from app.schemas.folder import FolderCreate, FolderRead, FolderUpdate
+from app.models.folderManager import FolderManager
+from app.controllers.getProjectController import get_project_logic
 
+def create_folder_in_project(
+    folder_data: FolderCreate,
+    projectid: str,
+    db: Session
+) -> FolderRead:
+    # 1. Validate project exists
+    get_project_logic(projectid)
+
+    # 2. Create folder — IGNORE user-provided id
+    folder_dict = folder_data.model_dump(exclude={"id"})
+    db_folder = FolderDB(**folder_dict)  # ← id = None → DB auto-generates
+
+    db.add(db_folder)
+    db.commit()
+    db.refresh(db_folder)
+
+    # 3. Link folder to project
+    link = FolderManager(folderId=db_folder.id, projectid=projectid)
+    db.add(link)
+    db.commit()
+
+    return FolderRead.from_orm(db_folder)
 
 def create_folder_logic(folder_in: FolderCreate, db: Session) -> FolderRead:
     db_folder = FolderDB(**folder_in.model_dump())
