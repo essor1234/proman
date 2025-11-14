@@ -13,7 +13,7 @@ class FolderBase(SQLModel):
 
 class FolderCreate(FolderBase):
     """For POST requests—user provides these."""
-    model_config = {"deferred": ["id"]}
+    id: Optional[int] = None
 
 class FolderRead(FolderBase):
     """For GET requests—user receives these."""

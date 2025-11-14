@@ -9,4 +9,4 @@ class FolderDB(FolderBase, table=True):
     __tablename__ = "folders"
 
     # Use STRING: "FolderFileDB" instead of importing
-    file_links: List["FolderFileDB"] = Relationship(back_populates="folder")
+    file_links: List["FolderFileDB"] = Relationship(back_populates="folder") # type: ignore

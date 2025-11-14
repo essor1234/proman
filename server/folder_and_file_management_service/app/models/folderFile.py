@@ -10,5 +10,5 @@ class FolderFileDB(SQLModel, table=True):
     fileId: int = Field(..., foreign_key="files.id", primary_key=True)
 
     # Use STRING: "FolderDB" and "FileDB"
-    folder: Optional["FolderDB"] = Relationship(back_populates="file_links")
-    file: Optional["FileDB"] = Relationship(back_populates="folder_links")
+    folder: Optional["FolderDB"] = Relationship(back_populates="file_links") # type: ignore
+    file: Optional["FileDB"] = Relationship(back_populates="folder_links") # type: ignore
