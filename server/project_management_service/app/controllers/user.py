@@ -1,6 +1,6 @@
 # project_service/app/repositories/user.py
 """
-Repository layer for User CRUD operations.
+Controller layer for User CRUD operations.
 - Isolates SQLAlchemy queries from FastAPI routes.
 - Makes testing easier (mock repository).
 - Follows separation of concerns.

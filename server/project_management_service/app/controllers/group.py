@@ -1,6 +1,6 @@
 # project_service/app/repositories/group.py
 """
-Repository layer for Group & UserGroup (member) operations.
+Controllers layer for Group & UserGroup (member) operations.
 - All SQLAlchemy queries are isolated here.
 - Routes only call these functions.
 """
