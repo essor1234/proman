@@ -27,6 +27,7 @@ app.add_middleware(
     CORSMiddleware,
     # allow_origins=settings.ALLOW_ORIGINS, # Uncomment and configure as needed
     allow_origins=["*"], # Example: Allow all origins
+    # allow_origins=settings.ALLOW_ORIGINS, # Uncomment and configure as needed
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
