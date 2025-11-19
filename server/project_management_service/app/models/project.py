@@ -27,9 +27,10 @@ class ProjectMember(Base):
     Junction: User-Project member with roles.
     """
     __tablename__ = "project_members"
-    userId = Column(Integer, ForeignKey("users.id"), primary_key=True)
+# The User ID is now an external ID, so we remove the ForeignKey constraint.
+    userId = Column(Integer, primary_key=True)
     projectId = Column(Integer, ForeignKey("projects.id"), primary_key=True)
     role = Column(String, default="member", index=True)
     
-    user = relationship("User", back_populates="projects")
+
     project = relationship("Project", back_populates="members")

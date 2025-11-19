@@ -1,50 +1,53 @@
-# project_service/app/repositories/group.py
 """
-Controllers layer for Group & UserGroup (member) operations.
+Repositories layer for Group & UserGroup (member) operations.
 - All SQLAlchemy queries are isolated here.
 - Routes only call these functions.
 """
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.group import Group as GroupModel, UserGroup as UserGroupModel
 from app.schemas.group import Group, GroupCreate, GroupUpdate, UserGroup, UserGroupCreate
+from app.client.account import get_account_user
 
-#CREATE
-def create_group(db:Session, group:GroupCreate):
+# CREATE
+def create_group(db: Session, group: GroupCreate):
+    """Creates a new group in the database."""
     db_group = GroupModel(name=group.name)
     db.add(db_group)
-    db.commit
+    
+    # 🐛 FIX: Must CALL the commit function with parentheses 
+    db.commit() 
+    
     db.refresh(db_group)
     return db_group
 
-def add_member(db:Session, member:UserGroupCreate):
-    # Validate user exists
-    user = db.query(db.model.User).filter(db.model.User.id == member.userId).first()
-    if not user:
-        raise ValueError(f"User with id {member.userId} not found")
+def add_member(db: Session, member: UserGroupCreate) -> UserGroup:
+    """Adds a user as a member to a group after validating the user ID."""
+    # 1. VALIDATE USER ID AGAINST ACCOUNT SERVICE (New Step!)
+    try:
+        # This will raise a 404/503 HTTPException if the user is invalid/service is down
+        get_account_user(member.userId) 
+    except HTTPException as e:
+        # Re-raise the exception with context/detail
+        raise ValueError(e.detail) # Raising ValueError to be caught by the router's try/except
 
-    # Validate group exists
-    group = db.query(GroupModel).filter(GroupModel.id == member.groupId).first()
-    if not group:
-        raise ValueError(f"Group with id {member.groupId} not found")
+    # TODO: Add logic here to check if the group exists (get_group(db, member.groupId))
+    # TODO: Add logic here to check for existing membership 
 
-    # Prevent duplicates
-    exists = db.query(UserGroupModel).filter(
-        UserGroupModel.userId == member.userId,
-        UserGroupModel.groupId == member.groupId
-    ).first()
-    if exists:
-        raise ValueError("User is already in this group")
-
-    # Insert
+    # 4. If all checks pass, create the local link
+    # 🐛 FIX: Using the imported ORM Model (UserGroupModel), not the Pydantic Schema (UserGroup)
     db_member = UserGroupModel(
-        userId=member.userId,
-        groupId=member.groupId,
+        userId=member.userId, 
+        groupId=member.groupId, 
         role=member.role
     )
+    
     db.add(db_member)
     db.commit()
     db.refresh(db_member)
+    
+    # Return the Pydantic schema model (UserGroup) for the API response
     return db_member
 
 # READ
@@ -70,6 +73,7 @@ def update_group(db: Session, group_id: int, update: GroupUpdate):
 
 # DELETE
 def delete_group(db: Session, group_id: int):
+    # Retrieve the object before deleting
     db_group = get_group(db, group_id)
     if db_group:
         db.delete(db_group)

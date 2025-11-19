@@ -1,87 +1,102 @@
-# project_service/app/repositories/project.py
-"""
-Repository layer for Project & ProjectMember operations.
-"""
-
 from sqlalchemy.orm import Session
-from app.models.project import Project as ProjectModel, ProjectMember as ProjectMemberModel
+from app.models.project import Project, ProjectMember
 from app.schemas.project import ProjectCreate, ProjectMemberCreate, ProjectUpdate
+from app.core.account_client import get_account_user  # Import the link file
 
-# CREATE
 def create_project(db: Session, project: ProjectCreate):
-    db_project = ProjectModel(name=project.name, groupId=project.groupId)
+    db_project = Project(name=project.name, groupId=project.groupId)
     db.add(db_project)
     db.commit()
     db.refresh(db_project)
     return db_project
 
-def add_member(db: Session, project_member: ProjectMemberCreate):
-    # Validate user
-    user = db.query(db.model.User).filter(db.model.User.id == project_member.userId).first()
-    if not user:
-        raise ValueError(f"User with id {project_member.userId} not found")
-
-    # Validate project
-    project = db.query(ProjectModel).filter(ProjectModel.id == project_member.projectId).first()
-    if not project:
-        raise ValueError(f"Project with id {project_member.projectId} not found")
-
-    # Prevent duplicate
-    exists = db.query(ProjectMemberModel).filter(
-        ProjectMemberModel.userId == project_member.userId,
-        ProjectMemberModel.projectId == project_member.projectId
-    ).first()
-    if exists:
-        raise ValueError("User is already in this project")
-
-    # Insert
-    db_project_member = ProjectMemberModel(
-        userId=project_member.userId,
-        projectId=project_member.projectId,
-        role=project_member.role
-    )
-    db.add(db_project_member)
-    db.commit()
-    db.refresh(db_project_member)
-    return db_project_member
-
-# READ
-def get_projects(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(ProjectModel).offset(skip).limit(limit).all()
-
 def get_project(db: Session, project_id: int):
-    return db.query(ProjectModel).filter(ProjectModel.id == project_id).first()
+    return db.query(Project).filter(Project.id == project_id).first()
 
-def get_members(db: Session, project_id: int):
-    return db.query(ProjectMemberModel).filter(ProjectMemberModel.projectId == project_id).all()
+def get_projects(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Project).offset(skip).limit(limit).all()
 
-# UPDATE
-def update_project(db: Session, project_id: int, update: ProjectUpdate):
-    db_project = get_project(db, project_id)
+def update_project(db: Session, project_id: int, project_data: ProjectUpdate):
+    db_project = db.query(Project).filter(Project.id == project_id).first()
     if not db_project:
         return None
-    if update.name is not None:
-        db_project.name = update.name
-    if update.groupId is not None:
-        db_project.groupId = update.groupId
+    
+    # Update fields if they are provided
+    if project_data.name:
+        db_project.name = project_data.name
+    if project_data.groupId is not None:
+        db_project.groupId = project_data.groupId
+        
     db.commit()
     db.refresh(db_project)
     return db_project
 
-# DELETE
 def delete_project(db: Session, project_id: int):
-    db_project = get_project(db, project_id)
-    if db_project:
-        db.delete(db_project)
-        db.commit()
+    db_project = db.query(Project).filter(Project.id == project_id).first()
+    if not db_project:
+        return None
+    db.delete(db_project)
+    db.commit()
     return db_project
 
-def remove_member(db: Session, project_id: int, user_id: int):
-    project_member = db.query(ProjectMemberModel).filter(
-        ProjectMemberModel.projectId == project_id,
-        ProjectMemberModel.userId == user_id
+def add_member(db: Session, member_data: ProjectMemberCreate):
+    """
+    Adds a user to a project.
+    1. Validates Project exists (Local DB).
+    2. Validates User exists (Remote Account Service Call).
+    3. Creates relationship.
+    """
+    # 1. Local Check: Does the project exist?
+    project = db.query(Project).filter(Project.id == member_data.projectId).first()
+    if not project:
+        raise ValueError("Project not found")
+
+    # 2. Remote Check: Does the user exist in Account Service?
+    # This uses the link file to call the other service
+    # It will raise HTTPException if the user is missing or service is down
+    account_user = get_account_user(member_data.userId)
+    
+    print(f"Adding user {account_user['name']} to project {project.name}")
+
+    # 3. Local Check: Is user already in the project?
+    existing_link = db.query(ProjectMember).filter(
+        ProjectMember.userId == member_data.userId,
+        ProjectMember.projectId == member_data.projectId
     ).first()
-    if project_member:
-        db.delete(project_member)
-        db.commit()
-    return project_member
+
+    if existing_link:
+        raise ValueError("User is already a member of this project")
+
+    # 4. Create the link
+    new_member = ProjectMember(
+        userId=member_data.userId,
+        projectId=member_data.projectId,
+        role=member_data.role
+    )
+    
+    db.add(new_member)
+    db.commit()
+    db.refresh(new_member)
+    
+    return new_member
+
+def get_members(db: Session, project_id: int):
+    # Already renamed to resolve previous import error
+    return db.query(ProjectMember).filter(ProjectMember.projectId == project_id).all()
+
+def remove_member(db: Session, project_id: int, user_id: int):
+    """
+    Removes a member from a project.
+    RENAMED from remove_project_member to resolve ImportError.
+    """
+    member = db.query(ProjectMember).filter(
+        ProjectMember.projectId == project_id,
+        ProjectMember.userId == user_id
+    ).first()
+    
+    if not member:
+        return None
+        
+    db.delete(member)
+    db.commit()
+    return member

@@ -9,7 +9,7 @@ import uvicorn
 from app.core.database import engine, Base
 
 # Import the router objects from your route files
-from app.routes import user, group, project
+from app.routes import group, project
 
 # This line tells SQLAlchemy to create all tables defined in your models
 # that inherit from Base if they don't already exist.
@@ -33,16 +33,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the routers from the other files
-app.include_router(user.router,prefix="/users")
-app.include_router(group.router,prefix="/groups")
-app.include_router(project.router,prefix="/projects")
+
 
 @app.get("/", tags=["Root"])
 def read_root():
     return {"message": "Welcome to the Project Management API"}
 # Include the routers from the other files
-app.include_router(user.router,prefix="/users")
+# app.include_router(user.router,prefix="/users")
 app.include_router(group.router,prefix="/groups")
 app.include_router(project.router,prefix="/projects")
 

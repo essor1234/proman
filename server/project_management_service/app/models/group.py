@@ -30,10 +30,11 @@ class UserGroup(Base):
     - Role: 'admin', 'member', etc.
     """
     __tablename__ = "user_groups"
-    userId = Column(Integer, ForeignKey("users.id"), primary_key=True)
+# The User ID is now an external ID, so we remove the ForeignKey constraint.
+    userId = Column(Integer, primary_key=True)
     groupId = Column(Integer, ForeignKey("groups.id"), primary_key=True)
     role = Column(String, default="member", index=True)
     
     # Bidirectional relationships
-    user = relationship("User", back_populates="groups")
+
     group = relationship("Group", back_populates="users")
