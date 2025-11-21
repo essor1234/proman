@@ -6,7 +6,7 @@ from app.core.database import get_db
 from app.core.security import get_current_user
 from app.controllers.membership_controller import MembershipController
 from app.schemas.membership_schemas import (
-    InvitationCreate,
+    MembershipCreate,
     MembershipResponse
 )
 
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/groups/{group_id}", tags=["invitations"])
 )
 async def invite_member(
     group_id: UUID,
-    invitation_data: InvitationCreate,
+    invitation_data: MembershipCreate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

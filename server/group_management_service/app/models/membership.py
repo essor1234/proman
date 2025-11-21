@@ -5,13 +5,6 @@ import enum
 from datetime import datetime
 from typing import TYPE_CHECKING # For type checking if Group is in another file
 
-# Use standard String for SQLite (no native UUID support)
-try:
-    from sqlalchemy.dialects.postgresql import UUID
-    use_uuid = True
-except ImportError:
-    use_uuid = False
-
 from ..core.database import Base
 
 # Optional: For type hinting if Group is defined elsewhere
@@ -40,18 +33,11 @@ class Membership(Base):
     """
     __tablename__ = "memberships"
     
-    # Primary key
-    if use_uuid:
-        id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-        group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-        invited_by = Column(UUID(as_uuid=True), nullable=True)
-    else:
-        # For SQLite: store UUID as string
-        id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(String(36), nullable=False, index=True)
-        invited_by = Column(String(36), nullable=True)
+    # Primary key - use String(36) for SQLite compatibility
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(String(36), nullable=False, index=True)
+    invited_by = Column(String(36), nullable=True)
     
     # Membership details
     role = Column(
@@ -72,7 +58,7 @@ class Membership(Base):
     
     # 🔗 Relationship: Many-to-One
     # The 'group' property provides the ORM linkage back to the Group object.
-    group: relationship["Group"] = relationship("Group", back_populates="memberships") # <-- UNCOMMENTED/ADDED
+    group = relationship("Group", back_populates="memberships")
     
     def __repr__(self):
         return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id}, role={self.role})>"
