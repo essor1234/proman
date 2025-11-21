@@ -26,11 +26,12 @@ class Settings(BaseSettings):
     
     # Auth Service Integration (for future use when fetching user data)
     # ==================================================================
-    # When you need to fetch user details from auth service:
-    # 1. Set this to your auth service URL
-    # 2. Create services/user_service.py
-    # 3. Use UserService.get_user_by_id(user_id, token) to fetch user data
+    # When you need to fetch user details from account/auth service:
+    # 1. Set this to your account management service URL (in dev this is http://localhost:8001)
+    # 2. Use `app.utils.account_client.get_user_by_id` to fetch user data
+    # NOTE: In docker-compose this service is available at http://account_service:8000
     AUTH_SERVICE_URL: str = "http://localhost:8001"
+    ACCOUNT_SERVICE_URL: str = "http://account_service:8000"  # Docker-internal default; override with http://localhost:8001 for local dev
     
     # CORS Settings
     CORS_ORIGINS: List[str] = [
