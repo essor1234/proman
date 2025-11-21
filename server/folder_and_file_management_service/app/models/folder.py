@@ -1,7 +1,12 @@
+# app/models/folder.py
+from typing import List
+from sqlmodel import SQLModel, Field, Relationship
+
+from ..schemas.folder import FolderBase
 
 
-class Folder:
-    def __init__(self, id: str, name: str, path: str, date_created: str):
-        self.id = id
-        self.name = name
-        self.path = path
+class FolderDB(FolderBase, table=True):
+    __tablename__ = "folders"
+
+    # Use STRING: "FolderFileDB" instead of importing
+    file_links: List["FolderFileDB"] = Relationship(back_populates="folder")

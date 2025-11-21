@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, Request
 from sqlalchemy.orm import Session
 from uuid import UUID
 
@@ -11,6 +11,7 @@ from app.schemas.group_schemas import (
     GroupResponse,
     GroupListResponse
 )
+from app.schemas.group_schemas import GroupWithMembersResponse
 
 router = APIRouter(prefix="/groups", tags=["groups"])
 
@@ -80,6 +81,29 @@ async def get_group(
     """
     controller = GroupController(db)
     return controller.get_group(group_id, current_user["id"])
+
+
+@router.get(
+    "/{group_id}/members",
+    response_model=GroupWithMembersResponse,
+    summary="Get group details with member profiles"
+)
+async def get_group_with_members(
+    group_id: UUID,
+    request: Request,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Returns group details plus members enriched with user profiles fetched
+    from the Account Management Service. For performance consider adding a
+    batch user endpoint on the account service.
+    """
+    controller = GroupController(db)
+    # Extract the JWT token from the Authorization header for forwarding to account service
+    auth_header = request.headers.get("Authorization", "")
+    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else None
+    return controller.get_group_with_members(group_id, current_user["id"], token=token)
 
 
 @router.put(
