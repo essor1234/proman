@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey  # <--- Make sure ForeignKey is imported
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+# FIX: Correct import from sibling module
+from .utils import UUIDColumn 
 
 class Project(Base):
     """
