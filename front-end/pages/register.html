@@ -1,211 +1,237 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <title>Log In</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <title>Log in</title>
+    
     <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <!-- Load external CSS styles -->
+    <link rel="stylesheet" href="styles.css">
     
     <style>
         body {
-            background-image: url('https://winnie2802.github.io/Website-Visualization/backgroundImage.jpg');
+            background-color: black;
+            background-image: url('https://winnie2802.github.io/Website-Visualization/images/backgroundImage.jpg');
             background-size: cover;
             background-attachment: fixed;
-            background-color: black;
-            
-            margin: 0;
             
             font-family: Arial;
+            
+            margin: 0;
         }
 
-        .homeButton {
-            font-size: 20px;
-            font-weight: bold;
-
-            background-color: white;
-
-            width: 120px;
-            height: 60px;
-
-            border: none;
-            border-radius: 30px;
-
-            margin: 30px;
-
-            cursor: pointer;
-
-            transition: 300ms;
+        .header {
+            display: flex;
+            align-items: center;
+            
+            padding-top: 20px;
+            padding-left: 20px;
+            padding-bottom: 20px;
         }
-        .homeButton:hover {
-            color: white;
-            background-color: #ea6b66;
-        }
+            .logoLabel {
+                font-size: 30px;
+                font-weight: 900;
+            }
 
         .registerForm {
             background-color: white;
 
             width: max-content;
             height: max-content;
+
+            border-radius: 10px;
+
+            display: flex;
+            flex-direction: column;
             
             margin: auto;
 
             padding: 30px;
         }
+            .createAnAccountLabel {
+                font-size: 20px;
+                font-weight: bold;
+                
+                text-align: center;
+            }
+                .excitedLabel {
+                    font-size: 18px;
+                    font-weight: bold;
+                    
+                    text-align: center;
+                }
 
-        .createAccountLabel {
-            font-size: 20px;
-            font-weight: bold;
-            
-            display: block;
-            
-            text-align: center;
-        }
+            .emailLabel {
+                font-size: 18px;
+                font-weight: bold;
 
-        .emailLabel {
-            font-size: 18px;
+                margin-top: 20px;
+            }
+                .emailInput {
+                    font-size: 16px;
 
-            display: block;
+                    width: 600px;
+                    height: 30px;
 
-            margin-top: 20px;
-        }
+                    margin-top: 10px;
 
-        .emailInput {
-            font-size: 16px;
+                    padding-left: 10px;
+                }
 
-            width: 600px;
-            height: 30px;
+            .usernameLabel {
+                font-size: 18px;
+                font-weight: bold;
 
-            margin-top: 10px;
+                margin-top: 20px;
+            }
+                .usernameInput {
+                    font-size: 16px;
 
-            padding-left: 10px;
-        }
+                    width: 600px;
+                    height: 30px;
 
-        .usernameLabel {
-            font-size: 18px;
+                    margin-top: 10px;
 
-            display: block;
+                    padding-left: 10px;
+                }
 
-            margin-top: 20px;
-        }
+            .passwordContainer {
+                display: flex;
+                justify-content: space-between;
+            }
+                .passwordLabel {
+                    font-size: 18px;
+                    font-weight: bold;
 
-        .usernameInput {
-            font-size: 16px;
+                    margin-top: 20px;
+                }
+                    .passwordInput {
+                        font-size: 16px;
 
-            width: 600px;
-            height: 30px;
+                        width: 600px;
+                        height: 30px;
 
-            margin-top: 10px;
+                        margin-top: 10px;
 
-            padding-left: 10px;
-        }
+                        padding-left: 10px;
+                    }
+                
+                .showLabel {
+                    color: #ea6b66;
+                    
+                    font-size: 16px;
 
-        .container {
-            display: flex;
+                    align-content: end;
+                    
+                    margin-top: 20px;
 
-            justify-content: space-between;
-        }
-        .passwordLabel {
-            font-size: 18px;
+                    cursor: pointer;
+                    visibility: hidden;
+                }
+                    .showLabel.visible {
+                        visibility: visible;
+                    }
+                
+                .forgotPasswordContainer {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                    .forgotPasswordLink {
+                        color: #ea6b66;
+                        
+                        font-size: 16px;
 
-            display: block;
+                        width: max-content;
+                        
+                        margin-top: 10px;
 
-            margin-top: 20px;
-        }
-        .showLabel {
-            font-size: 16px;
+                        cursor: pointer;
+                        transition: 0.3s;
+                    }
+                        .forgotPasswordLink:hover {
+                            text-decoration: underline;
+                        }
 
-            color: #ea6b66;
+            .registerButton {
+                background-color: #ea6b66;
+                color: white;
+                
+                font-size: 16px;
+                font-weight: bold;                
 
-            display: block;
+                width: 100%;
 
-            margin-top: 20px;
+                border: none;
+                border-radius: 10px;
 
-            align-content: end;
+                margin: auto;
+                margin-top: 20px;
+                
+                padding-top: 10px;
+                padding-bottom: 10px;
 
-            cursor: pointer;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+                .registerButton:hover {
+                    opacity: 70%;
+                }
 
-            visibility: hidden;
-        }
-        .showLabel.visible {
-            visibility: visible;
-        }
-        .passwordInput {
-            font-size: 16px;
+            .loginContainer {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                .loginLink {
+                    color: #ea6b66;
+                    
+                    font-size: 16px;
 
-            width: 600px;
-            height: 30px;
+                    margin-top: 10px;
+                    
+                    display: block;
+                    text-align: right;
 
-            margin-top: 10px;
-
-            padding-left: 10px;
-        }
-        
-        .registerButton {
-            font-size: 16px;
-            font-weight: bold;
-            
-            color: white;
-            background-color: #ea6b66;
-
-            width: 100%;
-            height: 30px;
-
-            border: none;
-
-            display: block;
-            
-            margin: auto;
-            margin-top: 20px;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-        .registerButton:hover {
-            opacity: 70%;
-        }
-
-        .loginLink {
-            font-size: 16px;
-
-            color: #ea6b66;
-            
-            display: block;
-            text-align: right;
-
-            margin-top: 10px;
-
-            cursor: pointer;
-        }
-        .loginLink:hover {
-            text-decoration: underline;
-        }
+                    cursor: pointer;
+                }
+                    .loginLink:hover {
+                        text-decoration: underline;
+                    }
     </style>
 </head>
 <body>
-    <button class="homeButton" onclick="location.href='home.html'">HOME</button>
+    <div class="header">
+        <div style="background-color: white; width: max-content; height: max-content; padding: 10px; display: flex; align-items: center; border-radius: 10px; cursor: pointer;" onclick="location.href='home.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/homeLogo.png" width="40px" height="40px" style="margin-right: 10px;">
+            <label class="logoLabel" style="cursor: pointer;">Home</label>
+        </div>
+    </div>
 
-    <form class="registerForm">
-        <label class="createAccountLabel">Create an account</label>
+    <form id="registerForm" class="registerForm" >
+        <label class="createAnAccountLabel">Create an account</label>
         
-        <label class="emailLabel">Email</label>
-        <input class="emailInput" type="text" placeholder="Enter your Email" required>
-
         <label class="usernameLabel">Username</label>
-        <input class="usernameInput" type="text" placeholder="Enter your Username" required>
+        <input id="username" name="username" class="usernameInput" type="text" placeholder="Enter your Username" required>
 
-        <div class="container">
+        <label class="emailLabel">Email</label>
+        <input id="email" name="email" class="emailInput" type="text" placeholder="Enter your Email" required>
+
+        <div class="passwordContainer">
             <label class="passwordLabel">Password</label>
             <label id="setVisible" class="showLabel">Show</label>
         </div>    
-        <input id="password" class="passwordInput" type="password" placeholder="Enter your Password" required>
+        <input id="password" name="password" class="passwordInput" type="password" placeholder="Enter your Password" required>
 
         <button class="registerButton" type="submit">Register</button>
 
-        <label class="loginLink" onclick="location.href='login.html'">Already have an account? Log in</label>
+        <div class="loginContainer">
+            <label class="loginLink" onclick="location.href='login.html'">Already have an account? Log in</label>
+        </div>
     </form>
 
     <script>
+        /// Show/Hide passwork ///
         const password   = document.getElementById('password');
         const setVisible = document.getElementById('setVisible');
         
@@ -224,6 +250,54 @@
             } else {
                 password.type = 'password';
                 setVisible.textContent = 'Show';
+            }
+        });
+
+        /// Register ///
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email    = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8000/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        email: email,
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                console.log("🔍 Raw response:", data);
+
+                if (response.ok) {
+                    alert(`✅ Register successful! Let's log in now ${data.username}.`);
+                    window.location.href = 'login.html';
+                } else {
+                    // 👇 Handle both object and array error formats
+                    let errorMessage = "❌ Login failed.";
+
+                    if (Array.isArray(data)) {
+                        // Validation error list from FastAPI
+                        errorMessage = data.map(err => err.msg).join(", ");
+                    } else if (data.detail) {
+                        // Normal HTTPException error
+                        errorMessage = data.detail;
+                    }
+
+                    alert(`❌ ${errorMessage}`);
+                }
+
+            } catch (error) {
+                console.error("❌ Network Error:", error);
+                alert("⚠️ Unable to connect to the server.");
             }
         });
     </script>
