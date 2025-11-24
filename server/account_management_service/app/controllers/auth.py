@@ -1,14 +1,14 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Form
 from sqlmodel import Session, select
-from models.user import User
-from core.db import engine
-from core.security import hash_password, verify_password
+from app.models.user import User
+from app.core.db import engine
+from app.core.security import hash_password, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # 🧩 REGISTER
 @router.post("/register")
-def register(username: str, email: str, password: str):
+def register(username: str = Form(...), email: str = Form(...), password: str = Form(...)):
     with Session(engine) as session:
         existing = session.exec(select(User).where(User.username == username)).first()
         if existing:
@@ -18,11 +18,11 @@ def register(username: str, email: str, password: str):
         session.add(user)
         session.commit()
         session.refresh(user)
-        return {"message": "User registered successfully", "user_id": user.id}
+        return {"message": "User registered successfully", "user_id": user.id, "username": user.username}
 
 # 🔑 LOGIN
 @router.post("/login")
-def login(username: str, password: str):
+def login(username: str = Form(...), password: str = Form(...)):
     with Session(engine) as session:
         user = session.exec(select(User).where(User.username == username)).first()
         if not user:

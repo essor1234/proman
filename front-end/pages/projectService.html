@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Project Service</title>
+    
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <!-- Load external CSS styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: 'Arial';
+
+            height: 1000px;
+
+            margin: 0px;
+        }
+
+        .stickyTopNavigationBar {
+            background-color: black;
+
+            border-bottom: 1px solid white;
+
+            position: sticky;
+            top: 0;
+
+            display: flex;
+            justify-content: space-between;
+        }
+            .buttonsLeftGroup {
+                display: flex;
+                flex-direction: row;
+            }
+                .buttonsLeftGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 200px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsLeftGroup .button:hover{
+                        background-color: white;
+                        color: black;
+
+                        cursor: pointer;
+                    }
+                    .buttonsLeftGroup .button.currentPage{
+                        background-color: white;
+                        color: black;
+
+                        cursor: default;
+                    }
+            .buttonsRightGroup {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+                .buttonsRightGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 150px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsRightGroup .button:hover{
+                        background-color: red;
+
+                        cursor: pointer;
+                    }
+
+        .header {
+            display: flex;
+            align-items: center;
+            
+            padding-top: 30px;
+            padding-left: 30px;
+            padding-bottom: 30px;
+        }
+            .logoLabel {
+                font-size: 30px;
+                font-weight: 900;
+            }
+
+        .contentArea {
+            display: flex;
+        }
+
+        .sideBar {
+            background-color: black;
+            
+            width: max-content;
+            height: 1000px;
+            
+            display: block;
+
+            padding: 10px;
+
+            border-radius: 0px 30px 0px 0px;
+        }
+            .sideBar .button {
+                background-color: black;
+                color: white;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                height: 40px;
+                
+                border: 1px solid white;
+                border-radius: 40px;
+
+                display: flex;
+                align-items: center;
+
+                padding-left: 10px;
+                padding-right: 10px;
+
+                margin-bottom: 10px;
+
+                cursor: pointer;
+                transition: 300ms;
+            }
+                .sideBar .button:hover {
+                    background-color: white;
+                    color: black;
+                }
+        .mainContent {
+            flex: 1;
+            
+            background-color: black;
+
+            padding: 10px;
+
+            margin-left: 10px;
+
+            border-radius: 30px 0px 0px 0px;
+        }
+            .content {
+                background-color: white;
+
+                width: max-content;
+                height: max-content;
+
+                border-radius: 30px;
+
+                padding: 10px;
+
+                opacity: 0;
+                animation: fadeIn 1s ease-out forwards;
+            }
+                .welcome {
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px); /* hiệu ứng trượt nhẹ lên */
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    </style>
+
+    <script>
+        // 🚧 Check login status IMMEDIATELY
+        const username = localStorage.getItem("username");
+        const user_id = localStorage.getItem("user_id");
+
+        if (!username || !user_id) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+    <div class="stickyTopNavigationBar">
+        <div class="buttonsLeftGroup">
+            <div class="button" onclick="location.href='fileService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" width="20px" height="13px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">File Service</label>
+            </div>
+
+            <div class="button" onclick="location.href='groupService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">Group Service</label>
+            </div>
+
+            <div class="button currentPage">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label>Project Service</label>
+            </div>
+        </div>
+
+        <div class="buttonsRightGroup">
+            <div class="button" onclick=logout()>
+                <label style="cursor: pointer;">Log out</label>
+                <i class="fa-solid fa-right-from-bracket" style="margin-left: 10px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" width="40px" height="40px" style="margin-right: 10px;">
+        <label class="logoLabel">Project Service</label>
+    </div>
+
+    <div class="contentArea">    
+        <div class="sideBar">  
+            <div class="button">
+                <i class="fa-solid fa-circle-plus" style="margin-right: 10px;"></i>
+                <label style="cursor: pointer;">Create a project</label>
+            </div>
+            
+            <div class="button" style="margin-top: 20px;">
+                <i class="fa-solid fa-arrow-up-right-dots" style="margin-right: 10px;"></i>
+                <label style="cursor: pointer;">MoSCoW</label>
+            </div>
+
+            <div class="button">
+                <i class="fa-solid fa-trophy" style="margin-right: 10px;"></i>
+                <label style="cursor: pointer;">MVP</label>
+            </div>
+
+            <div class="button">
+                <i class="fa-solid fa-list-check" style="margin-right: 10px;"></i>
+                <label style="cursor: pointer;">ToDo</label>
+            </div>
+        </div>
+        
+        <div class="mainContent">
+            <div class="content">
+                <label class="welcome">Hello, <span id="usernameDisplay"></span>!</label>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Display username dynamically
+        document.getElementById("usernameDisplay").textContent = localStorage.getItem("username");
+
+        // Logout function using browser confirm
+        function logout() {
+            const confirmed = confirm("Log out? We will miss you!");
+            if (confirmed) {
+                // Remove user info from localStorage
+                localStorage.removeItem("username");
+                localStorage.removeItem("user_id");
+
+                // Redirect to login page
+                window.location.href = "home.html";
+            }
+            // If not confirmed, do nothing
+        }
+    </script>
+</body>
+</html>
