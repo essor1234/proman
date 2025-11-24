@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint # <-- ADD UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 import uuid
 import enum
 from datetime import datetime
@@ -72,7 +73,8 @@ class Membership(Base):
     
     # 🔗 Relationship: Many-to-One
     # The 'group' property provides the ORM linkage back to the Group object.
-    group: relationship["Group"] = relationship("Group", back_populates="memberships") # <-- UNCOMMENTED/ADDED
+    group: Mapped["Group"] = relationship("Group", back_populates="memberships")
+
     
     def __repr__(self):
         return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id}, role={self.role})>"

@@ -97,7 +97,7 @@ class MembershipRepository:
             List of Membership objects
         """
         query = self.db.query(Membership).filter(Membership.group_id == str(group_id))
-        
+                
         if status_filter:
             query = query.filter(Membership.status == status_filter)
         

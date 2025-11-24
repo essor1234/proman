@@ -59,11 +59,11 @@ class Group(Base):
     
     # 🔗 Relationships: One-to-Many
     # This creates the list of Membership objects accessible via group.memberships
-    memberships: relationship[List["Membership"]] = relationship( # <-- UNCOMMENTED/FINALIZED
-        "Membership", 
-        back_populates="group", 
+    memberships = relationship(
+        "Membership",
+        back_populates="group",
         cascade="all, delete-orphan"
-    )
+    ) 
     
     def __repr__(self):
         return f"<Group(id={self.id}, name={self.name}, owner_id={self.owner_id})>"
