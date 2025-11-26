@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Form
 from sqlmodel import Session, select
 from app.models.user import User
 from app.core.db import engine
-from app.core.security import hash_password, verify_password, hash_password_secure 
+from app.core.security import verify_password, hash_password_secure 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
