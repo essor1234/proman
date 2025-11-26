@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 services:
   frontend:
     image: nginx
@@ -15,6 +16,8 @@ services:
 networks:
   promannet:
 =======
+=======
+>>>>>>> 7afed144 (update the auth.py in controllers and add more code in security.py)
 services:
   frontend:
     image: nginx
@@ -30,5 +33,8 @@ services:
 
 networks:
   promannet:
+<<<<<<< HEAD
 >>>>>>> 2f07d766 (update code in auth.py and security.py)
+=======
+>>>>>>> 7afed144 (update the auth.py in controllers and add more code in security.py)
     driver: bridge
