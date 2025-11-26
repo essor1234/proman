@@ -1,0 +1,413 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>File Service</title>
+    
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <!-- Load external CSS styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: 'Arial';
+
+            height: 1000px;
+
+            margin: 0px;
+        }
+
+        .stickyTopNavigationBar {
+            background-color: black;
+
+            border-bottom: 1px solid white;
+
+            position: sticky;
+            top: 0;
+
+            display: flex;
+            justify-content: space-between;
+        }
+            .buttonsLeftGroup {
+                display: flex;
+                flex-direction: row;
+            }
+                .buttonsLeftGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 200px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsLeftGroup .button:hover{
+                        background-color: white;
+                        color: black;
+
+                        cursor: pointer;
+                    }
+                    .buttonsLeftGroup .button.currentPage{
+                        background-color: white;
+                        color: black;
+
+                        cursor: default;
+                    }
+            .buttonsRightGroup {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+                .buttonsRightGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 150px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsRightGroup .button:hover{
+                        background-color: red;
+
+                        cursor: pointer;
+                    }
+
+        .header {
+            display: flex;
+            align-items: center;
+            
+            padding-top: 30px;
+            padding-left: 30px;
+            padding-bottom: 30px;
+        }
+            .logoLabel {
+                font-size: 30px;
+                font-weight: 900;
+            }
+
+        .contentArea {
+            display: flex;
+        }
+
+        .sideBar {
+            background-color: black;
+            
+            width: max-content;
+            height: 1000px;
+            
+            display: block;
+
+            padding: 10px;
+
+            border-radius: 0px 30px 0px 0px;
+        }
+            .createMenu {
+                background-color: black;
+                color: white;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                height: 20px;
+                
+                border: 1px solid white;
+                border-radius: 20px;
+
+                padding: 10px;
+
+                cursor: pointer;
+                transition: 600ms;
+                transition-delay: 300ms;
+            }
+                .createMenu:hover {
+                    background-color: white;
+                    color: black;
+
+                    height: 130px;
+
+                    transition: 600ms;
+                }
+                    .createMenu .subButtonContainer {
+                        margin-top: 10px;
+                        
+                        visibility: hidden;   
+                    }
+                        .createMenu .subButton {
+                            background-color: white;
+                            color: black;
+                            
+                            font-size: 20px;
+                            font-weight: bold;
+                            
+                            width: 180px;
+                            height: 40px;
+                            
+                            border: 1px solid black;
+                            border-radius: 40px;
+
+                            display: flex;
+
+                            padding-left: 10px;
+                            padding-right: 10px;
+
+                            cursor: pointer;
+                            transition: 300ms;
+                        }
+                            .createMenu .subButton:hover {
+                                background-color: black;
+                                color: white;
+                            }
+            
+            .uploadMenu {
+                background-color: black;
+                color: white;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                height: 20px;
+                
+                border: 1px solid white;
+                border-radius: 20px;
+
+                padding: 10px;
+
+                cursor: pointer;
+                transition: 600ms;
+                transition-delay: 300ms;
+            }
+                .uploadMenu:hover {
+                    background-color: white;
+                    color: black;
+
+                    height: 130px;
+
+                    transition: 600ms;
+                }
+                    .uploadMenu .subButtonContainer {
+                        margin-top: 10px;
+                        
+                        visibility: hidden;
+                    }
+                        .uploadMenu .subButton {
+                            background-color: white;
+                            color: black;
+                            
+                            font-size: 20px;
+                            font-weight: bold;
+                            
+                            width: 180px;
+                            height: 40px;
+                            
+                            border: 1px solid black;
+                            border-radius: 20px;
+
+                            display: flex;
+
+                            padding-left: 10px;
+                            padding-right: 10px;
+
+                            cursor: pointer;
+                            transition: 300ms;
+                        }
+                            .uploadMenu .subButton:hover {
+                                background-color: black;
+                                color: white;
+                            }
+
+        .mainContent {
+            flex: 1;
+            
+            background-color: black;
+
+            padding: 10px;
+
+            margin-left: 10px;
+
+            border-radius: 30px 0px 0px 0px;
+        }
+            .content {
+                background-color: white;
+
+                width: max-content;
+                height: max-content;
+
+                border-radius: 30px;
+
+                padding: 10px;
+
+                opacity: 0;
+                animation: fadeIn 1s ease-out forwards;
+            }
+                .welcome {
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+    </style>
+
+    <script>
+        /// 🚧 Check login status IMMEDIATELY ///
+        const username = localStorage.getItem("username");
+        const user_id = localStorage.getItem("user_id");
+
+        if (!username || !user_id) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+
+<body>
+    <div class="stickyTopNavigationBar">
+        <div class="buttonsLeftGroup">
+            <div class="button currentPage">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" width="20px" height="13px" style="margin-right: 10px;">
+                <label>File Service</label>
+            </div>
+            
+            <div class="button" onclick="location.href='groupService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">Group Service</label>
+            </div>
+            
+            <div class="button" onclick="location.href='projectService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">Project Service</label>
+            </div>
+        </div>
+
+        <div class="buttonsRightGroup">
+            <div class="button" onclick=logout()>
+                <label style="cursor: pointer;">Log out</label>
+                <i class="fa-solid fa-right-from-bracket" style="margin-left: 10px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" width="40px" height="27px" style="margin-right: 10px;">
+        <label class="logoLabel">File Service</label>
+    </div>
+    <div class="contentArea">
+        <div class="sideBar">  
+            <div class="createMenu" id="createMenu">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-circle-plus" style="margin-right: 10px;"></i>
+                    <label style="cursor: pointer;">Create</label>
+                </div>
+
+                <div class="subButtonContainer" id="createSubButtonContainer">
+                    <div class="subButton">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fa-regular fa-file" style="margin-right: 10px;"></i>
+                            <label style="cursor: pointer;">File</label>
+                        </div>
+                    </div>
+
+                    <div class="subButton" style="margin-top: 10px;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fa-regular fa-folder" style="margin-right: 10px;"></i>
+                            <label style="cursor: pointer;">Folder</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="uploadMenu" id="uploadMenu" style="margin-top: 10px;">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa-solid fa-upload" style="margin-right: 10px;"></i>
+                    <label style="cursor: pointer;">Upload</label>
+                </div>
+
+                <div class="subButtonContainer" id="uploadSubButtonContainer">
+                    <div class="subButton">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fa-regular fa-file" style="margin-right: 10px;"></i>
+                            <label style="cursor: pointer;">File</label>
+                        </div>
+                    </div>
+
+                    <div class="subButton" style="margin-top: 10px;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fa-regular fa-folder" style="margin-right: 10px;"></i>
+                            <label style="cursor: pointer;">Folder</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mainContent">
+            <div class="content">
+                <label class="welcome">Hello, <span id="usernameDisplay"></span>!</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /// Display username dynamically ///
+        document.getElementById("usernameDisplay").textContent = localStorage.getItem("username");
+
+        function logout() {
+            const confirmed = confirm("Log out? We will miss you!");
+            if (confirmed) {
+                /// Remove user info from localStorage ///
+                localStorage.removeItem("username");
+                localStorage.removeItem("user_id");
+
+                window.location.href = "home.html";
+            }
+        }
+
+        /// Show/Hide menus on hover ///
+        const createMenu = document.getElementById("createMenu");
+        const createSubButtonContainer = document.getElementById("createSubButtonContainer");
+
+        const uploadMenu = document.getElementById("uploadMenu");
+        const uploadSubButtonContainer = document.getElementById("uploadSubButtonContainer");
+
+        createMenu.addEventListener("mouseover", () => {
+            createSubButtonContainer.style.visibility = "visible";
+        });
+        createMenu.addEventListener("mouseout", () => {
+            createSubButtonContainer.style.visibility = "hidden";
+        });
+
+        uploadMenu.addEventListener("mouseover", () => {
+            uploadSubButtonContainer.style.visibility = "visible";
+        });
+        uploadMenu.addEventListener("mouseout", () => {
+            uploadSubButtonContainer.style.visibility = "hidden";
+        });
+    </script>
+</body>
+</html>

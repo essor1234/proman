@@ -1,56 +1,206 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
+    <meta charset="utf-8">
+
     <title>Home</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
     
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <!-- Load external CSS styles -->
+    <link rel="stylesheet" href="styles.css">
+
     <style>
         body {
-            background-image: url('https://winnie2802.github.io/Website-Visualization/backgroundImage.jpg');
-            background-size: cover;
-            background-attachment: fixed;
+            font-family: Arial;
+
+            height: 1000px;
+
+            margin: 0px;
+        }
+
+        .stickyTopNavigationBar {
+            background-color: black;
+
+            border-bottom: 1px solid white;
+
+            position: sticky;
+            top: 0;
+
+            display: flex;
+            justify-content: space-between;
+        }
+            .buttonsLeftGroup {
+                display: flex;
+                flex-direction: row;
+            }
+                .buttonsLeftGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 200px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsLeftGroup .button:hover{
+                        background-color: white;
+                        color: black;
+
+                        cursor: pointer;
+                    }
+                    .buttonsLeftGroup .button.currentPage{
+                        background-color: white;
+                        color: black;
+
+                        cursor: default;
+                    }
+            .buttonsRightGroup {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+                .buttonsRightGroup .button {
+                    background-color: black;
+                    color: white;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: 150px;
+                    height: 40px;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    transition: 300ms;
+                }
+                    .buttonsRightGroup .button:hover{
+                        background-color: green;
+
+                        cursor: pointer;
+                    }
+
+        .header {
+            display: flex;
+            align-items: center;
+            
+            padding-top: 30px;
+            padding-left: 30px;
+            padding-bottom: 30px;
+        }
+            .logoLabel {
+                font-size: 30px;
+                font-weight: 900;
+            }
+
+        .contentArea {
+            display: flex;
+        }
+
+        .sideBar {
             background-color: black;
             
-            height: 10000px;
+            width: max-content;
+            height: 1000px;
             
-            margin: 0;
-            
-            font-family: Arial;
+            display: block;
+
+            padding: 10px;
+
+            border-radius: 0px 30px 0px 0px;
         }
+            .sideBar .button {
+                background-color: black;
+                color: white;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                height: 40px;
+                
+                border: none;
+                border-radius: 20px;
 
-        .loginButton {
-            font-size: 20px;
-            font-weight: bold;
+                display: flex;
+                align-items: center;
 
-            background-color: white;
+                padding-left: 10px;
 
-            width: 120px;
-            height: 60px;
+                margin-bottom: 10px;
 
-            border: none;
-            border-radius: 30px;
+                cursor: pointer;
+                transition: 300ms;
+            }
+                .sideBar .button:hover {
+                    background-color: white;
+                    color: black;
+                }
+        .mainContent {
+            flex: 1;
             
-            position: fixed;
-            top: 30px;
-            right: 30px;
+            background-color: black;
 
-            cursor: pointer;
-            
-            transition: 0.3s;
-        }
-        .loginButton:hover {
-            color: white;
-            background-color: #67ab9f;
+            padding: 10px;
+
+            margin-left: 10px;
+
+            border-radius: 30px 0px 0px 0px;
         }
     </style>
 </head>
-<body>
-    <button class="loginButton" onclick="location.href='login.html'">Log In</button>
 
-    <script>
+<body>
+    <div class="stickyTopNavigationBar">
+        <div class="buttonsLeftGroup">
+            
+        </div>
         
-    </script>
+        <div class="buttonsRightGroup">
+            <div class="button" onclick="location.href='login.html'">
+                <i class="fa-solid fa-right-to-bracket" style="margin-right: 10px;"></i>
+                <label style="cursor: pointer;">Log in</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/homeLogo.png" width="40px" height="40px" style="margin-right: 10px;">
+        <label class="logoLabel">Home</label>
+    </div>
+    
+    <div class="contentArea">
+        <div class="sideBar">  
+            <div class="button" onclick="location.href='login.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" width="20px" height="13px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">File Service</label>
+            </div>
+
+            <div class="button" onclick="location.href='login.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">Group Service</label>
+            </div>
+            
+            <div class="button" onclick="location.href='login.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" width="20px" height="20px" style="margin-right: 10px;">
+                <label style="cursor: pointer;">Project Service</label>
+            </div>
+        </div>
+        
+        <div class="mainContent">
+
+        </div>
+    </div>
+    
+    <!-- Load external JavaScript -->
+    <script src="scripts.js"></script>
 </body>
 </html>

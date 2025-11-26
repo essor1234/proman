@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import Session, select
 from app.models.user import User
 from app.core.db import engine
-from app.core.security import hash_password, verify_password
+from app.core.security import hash_password, verify_password, hash_password_secure
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -14,7 +14,7 @@ def register(username: str, email: str, password: str):
         if existing:
             raise HTTPException(status_code=400, detail="Username already exists")
 
-        user = User(username=username, email=email, hashed_password=hash_password(password))
+        user = User(username=username, email=email, hashed_password=hash_password_secure(password)) # ← Now enforces 10+ chars + uppercase + etc.
         session.add(user)
         session.commit()
         session.refresh(user)
