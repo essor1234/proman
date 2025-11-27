@@ -25,14 +25,14 @@ class GroupController:
             name=group_data.name,
             description=group_data.description,
             visibility=group_data.visibility,
-            owner_id=str(owner_id) 
+            owner_id=owner_id
         )
         
         # 2. Create the Membership record for the owner
         # Uses group.id (which is now an auto-generated int)
         self.membership_repo.create(
-            group_id=group.id,  # group.id is already a string from the repo
-            user_id=str(owner_id),
+            group_id=group.id,
+            user_id=owner_id,
             role=MembershipRole.OWNER,
             status=MembershipStatus.ACTIVE
         )
@@ -47,7 +47,7 @@ class GroupController:
         """Lists groups for a user with pagination metadata."""
         skip = (page - 1) * size
         groups, total = self.group_repo.list_user_groups(
-            user_id=str(user_id),
+            user_id=user_id,
             skip=skip,
             limit=size,
             search=search
