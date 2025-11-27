@@ -1,21 +1,12 @@
-from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint # <-- ADD UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, relationship
 import uuid
 import enum
 from datetime import datetime
-from typing import TYPE_CHECKING # For type checking if Group is in another file
-
-# Use standard String for SQLite (no native UUID support)
-try:
-    from sqlalchemy.dialects.postgresql import UUID
-    use_uuid = True
-except ImportError:
-    use_uuid = False
+from typing import TYPE_CHECKING
 
 from ..core.database import Base
 
-# Optional: For type hinting if Group is defined elsewhere
 if TYPE_CHECKING:
     from .group import Group
 
@@ -41,18 +32,13 @@ class Membership(Base):
     """
     __tablename__ = "memberships"
     
-    # Primary key
-    if use_uuid:
-        id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-        group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-        invited_by = Column(UUID(as_uuid=True), nullable=True)
-    else:
-        # For SQLite: store UUID as string
-        id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(String(36), nullable=False, index=True)
-        invited_by = Column(String(36), nullable=True)
+    # SQLite Configuration: Always use String(36)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    
+    # Foreign Keys and IDs must be Strings
+    group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(String(36), nullable=False, index=True)
+    invited_by = Column(String(36), nullable=True)
     
     # Membership details
     role = Column(
@@ -71,16 +57,13 @@ class Membership(Base):
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # 🔗 Relationship: Many-to-One
-    # The 'group' property provides the ORM linkage back to the Group object.
+    # 🔗 Relationship
     group: Mapped["Group"] = relationship("Group", back_populates="memberships")
 
-    
     def __repr__(self):
         return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id}, role={self.role})>"
     
     def to_dict(self):
-        """Convert model to dictionary"""
         return {
             "id": str(self.id),
             "group_id": str(self.group_id),
@@ -93,7 +76,6 @@ class Membership(Base):
         }
     
     # 🔑 Data Integrity Constraint
-    # Ensures only one Membership exists for a given user in a given group.
-    __table_args__ = ( # <-- UNCOMMENTED AND APPLIED
+    __table_args__ = (
         UniqueConstraint('group_id', 'user_id', name='unique_group_user'),
     )

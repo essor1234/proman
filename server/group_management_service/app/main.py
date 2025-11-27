@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, FastAPI
 from sqlalchemy.orm import Session
 from uuid import UUID
 from fastapi import FastAPI
-from .core.database import get_db
+from .core.database import get_db, init_db
 from .core.security import get_current_user
 from .controllers.membership_controller import MembershipController
 from .schemas.membership_schemas import (
@@ -10,8 +10,18 @@ from .schemas.membership_schemas import (
     MembershipResponse
 )
 from .routes import group_routes, invitation_routes , membership_routes
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="Group Service API")
+# Define lifespan to run tasks on startup
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Starting up... creating database tables...")
+    init_db()  # <--- This creates the tables based on your models
+    yield
+    print("🛑 Shutting down...")
+
+app = FastAPI(title="Group Service API", lifespan=lifespan)
 
 # include routers
 app.include_router(group_routes.router)

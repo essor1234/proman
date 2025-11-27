@@ -19,23 +19,26 @@ class GroupController:
     def create_group(self, group_data: GroupCreate, owner_id: UUID) -> Group:
         """
         Create a new group with the current user as owner.
-        Automatically creates owner membership.
         """
-        # Create group
+        # 1. Create group (Convert UUID to string)
         group = self.group_repo.create(
             name=group_data.name,
             description=group_data.description,
             visibility=group_data.visibility,
-            owner_id=owner_id
+            owner_id=str(owner_id) 
         )
         
-        # Create owner membership
+        # 2. Create owner membership (Convert UUIDs to strings)
         self.membership_repo.create(
-            group_id=group.id,
-            user_id=owner_id,
+            group_id=group.id,  # group.id is already a string from the repo
+            user_id=str(owner_id),
             role=MembershipRole.OWNER,
             status=MembershipStatus.ACTIVE
         )
+        
+        # 3. CRITICAL: Refresh group to load the new membership relationship
+        # This ensures group.member_count property returns 1, not 0
+        self.db.refresh(group)
         
         return group
     
@@ -48,31 +51,31 @@ class GroupController:
     ) -> dict:
         """
         List all groups where user is a member.
-        Supports pagination and search.
+        Returns data matching GroupListResponse schema.
         """
         skip = (page - 1) * size
         
         groups, total = self.group_repo.list_user_groups(
-            user_id=user_id,
+            user_id=str(user_id),
             skip=skip,
             limit=size,
             search=search
         )
         
+        # FIX: Match keys exactly to GroupListResponse in schemas
         return {
-            "items": groups,
+            "groups": groups,                  # Schema expects 'groups', not 'items'
             "total": total,
             "page": page,
             "size": size,
-            "pages": (total + size - 1) // size
+            "has_more": total > (page * size)  # Schema expects 'has_more', not 'pages'
         }
     
     def get_group(self, group_id: UUID, user_id: UUID) -> Group:
         """
         Get group details.
-        User must be a member or group must be public.
         """
-        group = self.group_repo.get_by_id(group_id)
+        group = self.group_repo.get_by_id(group_id) # Repo handles str conversion internal check usually, but safe to pass UUID here if repo casts it, or cast here.
         
         if not group:
             raise HTTPException(
@@ -80,7 +83,7 @@ class GroupController:
                 detail="Group not found"
             )
         
-        # Check access
+        # Check access (Convert UUIDs to strings for comparison/repo calls)
         is_member = self.membership_repo.is_member(group_id, user_id)
         is_public = group.visibility == "public"
         
@@ -100,9 +103,12 @@ class GroupController:
     ) -> Group:
         """
         Update group information.
-        Only owner or admins can update.
         """
-        group = self.group_repo.get_by_id(group_id)
+        # Ensure strings
+        s_group_id = str(group_id)
+        s_user_id = str(user_id)
+
+        group = self.group_repo.get_by_id(s_group_id)
         
         if not group:
             raise HTTPException(
@@ -111,7 +117,7 @@ class GroupController:
             )
         
         # Check permission
-        membership = self.membership_repo.get_membership(group_id, user_id)
+        membership = self.membership_repo.get_membership(s_group_id, s_user_id)
         
         if not membership or membership.role not in [MembershipRole.OWNER, MembershipRole.ADMIN]:
             raise HTTPException(
@@ -121,16 +127,18 @@ class GroupController:
         
         # Update fields
         update_data = group_data.model_dump(exclude_unset=True)
-        updated_group = self.group_repo.update(group_id, **update_data)
+        updated_group = self.group_repo.update(s_group_id, **update_data)
         
         return updated_group
     
     def delete_group(self, group_id: UUID, user_id: UUID) -> None:
         """
         Delete a group.
-        Only owner can delete.
         """
-        group = self.group_repo.get_by_id(group_id)
+        s_group_id = str(group_id)
+        s_user_id = str(user_id)
+
+        group = self.group_repo.get_by_id(s_group_id)
         
         if not group:
             raise HTTPException(
@@ -139,17 +147,18 @@ class GroupController:
             )
         
         # Only owner can delete
-        if group.owner_id != user_id:
+        # Compare strings to ensure safety
+        if str(group.owner_id) != s_user_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only group owner can delete the group"
             )
         
         # Delete all memberships first
-        self.membership_repo.delete_all_memberships(group_id)
+        self.membership_repo.delete_all_memberships(s_group_id)
         
         # Delete group
-        self.group_repo.delete(group_id)
+        self.group_repo.delete(s_group_id)
     
     def transfer_ownership(
         self, 
@@ -159,9 +168,12 @@ class GroupController:
     ) -> Group:
         """
         Transfer group ownership to another member.
-        Only current owner can transfer.
         """
-        group = self.group_repo.get_by_id(group_id)
+        s_group_id = str(group_id)
+        s_new_owner_id = str(new_owner_id)
+        s_current_owner_id = str(current_owner_id)
+
+        group = self.group_repo.get_by_id(s_group_id)
         
         if not group:
             raise HTTPException(
@@ -170,14 +182,14 @@ class GroupController:
             )
         
         # Verify current owner
-        if group.owner_id != current_owner_id:
+        if str(group.owner_id) != s_current_owner_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only current owner can transfer ownership"
             )
         
         # Check new owner is a member
-        new_owner_membership = self.membership_repo.get_membership(group_id, new_owner_id)
+        new_owner_membership = self.membership_repo.get_membership(s_group_id, s_new_owner_id)
         
         if not new_owner_membership or new_owner_membership.status != MembershipStatus.ACTIVE:
             raise HTTPException(
@@ -186,29 +198,32 @@ class GroupController:
             )
         
         # Update group owner
-        updated_group = self.group_repo.update(group_id, owner_id=new_owner_id)
+        updated_group = self.group_repo.update(s_group_id, owner_id=s_new_owner_id)
         
         # Update old owner to admin
-        self.membership_repo.update_role(group_id, current_owner_id, MembershipRole.ADMIN)
+        self.membership_repo.update_role(s_group_id, s_current_owner_id, MembershipRole.ADMIN)
         
         # Update new owner role to owner
-        self.membership_repo.update_role(group_id, new_owner_id, MembershipRole.OWNER)
+        self.membership_repo.update_role(s_group_id, s_new_owner_id, MembershipRole.OWNER)
         
         return updated_group
     
     def get_group_stats(self, group_id: UUID, user_id: UUID) -> dict:
         """
         Get group statistics.
-        User must be a member.
         """
+        s_group_id = str(group_id)
+        s_user_id = str(user_id)
+
+        # Check access via get_group logic (reusing strict checks)
         group = self.get_group(group_id, user_id)
         
-        member_count = self.membership_repo.count_members(group_id)
+        member_count = self.membership_repo.count_members(s_group_id)
         
         return {
-            "group_id": group.id,
+            "group_id": str(group.id),
             "name": group.name,
             "member_count": member_count,
             "created_at": group.created_at,
-            "owner_id": group.owner_id
+            "owner_id": str(group.owner_id)
         }

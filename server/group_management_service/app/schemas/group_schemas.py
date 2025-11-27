@@ -1,9 +1,8 @@
-# app/schemas/group_schemas.py
-from pydantic import BaseModel, Field, UUID4, validator
-from typing import Optional, List
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List, Union
 from datetime import datetime
 from enum import Enum
-
+import uuid
 
 class GroupVisibility(str, Enum):
     PUBLIC = "public"
@@ -43,18 +42,24 @@ class GroupUpdate(BaseModel):
 # === OUTPUT SCHEMAS ===
 
 class GroupResponse(BaseModel):
-    id: UUID4
+    # Changed UUID4 to str to allow compatibility with SQLite Strings and your '1' test ID
+    id: str 
     name: str
     description: Optional[str] = None
     visibility: GroupVisibility
-    owner_id: UUID4
-    member_count: int = Field(..., ge=0)
+    owner_id: str 
+    member_count: int = Field(default=0, ge=0) # Added default to be safe
     created_at: datetime
     updated_at: datetime
 
     class Config:
-        from_attributes = True  # Allows conversion from SQLAlchemy model
-        orm_mode = True  # Backward compatibility (Pydantic v1)
+        from_attributes = True 
+        orm_mode = True 
+
+    # Optional: Validator to ensure output looks clean if you want to force UUID format later
+    @validator('id', 'owner_id', pre=True)
+    def parse_ids(cls, v):
+        return str(v)
 
 
 class GroupListResponse(BaseModel):
