@@ -1,36 +1,35 @@
-from pydantic import BaseModel, Field, UUID4
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 from enum import Enum
-
 
 class MembershipRole(str, Enum):
     OWNER = "owner"
     ADMIN = "admin"
     MEMBER = "member"
 
-
 class MembershipCreate(BaseModel):
-    user_id: UUID4
-    role: MembershipRole = Field(default=MembershipRole.MEMBER)
-
-
-class MembershipUpdate(BaseModel):
-    role: MembershipRole = Field(..., description="New role for the member")
-
-
-class InvitationCreate(BaseModel):
-    user_id: Optional[UUID4] = None
+    """Input for adding a member manually."""
+    user_id: int
     role: MembershipRole = MembershipRole.MEMBER
 
+class MembershipUpdate(BaseModel):
+    """Input for updating a member's role."""
+    role: MembershipRole
+
+class InvitationCreate(BaseModel):
+    """Input for sending an invitation."""
+    user_id: int
+    role: MembershipRole = MembershipRole.MEMBER
 
 class MembershipResponse(BaseModel):
-    id: UUID4
-    group_id: UUID4
-    user_id: UUID4
+    """Output for membership details."""
+    id: int
+    group_id: int
+    user_id: int
     role: MembershipRole
-    status: Optional[str] = None
-    invited_by: Optional[UUID4] = None
+    status: str
+    invited_by: Optional[int] = None
     joined_at: datetime
     updated_at: Optional[datetime] = None
 

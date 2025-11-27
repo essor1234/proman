@@ -1,80 +1,51 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from uuid import UUID
-from typing import List
+from typing import Optional
 
 from ..repositories.membership_repository import MembershipRepository
-from ..models.membership import MembershipRole, MembershipStatus, Membership
-
+from ..models.membership import MembershipRole, MembershipStatus
 
 class MembershipController:
+    """Business Logic for Memberships."""
+
     def __init__(self, db: Session):
         self.db = db
         self.repo = MembershipRepository(db)
 
-    def invite_member(self, group_id: UUID, invitation_data, invited_by: str):
-        """Create a pending membership (invitation)."""
-        try:
-            membership = self.repo.create(
-                group_id=group_id,
-                user_id=invitation_data.user_id,
-                role=invitation_data.role,
-                status=MembershipStatus.PENDING,
-                invited_by=UUID(invited_by) if invited_by else None,
-            )
-            return membership
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-
-    def add_member(self, group_id: UUID, membership_data, added_by: str = None):
-        """Add a member directly to a group (immediate membership)."""
-        try:
-            user_id = membership_data.user_id
-            role = membership_data.role
+    def add_member(self, group_id: int, membership_data, added_by: int = None):
+        """Adds a new member directly (skipping invitation)."""
+        user_id = membership_data.user_id
+        
+        # Prevent duplicates
+        if self.repo.get_membership(group_id, user_id):
+            raise HTTPException(status_code=400, detail="User already member")
             
-            # Check if already a member
-            existing = self.repo.get_membership(group_id, user_id)
-            if existing:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="User is already a member of this group"
-                )
-            
-            # Add as active member
-            membership = self.repo.create(
-                group_id=group_id,
-                user_id=user_id,
-                role=role,
-                status=MembershipStatus.ACTIVE,
-                invited_by=UUID(added_by) if added_by else None
-            )
-            return membership
-        except HTTPException:
-            raise
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        return self.repo.create(
+            group_id=group_id,
+            user_id=user_id,
+            role=membership_data.role,
+            status=MembershipStatus.ACTIVE,
+            invited_by=added_by
+        )
 
-    def list_members(self, group_id: UUID, user_id: str, status_filter: str = None):
-        """List members. Requester must be a member."""
+    def list_members(self, group_id: int, user_id: int, status_filter: str = None):
+        """Lists members if the requester is a member."""
         if not self.repo.is_member(group_id, user_id):
-             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group")
-             
+             raise HTTPException(status_code=403, detail="Not a member")
         return self.repo.list_members(group_id, status_filter)
 
-    def get_member(self, group_id: UUID, user_id: UUID, requester_id: str):
-        """Get member details."""
-        # Check access
+    def get_member(self, group_id: int, user_id: int, requester_id: int):
+        """Gets single member details."""
         if not self.repo.is_member(group_id, requester_id):
-             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group")
+             raise HTTPException(status_code=403, detail="Not a member")
         
         member = self.repo.get_membership(group_id, user_id)
         if not member:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found")
+            raise HTTPException(status_code=404, detail="Member not found")
         return member
-
-    def update_member(self, group_id: UUID, user_id: UUID, membership_data, updated_by: str):
-        """Update member role."""
-        # Check permissions
+    def update_member(self, group_id: int, user_id: int, membership_data, updated_by: int):
+        """Update member role. Only Admin/Owner can do this."""
+        # 1. Check permissions (updated_by must be admin/owner)
         if not self.repo.is_admin_or_owner(group_id, updated_by):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins/owner can update members")
         
@@ -82,36 +53,27 @@ class MembershipController:
         if not target_member:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found")
             
-        # Cannot change owner's role
+        # 2. Cannot change the Owner's role
         if target_member.role == MembershipRole.OWNER:
              raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot change role of the group owner")
 
         return self.repo.update_role(group_id, user_id, membership_data.role)
 
-    def remove_member(self, group_id: UUID, user_id: UUID, removed_by: str):
-        """Remove member from group."""
-        target_member = self.repo.get_membership(group_id, user_id)
-        if not target_member:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Member not found")
-        
-        # Logic: 
-        # 1. User removing themselves (leave)
-        # 2. Owner/Admin removing others
-        
-        is_self = str(user_id) == str(removed_by)
-        is_admin = self.repo.is_admin_or_owner(group_id, removed_by)
-        
-        if not (is_self or is_admin):
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions")
-            
-        # Cannot remove owner
-        if target_member.role == MembershipRole.OWNER:
-             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot remove the group owner")
-             
-        self.repo.delete(group_id, user_id)
+    def invite_member(self, group_id: int, invitation_data, invited_by: int):
+        """Create a pending membership."""
+        try:
+            return self.repo.create(
+                group_id=group_id,
+                user_id=invitation_data.user_id,
+                role=invitation_data.role,
+                status=MembershipStatus.PENDING,
+                invited_by=invited_by,
+            )
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-    def accept_invitation(self, group_id: UUID, user_id: str):
-        """Accept a pending invitation: set status to ACTIVE."""
+    def accept_invitation(self, group_id: int, user_id: int):
+        """Accept a pending invitation."""
         membership = self.repo.get_membership(group_id, user_id)
         if not membership:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invitation not found")
@@ -119,21 +81,43 @@ class MembershipController:
         if membership.status != MembershipStatus.PENDING:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation not pending")
 
-        updated = self.repo.update_status(group_id, user_id, MembershipStatus.ACTIVE)
-        return updated
+        return self.repo.update_status(group_id, user_id, MembershipStatus.ACTIVE)
 
-    def decline_invitation(self, group_id: UUID, user_id: str):
-        """Decline/remove a pending invitation."""
+    def decline_invitation(self, group_id: int, user_id: int):
+        """Decline/Delete a pending invitation."""
         deleted = self.repo.delete(group_id, user_id)
         if not deleted:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invitation not found")
 
-    def leave_group(self, group_id: UUID, user_id: str):
-        """Remove a membership (user leaves). Owner cannot leave."""
-        # Check if owner
+    def leave_group(self, group_id: int, user_id: int):
+        """User leaves group."""
         if self.repo.is_owner(group_id, user_id):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Owner cannot leave the group")
 
         deleted = self.repo.delete(group_id, user_id)
         if not deleted:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Membership not found")
+    def remove_member(self, group_id: int, user_id: int, removed_by: int):
+        """
+        Removes a member.
+        Logic: 
+        1. User can remove themselves (leave).
+        2. Admins/Owner can remove others.
+        3. Owner cannot be removed.
+        """
+        target_member = self.repo.get_membership(group_id, user_id)
+        if not target_member:
+            raise HTTPException(status_code=404, detail="Member not found")
+        
+        is_self = user_id == removed_by
+        is_admin = self.repo.is_admin_or_owner(group_id, removed_by)
+        
+        # Check permissions
+        if not (is_self or is_admin):
+            raise HTTPException(status_code=403, detail="Insufficient permissions")
+            
+        # Protect the Owner
+        if target_member.role == MembershipRole.OWNER:
+             raise HTTPException(status_code=400, detail="Cannot remove owner")
+             
+        self.repo.delete(group_id, user_id)
