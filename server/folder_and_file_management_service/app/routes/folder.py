@@ -16,6 +16,10 @@ from app.controllers.folder import create_folder_in_project, get_project_logic
 from app.models.folder import FolderDB
 from app.models.folderManager import FolderManager
 
+
+
+
+
 router = APIRouter(prefix="/folders", tags=["folders"])
 
 
@@ -48,10 +52,10 @@ def share_folder_with_project(
 @router.post("/project/{projectid}", response_model=FolderRead, status_code=201)
 def create_folder_in_project_route(
     projectid: str,
-    folder_in: FolderCreate,
+    folder_id: FolderCreate,
     db: Session = Depends(get_db)
 ):
-    return create_folder_in_project(folder_in, projectid, db)
+    return create_folder_in_project(folder_id, projectid, db)
 
 @router.get("/project/{projectid}", response_model=list[FolderRead])
 def get_folders_in_project(projectid: str, db: Session = Depends(get_db)):
