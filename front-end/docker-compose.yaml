@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   frontend:
     image: nginx
@@ -13,4 +14,21 @@ services:
 
 networks:
   promannet:
+=======
+services:
+  frontend:
+    image: nginx
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./pages:/usr/share/nginx/html
+    networks:
+      - promannet
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+networks:
+  promannet:
+>>>>>>> 2f07d766 (update code in auth.py and security.py)
     driver: bridge
