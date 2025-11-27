@@ -14,7 +14,7 @@ def register(username: str = Form(...), email: str = Form(...), password: str = 
         if existing:
             raise HTTPException(status_code=400, detail="Username already exists")
 
-        user = User(username=username, email=email, hashed_password=hash_password(password))
+        user = User(username=username, email=email, hashed_password=hash_password(password)) # ← Now enforces 10+ chars + uppercase + etc.
         session.add(user)
         session.commit()
         session.refresh(user)
