@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Form
 from sqlmodel import Session, select
 from app.models.user import User
 from app.core.db import engine
@@ -8,21 +8,21 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 # 🧩 REGISTER
 @router.post("/register")
-def register(username: str, email: str, password: str):
+def register(username: str = Form(...), email: str = Form(...), password: str = Form(...)):
     with Session(engine) as session:
         existing = session.exec(select(User).where(User.username == username)).first()
         if existing:
             raise HTTPException(status_code=400, detail="Username already exists")
 
-        user = User(username=username, email=email, hashed_password=hash_password(password))
+        user = User(username=username, email=email, hashed_password=hash_password(password)) # ← Now enforces 10+ chars + uppercase + etc.
         session.add(user)
         session.commit()
         session.refresh(user)
-        return {"message": "User registered successfully", "user_id": user.id}
+        return {"message": "User registered successfully", "user_id": user.id, "username": user.username}
 
 # 🔑 LOGIN
 @router.post("/login")
-def login(username: str, password: str):
+def login(username: str = Form(...), password: str = Form(...)):
     with Session(engine) as session:
         user = session.exec(select(User).where(User.username == username)).first()
         if not user:
