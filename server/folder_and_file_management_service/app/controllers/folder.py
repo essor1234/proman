@@ -11,10 +11,7 @@ import uuid
 import re
 
 
-# Example of a potentially problematic base path definition
 SCRIPT_DIR = Path(__file__).resolve().parent
-# You might be trying to navigate up to a higher 'app' directory
-# or assuming the code is one level deeper than it is.
 DEFAULT_FOLDER_PATH = SCRIPT_DIR.parent.parent /"storage"
 
 """Create a folder in the filesystem and link it to a project in the DB."""

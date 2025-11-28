@@ -35,13 +35,15 @@ def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(secu
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-@router.post("/", response_model=FileRead, status_code=status.HTTP_201_CREATED)
+@router.post("/{projectid}", response_model=FileCreate, status_code=status.HTTP_201_CREATED)
 def create_file(
     file_in: FileCreate,
     user_id: int = Depends(get_current_user_id),   # ← Automatically extracted
-    db: Session = Depends(get_db)
+    projectid: str ="",
+    db: Session = Depends(get_db),
+
 ):
-    return create_file_logic_with_userid(file_in, user_id, db)
+    return create_file_logic_with_userid(file_in, user_id, db, projectid=projectid)
 
 @router.get("/{file_id}", response_model=FileRead)
 def read_file(file_id: int, db=Depends(get_db)):
