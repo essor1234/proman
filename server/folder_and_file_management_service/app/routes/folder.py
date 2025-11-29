@@ -1,5 +1,7 @@
 # app/routes/folder.py
+from http.client import HTTPException
 from fastapi import APIRouter, Depends, status
+from sqlmodel import Session, select
 
 from app.core.database import get_db
 from app.controllers.folder import (
@@ -10,8 +12,63 @@ from app.controllers.folder import (
     delete_folder_logic,
 )
 from app.schemas.folder import FolderCreate, FolderRead, FolderUpdate
+from app.controllers.folder import create_folder_in_project, get_project_logic
+from app.models.folder import FolderDB
+from app.models.folderManager import FolderManager
+
+
+
+
 
 router = APIRouter(prefix="/folders", tags=["folders"])
+
+
+@router.post("/{folder_id}/share/project/{projectid}", status_code=201)
+def share_folder_with_project(
+    folder_id: int,
+    projectid: str,
+    db: Session = Depends(get_db)
+):
+    # Validate both exist
+    from app.controllers.folder import get_folder_logic
+    get_folder_logic(folder_id, db)
+    get_project_logic(projectid)
+
+    # Prevent duplicate
+    exists = db.exec(
+        select(FolderManager).where(
+            FolderManager.folderId == folder_id,
+            FolderManager.projectid == projectid
+        )
+    ).first()
+    if exists:
+        raise HTTPException(400, "Folder already in project")
+
+    link = FolderManager(folderId=folder_id, projectid=projectid)
+    db.add(link)
+    db.commit()
+    return {"message": "Folder shared successfully"}
+
+@router.post("/project/{projectid}", response_model=FolderRead, status_code=201)
+def create_folder_in_project_route(
+    projectid: str,
+    folder_id: FolderCreate,
+    db: Session = Depends(get_db)
+):
+    return create_folder_in_project(folder_id, projectid, db)
+
+@router.get("/project/{projectid}", response_model=list[FolderRead])
+def get_folders_in_project(projectid: str, db: Session = Depends(get_db)):
+    # Validate project exists
+    get_project_logic(projectid)
+
+    stmt = (
+        select(FolderDB)
+        .join(FolderManager)
+        .where(FolderManager.projectid == projectid)
+    )
+    folders = db.exec(stmt).all()
+    return [FolderRead.from_orm(f) for f in folders]
 
 
 @router.post("/", response_model=FolderRead, status_code=status.HTTP_201_CREATED)

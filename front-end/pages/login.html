@@ -1,238 +1,239 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <title>Log In</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <title>Log in</title>
+    
     <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <!-- Load external CSS styles -->
+    <link rel="stylesheet" href="styles.css">
     
     <style>
         body {
-            background-image: url('https://winnie2802.github.io/Website-Visualization/backgroundImage.jpg');
+            background-color: black;
+            background-image: url('https://winnie2802.github.io/Website-Visualization/images/backgroundImage.jpg');
             background-size: cover;
             background-attachment: fixed;
-            background-color: black;
-            
-            margin: 0;
             
             font-family: Arial;
+            
+            margin: 0;
         }
 
-        .homeButton {
-            font-size: 20px;
-            font-weight: bold;
-
-            background-color: white;
-
-            width: 120px;
-            height: 60px;
-
-            border: none;
-            border-radius: 30px;
-
-            margin: 30px;
-
-            cursor: pointer;
-
-            transition: 300ms;
+        .header {
+            display: flex;
+            align-items: center;
+            
+            padding-top: 20px;
+            padding-left: 20px;
+            padding-bottom: 20px;
         }
-        .homeButton:hover {
-            color: white;
-            background-color: #67ab9f;
-        }
+            .logoLabel {
+                font-size: 30px;
+                font-weight: 900;
+            }
 
         .loginForm {
             background-color: white;
 
             width: max-content;
             height: max-content;
+
+            border-radius: 10px;
+
+            display: flex;
+            flex-direction: column;
             
             margin: auto;
 
             padding: 30px;
         }
+            .welcomeBackLabel {
+                font-size: 20px;
+                font-weight: bold;
+                
+                text-align: center;
+            }
+                .excitedLabel {
+                    font-size: 18px;
+                    font-weight: bold;
+                    
+                    text-align: center;
+                }
 
-        .welcomeBackLabel {
-            font-size: 20px;
-            font-weight: bold;
-            
-            display: block;
-            
-            text-align: center;
-        }
-        .excitedLabel {
-            font-size: 18px;
-            font-weight: bold;
-            
-            display: block;
-            
-            text-align: center;
-        }
+            .emailLabel {
+                font-size: 18px;
+                font-weight: bold;
 
-        .emailLabel {
-            font-size: 18px;
+                margin-top: 20px;
+            }
+                .emailInput {
+                    font-size: 16px;
 
-            display: block;
+                    width: 600px;
+                    height: 30px;
 
-            margin-top: 20px;
-        }
-        .emailInput {
-            font-size: 16px;
+                    margin-top: 10px;
 
-            width: 600px;
-            height: 30px;
+                    padding-left: 10px;
+                }
 
-            margin-top: 10px;
+            .usernameLabel {
+                font-size: 18px;
+                font-weight: bold;
 
-            padding-left: 10px;
-        }
+                margin-top: 20px;
+            }
+                .usernameInput {
+                    font-size: 16px;
 
-        .usernameLabel {
-            font-size: 18px;
+                    width: 600px;
+                    height: 30px;
 
-            display: block;
+                    margin-top: 10px;
 
-            margin-top: 20px;
-        }
-        .usernameInput {
-            font-size: 16px;
+                    padding-left: 10px;
+                }
 
-            width: 600px;
-            height: 30px;
+            .passwordContainer {
+                display: flex;
+                justify-content: space-between;
+            }
+                .passwordLabel {
+                    font-size: 18px;
+                    font-weight: bold;
 
-            margin-top: 10px;
+                    margin-top: 20px;
+                }
+                    .passwordInput {
+                        font-size: 16px;
 
-            padding-left: 10px;
-        }
+                        width: 600px;
+                        height: 30px;
 
-        .container {
-            display: flex;
+                        margin-top: 10px;
 
-            justify-content: space-between;
-        }
-        .passwordLabel {
-            font-size: 18px;
+                        padding-left: 10px;
+                    }
+                
+                .showLabel {
+                    color: #5865F2;
+                    
+                    font-size: 16px;
 
-            display: block;
+                    align-content: end;
+                    
+                    margin-top: 20px;
 
-            margin-top: 20px;
-        }
-        .showLabel {
-            font-size: 16px;
+                    cursor: pointer;
+                    visibility: hidden;
+                }
+                    .showLabel.visible {
+                        visibility: visible;
+                    }
+                
+                .forgotPasswordContainer {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                    .forgotPasswordLink {
+                        color: #5865F2;
+                        
+                        font-size: 16px;
 
-            color: #67ab9f;
+                        width: max-content;
+                        
+                        margin-top: 10px;
 
-            display: block;
+                        cursor: pointer;
+                        transition: 0.3s;
+                    }
+                        .forgotPasswordLink:hover {
+                            text-decoration: underline;
+                        }
 
-            margin-top: 20px;
+            .loginButton {
+                background-color: #5865F2;
+                color: white;
+                
+                font-size: 16px;
+                font-weight: bold;                
 
-            align-content: end;
+                width: 100%;
 
-            cursor: pointer;
+                border: none;
+                border-radius: 10px;
 
-            visibility: hidden;
-        }
-        .showLabel.visible {
-            visibility: visible;
-        }
-        .passwordInput {
-            font-size: 16px;
+                margin: auto;
+                margin-top: 20px;
+                
+                padding-top: 10px;
+                padding-bottom: 10px;
 
-            width: 600px;
-            height: 30px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+                .loginButton:hover {
+                    opacity: 70%;
+                }
 
-            margin-top: 10px;
+            .registerContainer {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                .registerLink {
+                    color: #5865F2;
+                    
+                    font-size: 16px;
 
-            padding-left: 10px;
-        }
+                    margin-top: 10px;
+                    
+                    display: block;
+                    text-align: right;
 
-        .forgotPasswordLink {
-            font-size: 16px;
-
-            color: #67ab9f;
-            
-            display: block;
-            text-align: right;
-            
-            margin-top: 10px;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-        .forgotPasswordLink:hover {
-            text-decoration: underline;
-        }
-
-        .loginButton {
-            font-size: 16px;
-            font-weight: bold;
-            
-            color: white;
-            background-color: #67ab9f;
-
-            width: 100%;
-            height: 30px;
-
-            border: none;
-
-            display: block;
-            
-            margin: auto;
-            margin-top: 20px;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-        .loginButton:hover {
-            opacity: 70%;
-        }
-
-        .registerLink {
-            font-size: 16px;
-
-            color: #67ab9f;
-            
-            display: block;
-            text-align: right;
-
-            margin-top: 10px;
-
-            cursor: pointer;
-        }
-        .registerLink:hover {
-            text-decoration: underline;
-        }
+                    cursor: pointer;
+                }
+                    .registerLink:hover {
+                        text-decoration: underline;
+                    }
     </style>
 </head>
 <body>
-    <button class="homeButton" onclick="location.href='home.html'">HOME</button>
+    <div class="header">
+        <div style="background-color: white; width: max-content; height: max-content; padding: 10px; display: flex; align-items: center; border-radius: 10px; cursor: pointer;" onclick="location.href='home.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/homeLogo.png" width="40px" height="40px" style="margin-right: 10px;">
+            <label class="logoLabel" style="cursor: pointer;">Home</label>
+        </div>
+    </div>
 
-    <form class="loginForm">
+    <form id="loginForm" class="loginForm" >
         <label class="welcomeBackLabel">Welcome back!</label>
         <label class="excitedLabel">We're so excited to see you again!</label>
         
-        <label class="emailLabel">Email</label>
-        <input class="emailInput" type="text" placeholder="Enter your Email" required>
-
         <label class="usernameLabel">Username</label>
-        <input class="usernameInput" type="text" placeholder="Enter your Username" required>
+        <input id="username" name="username" class="usernameInput" type="text" placeholder="Enter your Username" required>
 
-        <div class="container">
+        <div class="passwordContainer">
             <label class="passwordLabel">Password</label>
             <label id="setVisible" class="showLabel">Show</label>
         </div>    
-        <input id="password" class="passwordInput" type="password" placeholder="Enter your Password" required>
+        <input id="password" name="password" class="passwordInput" type="password" placeholder="Enter your Password" required>
 
-        <label class="forgotPasswordLink">Forgot your password?</label>
+        <div class="forgotPasswordContainer">
+            <label class="forgotPasswordLink">Forgot your password?</label>
+        </div>
 
-        <button class="loginButton" type="submit">Log In</button>
+        <button class="loginButton" type="submit">Log in</button>
 
-        <label class="registerLink" onclick="location.href='register.html'">Need an account? Register</label>
+        <div class="registerContainer">
+            <label class="registerLink" onclick="location.href='register.html'">Need an account? Register</label>
+        </div>
     </form>
 
     <script>
+        /// Show/Hide password ///
         const password   = document.getElementById('password');
         const setVisible = document.getElementById('setVisible');
         
@@ -251,6 +252,56 @@
             } else {
                 password.type = 'password';
                 setVisible.textContent = 'Show';
+            }
+        });
+
+        /// Login ///
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:8000/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                console.log("🔍 Raw response:", data);
+
+                if (response.ok) {
+                    // ✅ Save login session in localStorage
+                    localStorage.setItem("username", data.username);
+                    localStorage.setItem("user_id", data.user_id);
+                    
+                    alert(`✅ Login successful! Welcome, ${data.username}`);
+                    window.location.href = 'fileService.html';
+                } else {
+                    // 👇 Handle both object and array error formats
+                    let errorMessage = "❌ Login failed.";
+
+                    if (Array.isArray(data)) {
+                        // Validation error list from FastAPI
+                        errorMessage = data.map(err => err.msg).join(", ");
+                    } else if (data.detail) {
+                        // Normal HTTPException error
+                        errorMessage = data.detail;
+                    }
+
+                    alert(`❌ ${errorMessage}`);
+                }
+
+            } catch (error) {
+                console.error("❌ Network Error:", error);
+                alert("⚠️ Unable to connect to the server.");
             }
         });
     </script>
