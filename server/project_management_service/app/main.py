@@ -5,7 +5,6 @@ from app.core.database import engine, Base
 from app.routes import project 
 # Removed: from app.routes import group
 
-# Application Initialization
 app = FastAPI(
     title="Project management service",
     description="Manage your own project",
