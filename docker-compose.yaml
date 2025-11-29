@@ -113,6 +113,22 @@ services:
       - file_service
       - group_service
       - project_service
+      - frontend
+    networks:
+      - promannet
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+  # -------------------------------------------------
+  # Frontend
+  # -------------------------------------------------
+  frontend:
+    image: nginx
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./front-end/pages:/usr/share/nginx/html
     networks:
       - promannet
     restart: unless-stopped
