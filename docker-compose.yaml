@@ -30,6 +30,7 @@ services:
       DATABASE_URL: ${DB_ACCOUNT}
     volumes:
       - ./server/account_management_service:/app
+      - ./server/account_management_service/data:/app/data
       - ./data:/data
     networks:
       - promannet
