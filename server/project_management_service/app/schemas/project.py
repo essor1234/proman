@@ -1,58 +1,17 @@
-
-
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, EmailStr
-
-
-
-# This is the Pydantic schema for API *responses*.
+from pydantic import BaseModel, ConfigDict
 
 class ProjectCreate(BaseModel):
     name: str
-    groupId: int | None = None
-
-from pydantic import BaseModel, ConfigDict, EmailStr
-
-class UserCreate(BaseModel):
-    name: str
-    email: EmailStr
-
-
-# This is the Pydantic schema for API *responses*.
-class User(UserCreate):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
-
-
-class GroupCreate(BaseModel):
-    name: str
-
-class Group(GroupCreate):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
-
-
-class ProjectCreate(BaseModel):
-    name: str
-    groupId: int
-
+    groupId: int # Must be int to match Group Service
 
 class Project(ProjectCreate):
     id: int
     model_config = ConfigDict(from_attributes=True)
 
-# These are used to create the links between objects.
-
-
-# These are used to create the links between objects.
-class UserGroupCreate(BaseModel):
-    userId: int
-    groupId: int
-    role: str
-
-class UserGroup(UserGroupCreate):
-    model_config = ConfigDict(from_attributes=True)
-
+class ProjectUpdate(BaseModel):
+    name: Optional[str] = None
+    groupId: Optional[int] = None
 
 class ProjectMemberCreate(BaseModel):
     userId: int
@@ -61,10 +20,3 @@ class ProjectMemberCreate(BaseModel):
 
 class ProjectMember(ProjectMemberCreate):
     model_config = ConfigDict(from_attributes=True)
-
-
-
-
-class ProjectUpdate(BaseModel):
-    name: Optional[str] = None
-    groupId: Optional[int] = None

@@ -25,7 +25,7 @@ class Group(Base):
     name = Column(String, index=True)
 
     # Note: 'Project' uses a string to defer resolution (standard SQLAlchemy for cycles)
-    projects = relationship("Project", back_populates="group")
+    # projects = relationship("Project", back_populates="group")
     users = relationship("UserGroup", back_populates="group")
 
 
