@@ -1,97 +1,61 @@
-from sqlalchemy import Column, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint # <-- ADD UniqueConstraint
-from sqlalchemy.orm import relationship
-import uuid
+from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum, ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, relationship
 import enum
 from datetime import datetime
-from typing import TYPE_CHECKING # For type checking if Group is in another file
-
-# Use standard String for SQLite (no native UUID support)
-try:
-    from sqlalchemy.dialects.postgresql import UUID
-    use_uuid = True
-except ImportError:
-    use_uuid = False
+from typing import TYPE_CHECKING
 
 from ..core.database import Base
 
-# Optional: For type hinting if Group is defined elsewhere
 if TYPE_CHECKING:
     from .group import Group
 
-
 class MembershipRole(str, enum.Enum):
-    """Member roles in a group"""
+    """Roles a user can have within a group."""
     OWNER = "owner"
     ADMIN = "admin"
     MEMBER = "member"
 
-
 class MembershipStatus(str, enum.Enum):
-    """Membership status"""
+    """Status of the membership (e.g., waiting for approval vs active)."""
     ACTIVE = "active"
     PENDING = "pending"
     REMOVED = "removed"
 
-
 class Membership(Base):
     """
-    Membership model representing a user's membership in a group.
-    Links users to groups with roles and status.
+    SQLAlchemy model representing the 'memberships' table.
+    Acts as a link between Users and Groups.
     """
     __tablename__ = "memberships"
     
-    # Primary key
-    if use_uuid:
-        id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-        group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-        invited_by = Column(UUID(as_uuid=True), nullable=True)
-    else:
-        # For SQLite: store UUID as string
-        id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
-        user_id = Column(String(36), nullable=False, index=True)
-        invited_by = Column(String(36), nullable=True)
+    # Auto-incrementing Integer ID for the membership record itself
+    id = Column(Integer, primary_key=True, index=True)
     
-    # Membership details
-    role = Column(
-        SQLEnum(MembershipRole),
-        default=MembershipRole.MEMBER,
-        nullable=False
-    )
+    # Foreign Key: Links to groups.id.
+    # ondelete="CASCADE": If the group is deleted in DB, this record vanishes.
+    group_id = Column(Integer, ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
     
-    status = Column(
-        SQLEnum(MembershipStatus),
-        default=MembershipStatus.ACTIVE,
-        nullable=False
-    )
+    # User ID: Stored as Integer (assuming User Service uses Int IDs)
+    user_id = Column(Integer, nullable=False, index=True)
+    
+    # Who sent the invite? (Optional, Integer)
+    invited_by = Column(Integer, nullable=True)
+    
+    # State fields (Role and Status)
+    role = Column(SQLEnum(MembershipRole), default=MembershipRole.MEMBER, nullable=False)
+    status = Column(SQLEnum(MembershipStatus), default=MembershipStatus.ACTIVE, nullable=False)
     
     # Timestamps
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # 🔗 Relationship: Many-to-One
-    # The 'group' property provides the ORM linkage back to the Group object.
-    group: relationship["Group"] = relationship("Group", back_populates="memberships") # <-- UNCOMMENTED/ADDED
-    
+    # Relationship back to the Group model
+    group: Mapped["Group"] = relationship("Group", back_populates="memberships")
+
     def __repr__(self):
-        return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id}, role={self.role})>"
+        return f"<Membership(id={self.id}, group_id={self.group_id}, user_id={self.user_id})>"
     
-    def to_dict(self):
-        """Convert model to dictionary"""
-        return {
-            "id": str(self.id),
-            "group_id": str(self.group_id),
-            "user_id": str(self.user_id),
-            "role": self.role.value if isinstance(self.role, MembershipRole) else self.role,
-            "status": self.status.value if isinstance(self.status, MembershipStatus) else self.status,
-            "invited_by": str(self.invited_by) if self.invited_by else None,
-            "joined_at": self.joined_at.isoformat() if self.joined_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-    
-    # 🔑 Data Integrity Constraint
-    # Ensures only one Membership exists for a given user in a given group.
-    __table_args__ = ( # <-- UNCOMMENTED AND APPLIED
+    # Constraint: A user can only have ONE membership record per group.
+    __table_args__ = (
         UniqueConstraint('group_id', 'user_id', name='unique_group_user'),
     )
