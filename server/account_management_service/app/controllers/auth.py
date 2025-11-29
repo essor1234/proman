@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Form
 from sqlmodel import Session, select
 from app.models.user import User
 from app.core.db import engine
-from app.core.security import hash_password, verify_password
+from app.core.security import verify_password, hash_password_secure
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -14,7 +14,7 @@ def register(username: str = Form(...), email: str = Form(...), password: str = 
         if existing:
             raise HTTPException(status_code=400, detail="Username already exists")
 
-        user = User(username=username, email=email, hashed_password=hash_password(password))
+        user = User(username=username, email=email, hashed_password=hash_password_secure(password))
         session.add(user)
         session.commit()
         session.refresh(user)

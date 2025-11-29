@@ -33,7 +33,7 @@ router = APIRouter(prefix="/groups/{group_id}", tags=["invitations"])
 @router.post(
     "/invite",
     response_model=MembershipResponse,
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_201_CREATED,        
     summary="Invite member to group"
 )
 async def invite_member(

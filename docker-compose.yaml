@@ -30,6 +30,7 @@ services:
       DATABASE_URL: ${DB_ACCOUNT}
     volumes:
       - ./server/account_management_service:/app
+      - ./server/account_management_service/data:/app/data
       - ./data:/data
     networks:
       - promannet
@@ -113,6 +114,22 @@ services:
       - file_service
       - group_service
       - project_service
+      - frontend
+    networks:
+      - promannet
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+  # -------------------------------------------------
+  # Frontend
+  # -------------------------------------------------
+  frontend:
+    image: nginx
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./front-end/pages:/usr/share/nginx/html
     networks:
       - promannet
     restart: unless-stopped
