@@ -1,6 +1,6 @@
 from http.client import HTTPException
 import os
-from time import time
+import time
 from sqlmodel import SQLModel, Field, Session, select
 
 import httpx

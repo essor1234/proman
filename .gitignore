@@ -56,3 +56,10 @@ Thumbs.db
 # database
 *.db
 *.sqlite3
+
+
+.txt
+server/folder_and_file_management_service/storage/**/*
+
+!/server/folder_and_file_management_service/storage/
+!/server/folder_and_file_management_service/storage/*/
