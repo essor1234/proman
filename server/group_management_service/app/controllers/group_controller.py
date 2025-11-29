@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from uuid import UUID
 from typing import Optional
 
 from ..repositories.group_repository import GroupRepository 
@@ -9,19 +8,19 @@ from ..schemas.group_schemas import GroupCreate, GroupUpdate
 from ..models.group import Group
 from ..models.membership import MembershipRole, MembershipStatus
 
-
 class GroupController:
+    """Business Logic for Groups."""
+
     def __init__(self, db: Session):
         self.db = db
         self.group_repo = GroupRepository(db)
         self.membership_repo = MembershipRepository(db)
     
-    def create_group(self, group_data: GroupCreate, owner_id: UUID) -> Group:
+    def create_group(self, group_data: GroupCreate, owner_id: int) -> Group:
         """
-        Create a new group with the current user as owner.
-        Automatically creates owner membership.
+        Creates a group and automatically assigns the creator as the Owner.
         """
-        # Create group
+        # 1. Create the Group record
         group = self.group_repo.create(
             name=group_data.name,
             description=group_data.description,
@@ -29,7 +28,8 @@ class GroupController:
             owner_id=owner_id
         )
         
-        # Create owner membership
+        # 2. Create the Membership record for the owner
+        # Uses group.id (which is now an auto-generated int)
         self.membership_repo.create(
             group_id=group.id,
             user_id=owner_id,
@@ -37,21 +37,15 @@ class GroupController:
             status=MembershipStatus.ACTIVE
         )
         
+        # 3. CRITICAL: Refresh the group object from the DB.
+        # This allows SQLAlchemy to see the new membership we just added
+        # so that 'group.member_count' returns 1 instead of 0.
+        self.db.refresh(group)
         return group
     
-    def list_user_groups(
-        self, 
-        user_id: UUID, 
-        page: int = 1, 
-        size: int = 20,
-        search: Optional[str] = None
-    ) -> dict:
-        """
-        List all groups where user is a member.
-        Supports pagination and search.
-        """
+    def list_user_groups(self, user_id: int, page: int = 1, size: int = 20, search: Optional[str] = None) -> dict:
+        """Lists groups for a user with pagination metadata."""
         skip = (page - 1) * size
-        
         groups, total = self.group_repo.list_user_groups(
             user_id=user_id,
             skip=skip,
@@ -59,156 +53,53 @@ class GroupController:
             search=search
         )
         
+        # Return dictionary matching GroupListResponse schema
         return {
-            "items": groups,
+            "groups": groups,
             "total": total,
             "page": page,
             "size": size,
-            "pages": (total + size - 1) // size
+            "has_more": total > (page * size)
         }
     
-    def get_group(self, group_id: UUID, user_id: UUID) -> Group:
-        """
-        Get group details.
-        User must be a member or group must be public.
-        """
+    def get_group(self, group_id: int, user_id: int) -> Group:
+        """Gets group details if user has access."""
         group = self.group_repo.get_by_id(group_id)
-        
         if not group:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Group not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
         
-        # Check access
+        # Permission check: Must be member OR group must be public
         is_member = self.membership_repo.is_member(group_id, user_id)
         is_public = group.visibility == "public"
         
         if not (is_member or is_public):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You don't have access to this group"
-            )
-        
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
         return group
     
-    def update_group(
-        self, 
-        group_id: UUID, 
-        group_data: GroupUpdate, 
-        user_id: UUID
-    ) -> Group:
-        """
-        Update group information.
-        Only owner or admins can update.
-        """
+    def update_group(self, group_id: int, group_data: GroupUpdate, user_id: int) -> Group:
+        """Updates group only if user is Owner/Admin."""
         group = self.group_repo.get_by_id(group_id)
-        
         if not group:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Group not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
         
-        # Check permission
+        # Permission check
         membership = self.membership_repo.get_membership(group_id, user_id)
-        
         if not membership or membership.role not in [MembershipRole.OWNER, MembershipRole.ADMIN]:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Only group owner or admins can update group"
-            )
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Permission denied")
         
-        # Update fields
+        # Exclude unset fields (don't overwrite with None)
         update_data = group_data.model_dump(exclude_unset=True)
-        updated_group = self.group_repo.update(group_id, **update_data)
-        
-        return updated_group
+        return self.group_repo.update(group_id, **update_data)
     
-    def delete_group(self, group_id: UUID, user_id: UUID) -> None:
-        """
-        Delete a group.
-        Only owner can delete.
-        """
+    def delete_group(self, group_id: int, user_id: int) -> None:
+        """Deletes group only if user is Owner."""
         group = self.group_repo.get_by_id(group_id)
-        
         if not group:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Group not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
         
-        # Only owner can delete
         if group.owner_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Only group owner can delete the group"
-            )
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only owner can delete")
         
-        # Delete all memberships first
+        # Clean up memberships first (good practice, though CASCADE handles it too)
         self.membership_repo.delete_all_memberships(group_id)
-        
-        # Delete group
         self.group_repo.delete(group_id)
-    
-    def transfer_ownership(
-        self, 
-        group_id: UUID, 
-        new_owner_id: UUID, 
-        current_owner_id: UUID
-    ) -> Group:
-        """
-        Transfer group ownership to another member.
-        Only current owner can transfer.
-        """
-        group = self.group_repo.get_by_id(group_id)
-        
-        if not group:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Group not found"
-            )
-        
-        # Verify current owner
-        if group.owner_id != current_owner_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Only current owner can transfer ownership"
-            )
-        
-        # Check new owner is a member
-        new_owner_membership = self.membership_repo.get_membership(group_id, new_owner_id)
-        
-        if not new_owner_membership or new_owner_membership.status != MembershipStatus.ACTIVE:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="New owner must be an active member of the group"
-            )
-        
-        # Update group owner
-        updated_group = self.group_repo.update(group_id, owner_id=new_owner_id)
-        
-        # Update old owner to admin
-        self.membership_repo.update_role(group_id, current_owner_id, MembershipRole.ADMIN)
-        
-        # Update new owner role to owner
-        self.membership_repo.update_role(group_id, new_owner_id, MembershipRole.OWNER)
-        
-        return updated_group
-    
-    def get_group_stats(self, group_id: UUID, user_id: UUID) -> dict:
-        """
-        Get group statistics.
-        User must be a member.
-        """
-        group = self.get_group(group_id, user_id)
-        
-        member_count = self.membership_repo.count_members(group_id)
-        
-        return {
-            "group_id": group.id,
-            "name": group.name,
-            "member_count": member_count,
-            "created_at": group.created_at,
-            "owner_id": group.owner_id
-        }

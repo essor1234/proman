@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
-from uuid import UUID
+from typing import List
+# removed UUID import
 
 from app.core.database import get_db
 from app.core.security import get_current_user
@@ -26,15 +27,9 @@ async def create_group(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Create a new group with the current user as owner.
-    
-    - **name**: Group name (required)
-    - **description**: Group description (optional)
-    - **visibility**: public, private, or invite-only (default: private)
-    """
     controller = GroupController(db)
-    return controller.create_group(group_data, current_user["id"])
+    # Ensure user_id is passed as int
+    return controller.create_group(group_data, int(current_user["id"]))
 
 
 @router.get(
@@ -49,14 +44,9 @@ async def list_groups(
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    List all groups the current user is a member of or owns.
-    
-    Supports pagination and search.
-    """
     controller = GroupController(db)
     return controller.list_user_groups(
-        user_id=current_user["id"],
+        user_id=int(current_user["id"]),
         page=page,
         size=size,
         search=search
@@ -69,17 +59,12 @@ async def list_groups(
     summary="Get group details"
 )
 async def get_group(
-    group_id: UUID,
+    group_id: int,  # <--- CHANGED FROM UUID TO int
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Get detailed information about a specific group.
-    
-    User must be a member of the group or the group must be public.
-    """
     controller = GroupController(db)
-    return controller.get_group(group_id, current_user["id"])
+    return controller.get_group(group_id, int(current_user["id"]))
 
 
 @router.put(
@@ -88,18 +73,13 @@ async def get_group(
     summary="Update group information"
 )
 async def update_group(
-    group_id: UUID,
+    group_id: int,  # <--- CHANGED FROM UUID TO int
     group_data: GroupUpdate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Update group information.
-    
-    Only group owner or admins can update group details.
-    """
     controller = GroupController(db)
-    return controller.update_group(group_id, group_data, current_user["id"])
+    return controller.update_group(group_id, group_data, int(current_user["id"]))
 
 
 @router.delete(
@@ -108,18 +88,12 @@ async def update_group(
     summary="Delete group"
 )
 async def delete_group(
-    group_id: UUID,
+    group_id: int,  # <--- CHANGED FROM UUID TO int
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Delete a group permanently.
-    
-    Only the group owner can delete the group.
-    All memberships will be removed.
-    """
     controller = GroupController(db)
-    controller.delete_group(group_id, current_user["id"])
+    controller.delete_group(group_id, int(current_user["id"]))
     return None
 
 
@@ -129,20 +103,14 @@ async def delete_group(
     summary="Transfer group ownership"
 )
 async def transfer_ownership(
-    group_id: UUID,
-    new_owner_id: UUID,
+    group_id: int,      # <--- CHANGED FROM UUID TO int
+    new_owner_id: int,  # <--- CHANGED FROM UUID TO int
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Transfer group ownership to another member.
-    
-    Only the current owner can transfer ownership.
-    The new owner must be an existing member of the group.
-    """
     controller = GroupController(db)
     return controller.transfer_ownership(
         group_id=group_id,
         new_owner_id=new_owner_id,
-        current_owner_id=current_user["id"]
+        current_owner_id=int(current_user["id"])
     )
