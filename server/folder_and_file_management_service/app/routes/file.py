@@ -34,7 +34,10 @@ def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(secu
         return user_id
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
+"""
+CREATE FILE LOGIC
 
+"""
 @router.post("/{projectid}", response_model=FileCreate, status_code=status.HTTP_201_CREATED)
 def create_file(
     file_in: FileCreate,
@@ -44,29 +47,41 @@ def create_file(
 
 ):
     return create_file_logic_with_userid(file_in, user_id, db, projectid=projectid)
+"""
+READ FILE LOGIC
 
+"""
 @router.get("/{file_id}", response_model=FileRead)
 def read_file(file_id: int, db=Depends(get_db)):
-    return get_file_logic(file_id, db)
-
-
-
-
-
-
+    return get_current_user_id(file_id, db)
 
 
 @router.get("/", response_model=list[FileRead])
 def list_files(skip: int = 0, limit: int = 100, db=Depends(get_db)):
     return list_files_logic(db, skip, limit)
 
+"""
+UPDATE FILE LOGIC
 
-@router.patch("/{file_id}", response_model=FileRead)
-def update_file(file_id: int, file_up: FileUpdate, db=Depends(get_db)):
-    return update_file_logic(file_id, file_up, db)
+"""
+@router.patch("/project/{projectid}/file/{file_id}", response_model=FileRead)
+def update_file(
+    file_id: int,
+    projectid: int,
+    file_up: FileUpdate,
+    db: Session = Depends(get_db),
+):
+    return update_file_logic(file_id, file_up, projectid, db)
 
+"""
+DELETE FILE LOGIC
 
-@router.delete("/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_file(file_id: int, db=Depends(get_db)):
-    delete_file_logic(file_id, db)
-    return None
+"""
+@router.delete("/project/{projectid}/file/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_file(
+    file_id: int,
+    projectid: int,
+    db: Session = Depends(get_db),
+):
+    delete_file_logic(file_id, projectid, db)
+    return None  

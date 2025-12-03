@@ -23,7 +23,10 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_FILE_PATH = SCRIPT_DIR.parent.parent / "storage" 
 
 security = HTTPBearer()  # Accepts `Authorization: Bearer <token>`
+"""
+CREATE FILE LOGIC
 
+"""
 def _sanitize_name(name: str) -> str:
     # Keep only safe filename characters, replace others with underscore
     safe = re.sub(r'[^A-Za-z0-9._-]', '_', name)
@@ -134,6 +137,17 @@ def create_file_logic_with_userid(file_in: FileCreate,
     db.refresh(db_file)
     return FileRead.from_orm(db_file)
 
+def create_file_logic(file_in: FileCreate, db: Session) -> FileRead:
+    db_file = FileDB(**file_in.model_dump())
+    db.add(db_file)
+    db.commit()
+    db.refresh(db_file)
+    return FileRead.from_orm(db_file)
+
+"""
+READ FILE LOGIC
+
+"""
 def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     # TODO: Replace with real JWT decode
@@ -144,12 +158,6 @@ def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(secu
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-def create_file_logic(file_in: FileCreate, db: Session) -> FileRead:
-    db_file = FileDB(**file_in.model_dump())
-    db.add(db_file)
-    db.commit()
-    db.refresh(db_file)
-    return FileRead.from_orm(db_file)
 
 
 def get_file_logic(file_id: int, db: Session) -> FileRead:
@@ -168,24 +176,134 @@ def get_files_by_user_logic(user_id: int, db: Session) -> list[FileRead]:
     stmt = select(FileDB).where(FileDB.userid == user_id)
     files = db.exec(stmt).all()
     return [FileRead.from_orm(f) for f in files]
+"""
+UPDATE FILE LOGIC
 
-def update_file_logic(file_id: int, file_up: FileUpdate, db: Session) -> FileRead:
+"""
+
+def update_file_logic(
+    file_id: int,
+    file_up: FileUpdate,
+    db: Session
+) -> FileRead:
+    """
+    Update file metadata AND/OR content AND/OR rename (move on disk).
+    Fully synchronized with filesystem.
+    """
     db_file = db.get(FileDB, file_id)
     if not db_file:
         raise HTTPException(status_code=404, detail="File not found")
-    data = file_up.model_dump(exclude_unset=True)
-    for k, v in data.items():
-        setattr(db_file, k, v)
+
+    # Get current filesystem path from DB
+    current_path_str = getattr(db_file, "path", None) or getattr(db_file, "filepath", None)
+    if not current_path_str:
+        raise HTTPException(status_code=500, detail="File path not stored in database")
+    
+    current_path = Path(current_path_str)
+    if not current_path.exists():
+        raise HTTPException(status_code=500, detail="File missing on disk")
+
+    update_data = file_up.model_dump(exclude_unset=True)
+    new_path = current_path
+
+    # === 1. Handle rename (name change) → move file on disk ===
+    new_name = None
+    for key in ("name", "filename", "title"):
+        if update_data.get(key):
+            new_name = update_data[key]
+            break
+
+    if new_name and new_name != current_path.name:
+        safe_name = _sanitize_name(Path(new_name).name)
+        proposed_path = current_path.parent / safe_name
+        proposed_path = _unique_path(proposed_path)  # avoid collisions
+
+        try:
+            current_path.rename(proposed_path)
+            new_path = proposed_path
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Failed to rename file on disk: {exc}")
+
+    # === 2. Handle content update ===
+    if "content" in update_data:
+        content = update_data["content"]
+        if content is None:
+            content = ""  # allow clearing file
+
+        mode = 'wb' if isinstance(content, bytes) else 'w'
+        encoding = 'utf-8' if mode == 'w' else None
+
+        try:
+            with open(new_path, mode, encoding=encoding) as f:
+                f.write(content)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Failed to write new content to file: {exc}")
+
+    # === 3. Update DB fields (including new path) ===
+    for key, value in update_data.items():
+        if hasattr(db_file, key):
+            setattr(db_file, key, value)
+
+    # Always update the stored path in case of rename
+    final_path_str = str(new_path.resolve())
+    if hasattr(db_file, "path"):
+        db_file.path = final_path_str
+    elif hasattr(db_file, "filepath"):
+        db_file.filepath = final_path_str
+
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
+
     return FileRead.from_orm(db_file)
 
+# def update_file_logic(file_id: int, file_up: FileUpdate, db: Session) -> FileRead:
+#     db_file = db.get(FileDB, file_id)
+#     if not db_file:
+#         raise HTTPException(status_code=404, detail="File not found")
+#     data = file_up.model_dump(exclude_unset=True)
+#     for k, v in data.items():
+#         setattr(db_file, k, v)
+#     db.add(db_file)
+#     db.commit()
+#     db.refresh(db_file)
+#     return FileRead.from_orm(db_file)
+"""
+DELETE FILE LOGIC
 
-def delete_file_logic(file_id: int, db: Session):
+"""
+def delete_file_logic(file_id: int, db: Session) -> dict:
+    """
+    Delete file from database AND filesystem.
+    Safe even if file is already missing.
+    """
     db_file = db.get(FileDB, file_id)
     if not db_file:
         raise HTTPException(status_code=404, detail="File not found")
+
+    # Get path from DB
+    fs_path_str = getattr(db_file, "path", None) or getattr(db_file, "filepath", None)
+    file_path = Path(fs_path_str) if fs_path_str else None
+
+    # Remove from filesystem
+    if file_path and file_path.exists():
+        try:
+            file_path.unlink()  # deletes the file
+            # Optional: remove empty parent dirs? Usually not needed
+        except Exception as exc:
+            print(f"Warning: Could not delete file from disk {file_path}: {exc}")
+            # You can choose to raise here if you want strict consistency
+
+    # Remove from database
     db.delete(db_file)
     db.commit()
+
+    return {"detail": "File deleted successfully"}
+
+# def delete_file_logic(file_id: int, db: Session):
+#     db_file = db.get(FileDB, file_id)
+#     if not db_file:
+#         raise HTTPException(status_code=404, detail="File not found")
+#     db.delete(db_file)
+#     db.commit()
 
