@@ -97,6 +97,26 @@ services:
     profiles: ["dev", "prod"]
 
   # -------------------------------------------------
+  # process Management Service
+  # -------------------------------------------------
+  process_service:
+    build: ./server/process_management_service
+    container_name: process_service
+    ports:
+      - "8005:8000"
+    environment:
+      DATABASE_URL: ${DB_PROCESS} # Fix here
+    volumes:
+      - ./server/process_management_service:/app
+      - ./data:/data
+    networks:
+      - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+  
+  # -------------------------------------------------
   # API Gateway (entry point)
   # -------------------------------------------------
   gateway:
@@ -109,6 +129,7 @@ services:
       FILE_SERVICE_URL: http://file_service:8000
       GROUP_SERVICE_URL: http://group_service:8000
       PROJECT_SERVICE_URL: http://project_service:8000
+      PROCESS_SERVICE_URL: http://process_service:8000
     depends_on:
       - account_service
       - file_service
