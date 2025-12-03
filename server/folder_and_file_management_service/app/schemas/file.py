@@ -10,14 +10,14 @@ class FileBase(SQLModel):
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
     userid: int = Field(..., index=True) # Get from account service
     name: str = Field(..., min_length=1, max_length=255)
-    size: int = Field(..., gt=0)
+    size: Optional[int] = Field(default=None)
     path: str = Field(..., min_length=1)
     date_created: Optional[datetime] = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class FileCreate(FileBase):
     """For POST requests—user provides these."""
-    model_config = {"deferred": ["id", "date_created", "path", "userid"]} 
+    name: str = Field(..., min_length=1, max_length=255)
 
 class FileRead(FileBase):
     """For GET requests—user receives these."""
