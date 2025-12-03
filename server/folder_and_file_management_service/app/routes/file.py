@@ -64,24 +64,22 @@ def list_files(skip: int = 0, limit: int = 100, db=Depends(get_db)):
 UPDATE FILE LOGIC
 
 """
-@router.patch("/project/{projectid}/file/{file_id}", response_model=FileRead)
+@router.patch("/file/{file_id}", response_model=FileRead)
 def update_file(
     file_id: int,
-    projectid: int,
     file_up: FileUpdate,
     db: Session = Depends(get_db),
 ):
-    return update_file_logic(file_id, file_up, projectid, db)
+    return update_file_logic(file_id, file_up, db)
 
 """
 DELETE FILE LOGIC
 
 """
-@router.delete("/project/{projectid}/file/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/file/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_file(
     file_id: int,
-    projectid: int,
     db: Session = Depends(get_db),
 ):
-    delete_file_logic(file_id, projectid, db)
+    delete_file_logic(file_id, db)
     return None  
