@@ -111,15 +111,26 @@ def create_file_logic_with_userid(file_in: FileCreate,
     get_project_logic(projectid)
 
     # EXCLUDE userid from input (even if client sent it)
-    data = file_in.model_dump(exclude={"userid"})
+    data = file_in.model_dump(exclude={"userid", "id", "path", "size", "date_created"})
 
     full_data = file_in.model_dump(exclude={"userid"})
     target_file_path = _create_filesystem_file(full_data, projectid) 
+
+    # If size wasn't provided, calculate it from the created file
+    if data.get('size') is None:
+        import os
+        if target_file_path.exists():
+            data['size'] = os.path.getsize(target_file_path)
+        else:
+            # Fallback if file doesn't exist yet
+            data['size'] = 0
+
 
     # Save file record in DB
     db_file = FileDB(
         **data,
         userid=current_user_id, # ONLY source of truth
+        path=str(target_file_path.resolve())
     )
     
     # Set the path field on the DB model
