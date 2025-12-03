@@ -12,6 +12,7 @@ from app.controllers.file import (
     delete_file_logic,
     create_file_logic_with_userid
 )
+from app.routes.security import get_current_user_id
 from app.schemas.file import FileCreate, FileRead, FileUpdate
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
@@ -20,20 +21,21 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 router = APIRouter(prefix="/files", tags=["files"])
 
 
+
 # @router.post("/", response_model=FileRead, status_code=status.HTTP_201_CREATED)
 # def create_file(file_in: FileCreate, db=Depends(get_db)):
 #     return create_file_logic(file_in, db)
-security = HTTPBearer()  # Accepts `Authorization: Bearer <token>`
+# security = HTTPBearer()  # Accepts `Authorization: Bearer <token>`
 
-def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
-    # TODO: Replace with real JWT decode
-    # For testing: accept any token that is a number
-    try:
-        user_id = int(token)
-        return user_id
-    except:
-        raise HTTPException(status_code=401, detail="Invalid token")
+# def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(security)):
+#     token = credentials.credentials
+#     # TODO: Replace with real JWT decode
+#     # For testing: accept any token that is a number
+#     try:
+#         user_id = int(token)
+#         return user_id
+#     except:
+#         raise HTTPException(status_code=401, detail="Invalid token")
 """
 CREATE FILE LOGIC
 
@@ -57,8 +59,8 @@ def read_file(file_id: int, db=Depends(get_db)):
 
 
 @router.get("/", response_model=list[FileRead])
-def list_files(skip: int = 0, limit: int = 100, db=Depends(get_db)):
-    return list_files_logic(db, skip, limit)
+def list_files(user_id: int = Depends(get_current_user_id), skip: int = 0, limit: int = 100, db=Depends(get_db)):
+    return list_files_logic(user_id, db, skip, limit)
 
 """
 UPDATE FILE LOGIC

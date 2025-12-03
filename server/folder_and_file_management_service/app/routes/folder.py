@@ -17,7 +17,7 @@ from app.controllers.folder import create_folder_in_project, get_project_logic
 from app.models.folder import FolderDB
 from app.models.folderManager import FolderManager
 
-
+from app.routes.security import get_current_user_id
 
 
 
@@ -50,13 +50,14 @@ def share_folder_with_project(
     db.commit()
     return {"message": "Folder shared successfully"}
 
-@router.post("/project/{projectid}", response_model=FolderRead, status_code=201)
-def create_folder_in_project_route(
+@router.post("/project/{projectid}", response_model=FolderRead, status_code=status.HTTP_201_CREATED)
+def create_folder(
     projectid: str,
-    folder_id: FolderCreate,
+    folder_data: FolderCreate,
+    user_id: int = Depends(get_current_user_id),  # Get authenticated user
     db: Session = Depends(get_db)
 ):
-    return create_folder_in_project(folder_id, projectid, db)
+    return create_folder_in_project(folder_data, projectid, user_id, db)
 
 @router.get("/project/{projectid}", response_model=list[FolderRead])
 def get_folders_in_project(projectid: str, db: Session = Depends(get_db)):
@@ -86,8 +87,8 @@ def read_folder(folder_id: int, db=Depends(get_db)):
 
 
 @router.get("/", response_model=list[FolderRead])
-def list_folders(skip: int = 0, limit: int = 100, db=Depends(get_db)):
-    return list_folders_logic(db, skip, limit)
+def list_folders(user_id: int = Depends(get_current_user_id), skip: int = 0, limit: int = 100, db=Depends(get_db)):
+    return list_folders_logic(user_id, db, skip, limit)
 
 """
 UPDATE FOLDER LOGIC

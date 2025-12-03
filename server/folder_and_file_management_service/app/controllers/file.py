@@ -177,11 +177,15 @@ def get_file_logic(file_id: int, db: Session) -> FileRead:
         raise HTTPException(status_code=404, detail="File not found")
     return FileRead.from_orm(db_file)
 
-
-def list_files_logic(db: Session, skip: int = 0, limit: int = 100) -> list[FileRead]:
-    stmt = select(FileDB).offset(skip).limit(limit)
+def list_files_logic(user_id: int, db: Session, skip: int = 0, limit: int = 100) -> list[FileRead]:
+    stmt = select(FileDB).where(FileDB.userid == user_id).offset(skip).limit(limit)
     files = db.exec(stmt).all()
     return [FileRead.from_orm(f) for f in files]
+
+# def list_files_logic(db: Session, skip: int = 0, limit: int = 100) -> list[FileRead]:
+#     stmt = select(FileDB).offset(skip).limit(limit)
+#     files = db.exec(stmt).all()
+#     return [FileRead.from_orm(f) for f in files]
 
 def get_files_by_user_logic(user_id: int, db: Session) -> list[FileRead]:
     stmt = select(FileDB).where(FileDB.userid == user_id)
