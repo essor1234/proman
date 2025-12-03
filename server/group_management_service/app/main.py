@@ -13,6 +13,8 @@ from .routes import group_routes, invitation_routes , membership_routes
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # Define lifespan to run tasks on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,6 +24,14 @@ async def lifespan(app: FastAPI):
     print("🛑 Shutting down...")
 
 app = FastAPI(title="Group Service API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # include routers
 app.include_router(group_routes.router)
