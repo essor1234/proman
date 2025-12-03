@@ -1,28 +1,93 @@
 # app/core/security.py
 
-from fastapi import Depends, HTTPException, status, Header
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from typing import Optional, Dict
+from typing import Dict
+# import jwt
+# import os
 
-# security = HTTPBearer() # <--- Comment this out if you want to avoid the "Lock" icon check in Swagger
-security = HTTPBearer(auto_error=False) # Use this so it doesn't complain if header is missing
+security = HTTPBearer()
+
+# --- JWT Authentication (COMMENTED OUT) ---
+# JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
+# JWT_ALGORITHM = "HS256"
 
 async def get_current_user(
-    x_user_id: Optional[str] = Header(None, alias="x-user-id"),
-    token_auth: Optional[HTTPAuthorizationCredentials] = Depends(security)
+    token_auth: HTTPAuthorizationCredentials = Depends(security)
 ) -> Dict:
+    """
+    Simple authentication: User enters their user ID as the Bearer token.
+    For testing purposes only - NOT for production use!
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid user ID in Bearer token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     
-    # --- TEMPORARY TESTING BYPASS ---
-    # We just pretend User ID 1 is always logged in.
-    print("⚠️ SECURITY DISABLED: Returning hardcoded User ID 1")
-    return {"id": 1} 
-    # --------------------------------
+    try:
+        # Get the token value (which should be a user ID number)
+        token = token_auth.credentials
+        
+        # Try to convert to integer
+        user_id = int(token)
+        
+        if user_id <= 0:
+            raise credentials_exception
+            
+        print(f"✅ Authenticated User ID: {user_id}")
+        return {"id": user_id}
+        
+    except ValueError:
+        # Token is not a valid integer
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Bearer token must be a valid user ID (integer)",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except Exception as e:
+        print(f"❌ Authentication error: {e}")
+        raise credentials_exception
 
-    # --- COMMENT OUT EVERYTHING BELOW ---
-    # credentials_exception = HTTPException(...)
-    # if x_user_id: ...
-    # try:
-    #    token = token_auth.credentials
-    #    payload = jwt.decode(...)
-    #    ...
-    # except ...
+# --- JWT Authentication Logic (COMMENTED OUT) ---
+# async def get_current_user(
+#     token_auth: HTTPAuthorizationCredentials = Depends(security)
+# ) -> Dict:
+#     """
+#     Extract and validate JWT token, return user info
+#     """
+#     credentials_exception = HTTPException(
+#         status_code=status.HTTP_401_UNAUTHORIZED,
+#         detail="Could not validate credentials",
+#         headers={"WWW-Authenticate": "Bearer"},
+#     )
+#     
+#     try:
+#         token = token_auth.credentials
+#         
+#         # Decode JWT token
+#         payload = jwt.decode(
+#             token, 
+#             JWT_SECRET, 
+#             algorithms=[JWT_ALGORITHM]
+#         )
+#         
+#         # Extract user_id from payload
+#         user_id: int = payload.get("sub")
+#         if user_id is None:
+#             raise credentials_exception
+#             
+#         print(f"✅ Authenticated User ID: {user_id}")
+#         return {"id": int(user_id)}
+#         
+#     except jwt.ExpiredSignatureError:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Token has expired",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     except jwt.InvalidTokenError:
+#         raise credentials_exception
+#     except Exception as e:
+#         print(f"❌ Token validation error: {e}")
+#         raise credentials_exception

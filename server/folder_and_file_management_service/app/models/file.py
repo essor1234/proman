@@ -7,3 +7,4 @@ class FileDB(FileBase, table=True):
     __tablename__ = "files"
 
     folder_links: List["FolderFileDB"] = Relationship(back_populates="file") # type: ignore
+    
