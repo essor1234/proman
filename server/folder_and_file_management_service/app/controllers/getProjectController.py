@@ -13,7 +13,7 @@ def get_project_logic(project_id: str) -> dict:
     Returns basic project info
     """
     # url = f"{PROJECT_SERVICE_URL}/projects/{project_id}"
-    url = f"{PROJECT_SERVICE_URL}/projects/projects/{project_id}"
+    url = f"{PROJECT_SERVICE_URL}/projects/{project_id}"
 
     print(f"[Folder Service] Calling Project Service → {url}")
 

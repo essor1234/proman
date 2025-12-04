@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 from typing import List
 # removed UUID import
-
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.controllers.group_controller import GroupController
