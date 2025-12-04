@@ -24,8 +24,6 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 
 # app/routes/project.py
 
-# app/routes/project.py
-
 @router.post("/", response_model=ProjectSchema, status_code=status.HTTP_201_CREATED)
 def create(
     project: ProjectCreate, 
