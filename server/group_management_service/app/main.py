@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from uuid import UUID
@@ -97,3 +98,34 @@ async def leave_group(
     controller = MembershipController(db)
     controller.leave_group(group_id, current_user["id"])
     return None
+=======
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
+
+from .core.database import init_db
+from .routes import group_routes, invitation_routes, membership_routes
+
+# Define lifespan to run tasks on startup
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Starting up... creating database tables...")
+    init_db()  # <--- This creates the tables based on your models
+    yield
+    print("🛑 Shutting down...")
+
+app = FastAPI(title="Group Service API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include all the routers from the routes module
+app.include_router(group_routes.router)
+app.include_router(membership_routes.router)
+app.include_router(invitation_routes.router)
+>>>>>>> Stashed changes

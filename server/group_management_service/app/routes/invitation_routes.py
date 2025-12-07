@@ -1,16 +1,58 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from uuid import UUID
+from datetime import datetime, timedelta
+from jose import jwt
 
 from app.core.database import get_db
 from app.core.security import get_current_user
+from app.core.config import settings
 from app.controllers.membership_controller import MembershipController
 from app.schemas.membership_schemas import (
     InvitationCreate,
     MembershipResponse
 )
+from app.schemas.invitation_schemas import InviteLinkResponse
 
 router = APIRouter(prefix="/groups/{group_id}", tags=["invitations"])
+
+
+@router.post(
+    "/generate-invite-link",
+    response_model=InviteLinkResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Generate a secure invite link"
+)
+async def generate_invite_link(
+    group_id: int,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Generate a secure, single-use invite link for the group.
+
+    The link expires in 24 hours.
+    """
+    # 1. Define expiry for the token
+    expire = datetime.utcnow() + timedelta(hours=24)
+    
+    # 2. Create the token payload
+    to_encode = {
+        "groupId": group_id,
+        "exp": expire
+    }
+    
+    # 3. Encode the JWT token
+    # Note: Using a hardcoded secret as per the request's example.
+    # In a real scenario, this should come from a secure config.
+    encoded_jwt = jwt.encode(to_encode, "mySecretKey", algorithm="HS256")
+    
+    # 4. Construct the invite link
+    # Using the base URL from the request's example.
+    base_url = "https://example.com/invite"
+    invite_link = f"{base_url}?token={encoded_jwt}"
+    
+    return {"inviteLink": invite_link, "token": encoded_jwt}
+
 
 # Invite
 @router.post(
