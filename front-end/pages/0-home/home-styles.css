@@ -1,0 +1,175 @@
+body {
+    font-family: Arial;
+
+    margin: 0px;
+}
+
+.navigationBar {
+    background-color: black;
+
+    border-bottom: 1px solid white;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    position: sticky;
+    top: 0;
+
+    z-index: 10;
+}
+    .leftButtons {
+        display: flex;
+        flex-direction: row;
+    }
+        .leftButtons .button {
+            color: white;
+            background-color: black;
+            
+            font-size: 20px;
+            font-weight: bold;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .leftButtons .button:hover{
+                color: black;
+                background-color: white;
+            }
+            
+            .leftButtons .button.currentPage{
+                color: black;
+                background-color: white;
+
+                cursor: default;
+            }
+
+        .leftButtons img {
+            border-radius: 20px;
+
+            margin-right: 10px;
+        }
+
+    .rightButtons {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+        .rightButtons .button {
+            color: white;
+            background-color: black;
+            
+            font-size: 20px;
+            font-weight: bold;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .rightButtons .button:hover{
+                color: white;
+                background-color: green;
+            }
+
+            .button i {
+                width: 30px;
+                height: 30px;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+
+.header {
+    font-size: 30px;
+    font-weight: 900;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    padding: 30px;
+}
+    .header img {
+        border-radius: 40px;
+
+        margin-right: 10px;
+    }
+
+.contentArea {
+    display: flex;
+    flex-direction: row;
+}
+    .sideBar {
+        background-color: black;
+        
+        width: max-content;
+        height: calc(100vh - 193px);
+
+        border-radius: 0px 30px 0px 0px;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        padding: 20px;
+    }
+        .sideBar .button {
+            color: white;
+            background-color: black;
+
+            width: 200px;
+            
+            font-size: 20px;
+            font-weight: bold;
+            
+            border: 1px solid white;
+            border-radius: 40px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            padding: 10px;
+
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .button:hover {
+                color: black;
+                background-color: white;
+            }
+
+            .button img {
+                border-radius: 30px;
+
+                margin-right: 10px;
+            }
+
+    .mainContent {
+        flex: 1;
+        
+        background-color: black;
+
+        border-radius: 30px 0px 0px 0px;
+        
+        margin-left: 10px;
+        
+        padding: 10px;
+    }

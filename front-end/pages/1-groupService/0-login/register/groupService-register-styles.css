@@ -1,0 +1,186 @@
+body {
+    background-color: #EA6B66;
+    background-image: url('https://winnie2802.github.io/Website-Visualization/images/backgroundImage.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    
+    font-family: Arial;
+
+    display: flex;
+    flex-direction: column;
+    
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    padding: 20px;
+}
+    .brand {
+        background-color: white;
+        
+        font-size: 30px;
+        font-weight: 900;
+        
+        width: max-content;
+        height: max-content;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+        
+        cursor: pointer;
+    }
+        .brand img {
+            margin-right: 10px;
+        }
+
+.registerForm {
+    background-color: white;
+
+    width: max-content;
+    height: max-content;
+
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+
+    padding: 30px;
+}
+    .mainLabel {
+        font-size: 20px;
+        font-weight: bold;
+        
+        text-align: center;
+    }
+
+    .email {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        margin-top: 20px;
+    }
+        .emailLabel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .email input {
+            font-size: 16px;
+
+            width: 600px;
+
+            padding: 10px;
+        }
+    
+    .username {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        margin-top: 20px;
+    }
+        .usernameLabel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .username input {
+            font-size: 16px;
+
+            width: 600px;
+
+            padding: 10px;
+        }
+
+    .password {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        margin-top: 20px;
+    }
+        .password-showHide {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: end;
+        }
+            .passwordLabel {
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .showHide {
+                color: #EA6B66;
+                
+                font-size: 16px;
+
+                cursor: pointer;
+                
+                visibility: hidden;
+            }
+                .showHide.visible {
+                    visibility: visible;
+                }
+        
+        .password input {
+            font-size: 16px;
+
+            width: 600px;
+
+            padding: 10px;
+        }
+
+    .registerButton {
+        color: white;
+        background-color: #EA6B66;
+        
+        font-size: 16px;
+        font-weight: bold;
+
+        border: 1px solid #EA6B66;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        margin-top: 20px;
+
+        padding: 10px;
+
+        cursor: pointer;
+        transition: 300ms;
+    }
+        .registerButton:hover {
+            opacity: 70%;
+        }
+
+    .login {
+        display: flex;
+        flex-direction: row-reverse;
+
+        margin-top: 10px;
+    }
+        .loginLabel {
+            color: #EA6B66;
+        
+            font-size: 16px;
+
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .loginLabel:hover {
+                text-decoration: underline;
+            }
