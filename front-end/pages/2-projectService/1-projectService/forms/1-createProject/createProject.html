@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Create Project</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="createProject-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../projectService.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" alt="projectLogo" width="40px" height="40px">
+            <label class="logoLabel">Project Service</label>
+        </div>
+    </div>
+
+    <form id="createProjectForm" class="createProjectForm" >
+        <label class="createProjectLabel">Create your project!</label>
+        
+        <label class="groupIdLabel">Group Id</label>
+        <input class="groupIdInput" id="groupId" name="groupId" type="text" placeholder="123..." required>
+
+        <label class="projectNameLabel">Project Name</label>
+        <input class="projectNameInput" id="projectName" name="projectName" type="text" placeholder="Project Name" required>
+
+        <button class="createProjectButton" type="submit">Create Project</button>
+    </form>
+
+    <script src="createProject-scripts.js"></script>
+</body>
+</html>

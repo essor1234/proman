@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Group Service</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="groupService-styles.css">
+</head>
+
+<body>
+    <div class="navigationBar">
+        <div class="leftButtons">
+            <div class="leftButton currentPage">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" alt="groupLogo" width="30px" height="30px">
+                Group Service
+            </div>
+
+            <div class="leftButton" onclick="window.location.href='../../2-projectService/1-projectService/projectService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" alt="projectLogo" width="30px" height="30px">
+                Project Service
+            </div>
+
+            <div class="leftButton" onclick="window.location.href='../../3-fileService/1-fileService/fileService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="30px" height="30px">
+                File Service
+            </div>
+        </div>
+
+        <div class="rightButtons">
+            <div class="rightButton" onclick="logout()">
+                Log out
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" alt="groupLogo" width="40px" height="40px">
+        <label class="logoLabel">Group Service</label>
+    </div>
+
+    <div class="contentArea">
+        <div class="sideBar">  
+            <div class="mainButtons">
+                <div class="mainButton" onclick="window.location.href='forms/1-createGroup/createGroup.html'">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    Create a group
+                </div>
+            </div>
+            
+            <div class="subButtons" id="subButtons">
+                <div class="group">
+                    Group Name
+                </div>
+            </div>
+        </div>
+
+        <div class="mainContent">
+            <div class="hello">
+                <div>Hello, <span id="username"></span>!</div>
+            </div>
+
+            <div class="content-messageBox">
+                <div class="content">
+                    <div class="noGroupSelect" id="groupDetails">
+                        Select a group to view its information.
+                    </div>
+                </div>
+                
+                <div class="contentBlank"></div>
+                
+                <div class="messageBox">
+                    <div class="shareFileButton"><i class="fa-solid fa-paperclip"></i></div>
+
+                    <input type="text" placeholder="Message...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="deleteGroupButton" id="deleteGroupButton">
+        <i class="fa-solid fa-trash-can"></i>
+    </div>
+
+    <script src="groupService-scripts.js"></script>
+</body>
+</html>

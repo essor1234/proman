@@ -1,0 +1,149 @@
+body {
+    background-image: url('https://winnie2802.github.io/Website-Visualization/images/backgroundImage.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    
+    font-family: Arial;
+
+    display: flex;
+    flex-direction: column;
+    
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    padding: 20px;
+}
+    .brand {
+        background-color: white;
+        
+        font-size: 30px;
+        font-weight: 900;
+        
+        width: max-content;
+        height: max-content;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+        
+        cursor: pointer;
+    }
+        .brand img {
+            border-radius: 40px;
+            
+            margin-right: 10px;
+        }
+
+.createGroupForm {
+    background-color: white;
+
+    width: max-content;
+    height: max-content;
+
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+
+    padding: 30px;
+}
+    .mainLabel {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .groupName {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        margin-top: 20px;
+    }
+        .groupNameLabel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .groupName input {
+            font-size: 16px;
+
+            width: 600px;
+
+            padding: 10px;
+        }
+
+    .groupDescription {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        margin-top: 20px;
+    }
+        .groupDescriptionLabel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .groupDescription textarea {
+            font-family: Arial;
+            font-size: 16px;
+            text-align: justify;
+
+            width: 600px;
+
+            padding: 10px;
+        }
+
+    .groupType {
+        display: flex;
+        justify-content: space-between;
+        
+        margin-top: 20px;
+    }
+        .groupTypeLabel {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .groupType .options {
+            display: flex;
+
+            gap: 60px;
+        }
+
+    .createGroupButton {
+        color: white;
+        background-color: #5865F2;
+        
+        font-size: 16px;
+        font-weight: bold;
+
+        border: 1px solid #5865F2;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        margin-top: 20px;
+
+        padding: 10px;
+
+        cursor: pointer;
+        transition: 300ms;
+    }
+        .createGroupButton:hover {
+            opacity: 70%;
+        }
