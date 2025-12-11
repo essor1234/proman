@@ -42,11 +42,10 @@ CREATE FILE LOGIC
 """
 @router.post("/{projectid}", response_model=FileCreate, status_code=status.HTTP_201_CREATED)
 def create_file(
+    projectid: str,
     file_in: FileCreate,
     user_id: int = Depends(get_current_user_id),   # ← Automatically extracted
-    projectid: str ="",
     db: Session = Depends(get_db),
-
 ):
     return create_file_logic_with_userid(file_in, user_id, db, projectid=projectid)
 """
