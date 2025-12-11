@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Update File</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="updateFile-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../../fileService.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="40px" height="40px">
+            <label class="logoLabel">File Service</label>
+        </div>
+    </div>
+
+    <form id="createFileForm" class="createFileForm" >
+        <label class="createFileLabel">Update File</label>
+        
+        <label class="projectIdLabel">Project Id</label>
+        <input class="projectIdInput" id="projectId" name="projectId" type="text" placeholder="123..." readonly>
+
+        <label class="fileNameLabel">File Name</label>
+        <input class="fileNameInput" id="fileName" name="fileName" type="text" placeholder="File Name" required>
+
+        <button class="createFileButton" type="submit">Update File</button>
+    </form>
+
+    <script src="updateFile-scripts.js"></script>
+</body>
+</html>

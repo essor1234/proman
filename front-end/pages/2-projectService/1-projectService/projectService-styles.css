@@ -1,0 +1,562 @@
+body {
+    font-family: Arial;
+    
+    margin: 0px;
+}
+
+.stickyTopNavigationBar {
+    background-color: black;
+    
+    border-bottom: 1px solid white;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    position: sticky;
+    top: 0;
+    
+    z-index: 10;
+}
+    .buttonsLeftGroup {
+        display: flex;
+        flex-direction: row;
+    }
+        .buttonsLeftGroup .button {
+            color: white;
+            background-color: black;
+            
+            font-size: 20px;
+            font-weight: bold;
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .buttonsLeftGroup .button:hover{
+                color: black;
+                background-color: white;
+            }
+
+            .buttonsLeftGroup .button.currentPage{
+                color: black;
+                background-color: white;
+                
+                cursor: default;
+            }
+
+        .buttonsLeftGroup img {
+            border-radius: 20px;
+            
+            margin-right: 10px;
+        }
+
+    .buttonsRightGroup {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+        .buttonsRightGroup .button {
+            color: white;
+            background-color: black;
+            
+            font-size: 20px;
+            font-weight: bold;
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .buttonsRightGroup .button:hover{
+                background-color: red;
+            }
+
+    .buttonsRightGroup i {
+        width: 30px;
+        height: 30px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+.header {
+    font-size: 30px;
+    font-weight: 900;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    padding: 30px;
+}
+    .header img {
+        border-radius: 40px;
+        
+        margin-right: 10px;
+    }
+
+.contentArea {
+    display: flex;
+    flex-direction: row;
+}
+    .sideBar {
+        background-color: black;
+        
+        width: max-content;
+        height: calc(100vh - 153px);
+        
+        border-radius: 0px 30px 0px 0px;
+        
+        display: flex;
+        flex-direction: column;
+    }
+        .mainButtons {
+            border-bottom: 1px solid white;
+            
+            display: flex;
+            flex-direction: column;
+            
+            padding: 20px;
+        }
+            .mainButtons .button {
+                color: white;
+                background-color: #FF751F;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                
+                border: 1px solid #FF751F;
+                border-radius: 40px;
+                
+                display: flex;
+                align-items: center;
+                
+                padding: 10px;
+                
+                cursor: pointer;
+                transition: 300ms;
+                
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }  
+                .mainButtons .button:hover {
+                    color: #FF751F;
+                    background-color: white;
+
+                    border: 1px solid #FF751F;
+                }
+
+            .mainButtons i {
+                margin-right: 10px;
+            }
+
+            .mainButtons label {
+                cursor: pointer;
+            }
+
+        .subButtons {
+            height: calc(100vh - 361px);
+            
+            border-top: 1px solid white;
+            
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            
+            padding: 20px;
+            
+            overflow-y: auto;
+        }  
+            .subButtons .button {
+                color: white;
+                background-color: black;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                width: 200px;
+                
+                border: 1px solid white;
+                border-radius: 10px;
+                
+                display: flex;
+                align-items: center;
+                
+                padding: 10px;
+                
+                cursor: pointer;
+                transition: 300ms;
+            }
+                .subButtons .button:hover {
+                    color: black;
+                    background-color: white;
+                }
+                
+                .subButtons .button.active {
+                    color: black;
+                    background-color: white;
+                }
+
+            .subButtons i {
+                margin-right: 10px;
+            }
+
+            .subButtons .loading {
+                color: white;
+                text-align: center;
+                padding: 20px;
+            }
+
+    .mainContent {
+        flex: 1;
+        
+        background-color: black;
+        
+        border-radius: 30px 0px 0px 0px;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        
+        margin-left: 10px;
+
+        padding: 20px;
+    }
+        .hello {
+            background-color: white;
+            
+            font-size: 20px;
+            font-weight: bold;
+            
+            width: max-content;
+            height: max-content;
+            
+            border-radius: 40px;
+            
+            display: flex;
+            flex-direction: row;
+            
+            padding: 10px;
+            
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .content {
+            flex: 1;
+            
+            background-color: black;
+            
+            border-radius: 10px;
+            
+            display: flex;
+            flex-direction: column;
+        }
+            .path {
+                color: white;
+                background-color: #FF751F;
+                
+                font-size: 20px;
+                font-weight: bold;
+                
+                border-radius: 10px;
+                
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                
+                padding: 10px;
+            }   
+                .pathSelect {
+                    font-size: 20px;
+                    font-weight: bold;
+
+                    border-radius: 10px;
+
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .pathSelect:hover {
+                        text-decoration: underline;
+                    }
+    
+            .groups {
+                background-color: black;
+                
+                height: calc(100vh - 357px);
+                
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                margin-top: 20px;
+                
+                overflow-y: auto;
+            }
+                .group {
+                    color: white;
+                    background-color: black;
+                    
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    border: 1px solid white;
+                    border-radius: 10px;
+                    
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    
+                    padding: 10px;
+                    
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .group:hover {
+                        color: black;
+                        background-color: white;
+                    }
+
+                    .groupLabel {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+                        .groupIdLabel {
+                            transition: 300ms;
+                        }
+                            .group:hover .groupIdLabel {
+                                color: #5865F2;
+                            }
+
+                        .projectNumbers {
+                            color: black;
+                            background-color: white;
+                            
+                            border-radius: 40px;
+                            
+                            padding-top: 10px;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                            padding-bottom: 10px;
+
+                            transition: 300ms;
+                        }
+                            .group:hover .projectNumbers {
+                                color: white;
+                                background-color: #5865F2;
+                            }
+
+            .projects {
+                background-color: black;
+                
+                height: calc(100vh - 357px);
+                
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                margin-top: 20px;
+                
+                overflow-y: auto;
+            }
+                .project {
+                    color: white;
+                    background-color: black;
+
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    border: 1px solid white;
+                    border-radius: 10px;
+                    
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    
+                    padding: 10px;
+                    
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .project:hover {
+                        color: black;
+                        background-color: white;
+                    }
+                    
+                    .project.active {
+                        color: black;
+                        background-color: white;
+                    }
+
+                    .projectLabel {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px
+                    }
+                        .projectIdLabel {
+                            transition: 300ms;
+                        }
+                            .project:hover .projectIdLabel {
+                                color: #FF751F;
+                            }
+                            
+                            .project.active .projectIdLabel {
+                                color: #FF751F;
+                            }
+                        
+                    .project-group {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: 10px;
+                        
+                        transform: 300ms;
+                    }
+                        .project:hover .project-group {
+                            color: #FF751F;
+                        }
+                        
+                        .project.active .project-group {
+                            color: #FF751F;
+                        }
+
+            .projectDetails {
+                background-color: white;
+                
+                height: calc(100vh - 320px);
+                
+                border-radius: 10px;
+                
+                display: flex;
+                flex-direction: column;
+                
+                margin-top: 20px;
+                
+                position: relative;
+            }
+                .noProjectSelected {
+                    font-size: 20px;
+                    font-weight: bold;
+                    
+                    width: calc(100% - 20px);
+                    
+                    display: flex;
+                    
+                    margin: 10px;
+                }
+                
+                .projectDetails .details {
+                    color: white;
+                    background-color: #FF751F;
+
+                    font-size: 20px;
+
+                    border-radius: 10px;
+
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    margin: 10px;
+
+                    padding: 20px;
+
+                    overflow-y: auto;
+                }
+                    .projectDetails label {
+                        font-weight: bold;
+                        text-align: justify;
+                    }
+                    
+                    .projectDetails .value {
+                        font-weight: normal;
+                    }
+                
+                .projectActions {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    justify-content: flex-end;
+                    align-items: center;
+                    
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                }
+                
+                .updateProject {
+                    color: #FF751F;
+                    background-color: white;
+
+                    font-size: 20px;
+                    font-weight: bold;
+
+                    width: max-content;
+
+                    border: 2px solid #FF751F;
+                    border-radius: 10px;
+
+                    padding: 10px 20px;
+
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .updateProject:hover {
+                        color: white;
+                        background-color: #FF751F;
+                    }
+                
+                .deleteProject {
+                    color: white;
+                    background-color: red;
+
+                    font-size: 20px;
+                    font-weight: bold;
+
+                    width: max-content;
+
+                    border: 2px solid red;
+                    border-radius: 10px;
+
+                    padding: 10px 20px;
+
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .deleteProject:hover {
+                        opacity: 70%;
+                    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

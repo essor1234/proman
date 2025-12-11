@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Update Group</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="updateGroup-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../groupService.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" alt="groupLogo" width="40px" height="40px">
+            <label class="logoLabel">Group Service</label>
+        </div>
+    </div>
+
+    <form id="updateGroupForm" class="updateGroupForm">
+        <label class="updateGroupLabel">Update Group</label>
+        
+        <div class="loadingMessage" id="loadingMessage">Loading group data...</div>
+        
+        <label class="groupIdLabel">Group Id</label>
+        <input class="groupIdInput" id="groupId" name="groupId" type="text" placeholder="Group Id" readonly>
+        
+        <label class="groupNameLabel">Group Name</label>
+        <input class="groupNameInput" id="groupNameInput" name="groupNameInput" type="text" placeholder="Group Name" required>
+
+        <label class="groupDescriptionLabel">Group Description (Optional)</label>
+        <textarea class="groupDescriptionInput" id="groupDescriptionInput" name="groupDescriptionInput" rows="6" placeholder="Group Description (Optional)"></textarea>
+
+        <div class="groupType">  
+            <label>Group Type</label>
+            
+            <div class="options">
+                <div class="publicOption">
+                    <input id="public" name="groupTypeInput" type="radio" value="public" checked>
+                    <label class="radioLabel" for="public"><i class="fas fa-globe"></i> Public</label>
+                </div>
+                
+                <div class="privateOption">
+                    <input id="private" name="groupTypeInput" type="radio" value="private">
+                    <label class="radioLabel" for="private"><i class="fas fa-lock"></i> Private</label>
+                </div>
+            </div>
+        </div>
+
+        <button class="updateGroupButton" type="submit" id="submitButton" disabled>Update Group</button>
+    </form>
+
+    <script src="updateGroup-scripts.js"></script>
+</body>
+</html>

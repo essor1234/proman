@@ -1,0 +1,128 @@
+body {
+    background-color: black;
+    background-image: url('https://winnie2802.github.io/Website-Visualization/images/backgroundImage.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    
+    font-family: Arial;
+    
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+    .brand {
+        background-color: white;
+        
+        width: max-content;
+        height: max-content;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        align-items: center;
+        
+        padding: 10px;
+        
+        cursor: pointer;
+    }
+    
+    .header img {
+        border-radius: 40px;
+        
+        margin-right: 10px;
+    }
+
+    .logoLabel {
+        font-size: 30px;
+        font-weight: 900;
+
+        cursor: pointer;
+    }
+
+.createProjectForm {
+    background-color: white;
+
+    width: max-content;
+    height: max-content;
+
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    
+    margin: auto;
+
+    padding: 30px;
+}
+    .createProjectLabel {
+        font-size: 20px;
+        font-weight: bold;
+        
+        text-align: center;
+    }
+
+    .groupIdLabel {
+        font-size: 18px;
+        font-weight: bold;
+
+        margin-top: 20px;
+    }
+        .groupIdInput {
+            font-size: 16px;
+
+            width: 600px;
+            height: 30px;
+
+            margin-top: 10px;
+
+            padding-left: 10px;
+        }
+
+    .projectNameLabel {
+        font-size: 18px;
+        font-weight: bold;
+
+        margin-top: 20px;
+    }
+        .projectNameInput {
+            font-size: 16px;
+
+            width: 600px;
+            height: 30px;
+
+            margin-top: 10px;
+
+            padding-left: 10px;
+        }
+
+    .createProjectButton {
+        color: white;
+        background-color: #FF751F;
+        
+        font-size: 16px;
+        font-weight: bold;                
+
+        width: 100%;
+
+        border: none;
+        border-radius: 10px;
+
+        margin: auto;
+        margin-top: 20px;
+        
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        cursor: pointer;
+        transition: 0.3s;
+    }
+        .createProjectButton :hover {
+            opacity: 70%;
+        }

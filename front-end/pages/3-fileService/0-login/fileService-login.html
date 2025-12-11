@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Login</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="fileService-login-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../0-home/home.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/homeLogo.png" alt="homeLogo" width="40px" height="40px">
+            Proman Micro-Services
+        </div>
+    </div>
+
+    <form class="loginForm" id="loginForm">
+        <div class="welcomeBack">
+            <div class="mainLabel">Welcome back!</div>
+            <div class="subLabel">We're so excited to see you again!</div>
+        </div>
+        
+        <div class="username">
+            <div class="usernameLabel">Username</div>
+            <input id="usernameInput" name="usernameInput" type="text" placeholder="Enter your Username" required>
+        </div>
+        
+        <div class="password">
+            <div class="password-showHide">
+                <div class="passwordLabel">Password</div>
+                <div class="showHide" id="showHide">Show</div>
+            </div>    
+            
+            <input id="passwordInput" name="passwordInput" type="password" placeholder="Enter your Password" required>
+
+            <div class="forgotPassword">
+                <div class="forgotPasswordLabel">Forgot your password?</div>
+            </div>
+        </div>
+        
+        <button class="loginButton" type="submit">Login</button>
+
+        <div class="register">
+            <div class="registerLabel" onclick="window.location.href='register/fileService-register.html'">Need an account? Register</div>
+        </div>
+    </form>
+
+    <script src="fileService-login-scripts.js"></script>
+</body>
+</html>
