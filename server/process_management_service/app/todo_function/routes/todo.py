@@ -46,7 +46,7 @@ def read_all_todos(
 
 @router.get("/todos/{todo_id}", response_model=TodoSchema)
 def read_one_todo(
-    todo_id: str, 
+    todo_id: int, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
@@ -57,7 +57,7 @@ def read_one_todo(
 
 @router.delete("/elements/{element_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_element(
-    element_id: str, 
+    element_id: int, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):

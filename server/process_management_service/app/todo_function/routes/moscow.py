@@ -44,7 +44,7 @@ def read_all_moscows(
 
 @router.get("/moscows/{moscow_id}", response_model=MoscowSchema)
 def read_one_moscow(
-    moscow_id: str, 
+    moscow_id: int, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
@@ -55,7 +55,7 @@ def read_one_moscow(
 
 @router.delete("/elements/{element_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_element(
-    element_id: str, 
+    element_id: int, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):

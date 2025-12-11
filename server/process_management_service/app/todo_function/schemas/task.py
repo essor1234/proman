@@ -1,16 +1,15 @@
-from typing import Optional, List
-from pydantic import BaseModel, ConfigDict
-
+from typing import Optional
+from pydantic import BaseModel, ConfigDict, Field
 
 class TaskCreate(BaseModel):
     description: str
-    isFinished: bool = False
-    elements_id: str  # Foreign Key linking to Todo or Moscow
+    is_finished: bool = Field(default=False, alias="isFinished")
+    elements_id: int 
 
 class Task(TaskCreate):
-    id: str
+    id: int
     model_config = ConfigDict(from_attributes=True)
 
 class TaskUpdate(BaseModel):
     description: Optional[str] = None
-    isFinished: Optional[bool] = None
+    is_finished: Optional[bool] = Field(default=None, alias="isFinished")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey, create_engine
+from sqlalchemy import Column, String, Boolean, ForeignKey, create_engine, Integer
 from sqlalchemy.orm import declarative_base, relationship, Session
 from .element import Element
 from ..core.database import Base
@@ -12,10 +12,8 @@ class Moscow(Element):
     """
     __tablename__ = 'moscow'
     
-    # The Primary Key is also the Foreign Key to Elements
-    id = Column(String(50), ForeignKey('elements.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('elements.id'), primary_key=True)
     
-    # Specific attribute from Class Diagram
     category = Column(String(100))
 
     __mapper_args__ = {

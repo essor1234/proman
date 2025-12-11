@@ -36,7 +36,7 @@ def add_task(
 
 @router.put("/tasks/{task_id}", response_model=TaskSchema)
 def update_existing_task(
-    task_id: str, 
+    task_id: int, 
     task_update: TaskUpdate, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
@@ -48,7 +48,7 @@ def update_existing_task(
 
 @router.delete("/elements/{element_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_element(
-    element_id: str, 
+    element_id: int, 
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
