@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
+
+
 # Dependencies
 from app.todo_function.core.database import get_db
 from app.todo_function.core.security import get_current_user
@@ -10,10 +12,10 @@ from app.todo_function.core.security import get_current_user
 # Importing directly from app.schemas thanks to __init__.py
 # Note: aliases (TodoSchema, MoscowSchema) are already defined in __init__.py
 from app.todo_function.schemas import (
-    TodoSchema, TodoCreate,
-    MoscowSchema, MoscowCreate,
-    TaskSchema, TaskCreate, TaskUpdate
+    Task as TaskSchema, TaskCreate, TaskUpdate
 )
+from app.todo_function.controllers import (
+    create_task, update_task, delete_element, delete_task)
 
 # Controller Functions
 # Importing directly from app.controllers thanks to __init__.py
@@ -58,4 +60,18 @@ def remove_element(
     deleted = delete_element(db, element_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Element not found")
+    return None
+
+@router.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_task(
+    task_id: int, 
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Deletes a single task.
+    """
+    deleted = delete_task(db, task_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Task not found")
     return None
