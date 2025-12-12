@@ -2,25 +2,23 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
-# Dependencies
 from app.todo_function.core.database import get_db
 from app.todo_function.core.security import get_current_user
 
-# Schemas
-# Importing directly from app.schemas thanks to __init__.py
-# Note: aliases (TodoSchema, MoscowSchema) are already defined in __init__.py
+# ✅ FIX: Import the real class names and ALIAS them here
 from app.todo_function.schemas import (
-    TodoSchema, TodoCreate,
-    MoscowSchema, MoscowCreate,
-    TaskSchema, TaskCreate, TaskUpdate
+    Moscow as MoscowSchema, MoscowCreate, MoscowUpdate,
+    Todo as TodoSchema,     TodoCreate,
+    Task as TaskSchema,     TaskCreate,   TaskUpdate
 )
 
-# Controller Functions
-# Importing directly from app.controllers thanks to __init__.py
 from app.todo_function.controllers import (
-    create_todo, get_todos, get_todo,
-    create_moscow, get_moscows, get_moscow,
-    create_task, update_task, delete_element
+    create_moscow, 
+    get_moscows, 
+    get_moscow, 
+    get_moscows_by_project, 
+    update_moscow,
+    delete_element  # <--- Add this here!
 )
 
 router = APIRouter(prefix="/process", tags=["Process Management"])
@@ -52,6 +50,18 @@ def read_one_moscow(
     if not moscow:
         raise HTTPException(status_code=404, detail="Moscow board not found")
     return moscow
+
+@router.put("/{moscow_id}", response_model=MoscowSchema)
+def update_existing_moscow(
+    moscow_id: int,
+    moscow_update: MoscowUpdate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    updated = update_moscow(db, moscow_id, moscow_update)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Moscow board not found")
+    return updated
 
 @router.delete("/elements/{element_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_element(

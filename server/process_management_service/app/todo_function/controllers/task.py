@@ -57,3 +57,15 @@ def delete_element(db: Session, element_id: int):
     db.delete(db_element)
     db.commit()
     return db_element
+
+def delete_task(db: Session, task_id: int):
+    """
+    Deletes a specific task by ID.
+    """
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    if not db_task:
+        return None
+    
+    db.delete(db_task)
+    db.commit()
+    return db_task
