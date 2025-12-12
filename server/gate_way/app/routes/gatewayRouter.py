@@ -44,6 +44,26 @@ async def register(request: Request):
 
     return Response(content=resp.text, status_code=resp.status_code, media_type="application/json")
 
+### User ###
+@router.get("/user")
+async def user(request: Request):
+    forward_headers = {"Content-Type": "application/json"}
+    
+    if "authorization" in request.headers:
+        forward_headers["Authorization"] = request.headers["authorization"]
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            resp = await client.get(
+                f"{ACCOUNT_SERVICE_URL}/users/me",
+                headers=forward_headers,
+                timeout=10.0,
+            )
+        except httpx.RequestError as e:
+            return Response(content=f"❌ Cannot connect to Account Service: {e}", status_code=502)
+    
+    return Response(content=resp.text, status_code=resp.status_code, media_type="application/json")
+
 ### GROUP SERVICE ###
 
 ### Create Group ###
