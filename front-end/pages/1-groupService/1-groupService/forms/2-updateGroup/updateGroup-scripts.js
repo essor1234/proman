@@ -1,10 +1,9 @@
-/// Check login status IMMEDIATELY ///
-const username = window.sessionStorage.getItem("username");
-const userId = window.sessionStorage.getItem("userId");
+/// 🚧 Check login status IMMEDIATELY ///
+const token = window.sessionStorage.getItem("token");
 
-if (!username || !userId) {
+if (!token) {
     alert("❌ You haven't logged in yet!");
-    window.location.href = "../../../0-login/groupService-login.html";
+    window.location.href='/1-groupService/0-login/groupService-login.html';
 }
 
 /// Load group data when page loads ///
@@ -27,7 +26,7 @@ window.addEventListener('DOMContentLoaded', async function() {
         const response = await fetch(`http://localhost:8000/read/group/${groupId}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -92,7 +91,7 @@ document.getElementById('updateGroupForm').addEventListener('submit', async func
         const response = await fetch(`http://localhost:8000/update/group/${groupId}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
