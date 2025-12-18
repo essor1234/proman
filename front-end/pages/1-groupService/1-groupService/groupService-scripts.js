@@ -1,10 +1,9 @@
 /// 🚧 Check login status IMMEDIATELY ///
-const userId   = window.sessionStorage.getItem("userId");
-const username = window.sessionStorage.getItem("username");
+const token = window.sessionStorage.getItem("token");
 
-if (!userId || !username) {
+if (!token) {
     alert("❌ You haven't logged in yet!");
-    window.location.href='../../../0-login/groupService-login.html';
+    window.location.href='/1-groupService/0-login/groupService-login.html';
 }
 
 /// Logout ///
@@ -12,10 +11,9 @@ function logout() {
     const logout = confirm(`Logging out? We'll miss you!`);
     
     if (logout) {
-        window.sessionStorage.removeItem("userId");
-        window.sessionStorage.removeItem("username");
+        window.sessionStorage.removeItem("token");
         
-        window.location.href='../../0-home/home.html';
+        window.location.href='/0-home/home.html';
     }
 }
 
@@ -76,12 +74,12 @@ async function listAllGroups() {
     const subButtons = document.getElementById('subButtons');
     
     try {
-        const userId = window.sessionStorage.getItem('userId');
+        const token = window.sessionStorage.getItem('token');
         
         const response = await fetch("http://localhost:8000/list/groups", {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -199,7 +197,7 @@ function displayGroupDetails(group) {
 /// Delete Group ///
 async function deleteGroup(groupId) {
     try {
-        const userId = window.sessionStorage.getItem('userId');
+        const token = window.sessionStorage.getItem('token');
         const group = readListAllGroups.find(g => g.id === groupId);
         
         if (!group) {
@@ -211,7 +209,7 @@ async function deleteGroup(groupId) {
         const checkProjectsResponse = await fetch("http://localhost:8000/list/projects", {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -237,13 +235,16 @@ async function deleteGroup(groupId) {
         const response = await fetch(`http://localhost:8000/delete/group/${groupId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
 
         if (response.ok || response.status === 204) {
             alert(`✅ Group "${group.name}" has been successfully deleted.`);
+
+            window.sessionStorage.removeItem("groupId");
+            window.sessionStorage.removeItem("groupName");
             
             // If the deleted group was selected, clear the details
             if (currentSelectedGroup && currentSelectedGroup.id === groupId) {

@@ -1,10 +1,9 @@
 /// 🚧 Check login status IMMEDIATELY ///
-const userId   = window.sessionStorage.getItem("userId");
-const username = window.sessionStorage.getItem("username");
+const token = window.sessionStorage.getItem("token");
 
-if (!userId || !username) {
+if (!token) {
     alert("❌ You haven't logged in yet!");
-    window.location.href='../../../0-login/groupService-login.html';
+    window.location.href='/1-groupService/0-login/groupService-login.html';
 }
 
 /// Create Group ///
@@ -16,12 +15,12 @@ document.getElementById('createGroupForm').addEventListener('submit', async func
     const groupTypeInput        = document.querySelector('input[name="groupTypeInput"]:checked').value;
 
     try {
-        const userId = window.sessionStorage.getItem('userId');
+        const token = window.sessionStorage.getItem('token');
         
         const response = await fetch("http://localhost:8000/create/group", {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${userId}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
