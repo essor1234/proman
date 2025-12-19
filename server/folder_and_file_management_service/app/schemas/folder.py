@@ -8,12 +8,13 @@ from .folderFile import FolderFileBase
 class FolderBase(SQLModel):
     """Base schema for Folder entity."""
     id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    userid: int = Field(..., index=True)
     name: str = Field(..., min_length=1, max_length=255)
     path: str = Field(..., min_length=1)
 
 class FolderCreate(FolderBase):
     """For POST requests—user provides these."""
-    id: Optional[int] = None
+    name: str = Field(..., min_length=1, max_length=255)
 
 class FolderRead(FolderBase):
     """For GET requests—user receives these."""

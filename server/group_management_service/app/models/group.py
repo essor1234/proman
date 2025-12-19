@@ -1,52 +1,40 @@
-from sqlalchemy import Column, String, DateTime, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum
 from sqlalchemy.dialects.sqlite import TEXT
 from sqlalchemy.orm import relationship
-import uuid
 import enum
 from datetime import datetime
-from typing import List, TYPE_CHECKING # Added imports for proper type hinting
-
-# --- Conditional UUID Setup ---
-try:
-    from sqlalchemy.dialects.postgresql import UUID
-    use_uuid = True
-except ImportError:
-    use_uuid = False
+from typing import TYPE_CHECKING
 
 from ..core.database import Base
 
-# Optional: For type hinting if Membership is defined elsewhere
+# Type checking import to avoid circular dependency errors at runtime
 if TYPE_CHECKING:
     from .membership import Membership
 
-
 class GroupVisibility(str, enum.Enum):
-    """Group visibility options"""
+    """Enumeration for Group Visibility options."""
     PUBLIC = "public"
     PRIVATE = "private"
     INVITE_ONLY = "invite_only"
 
-
 class Group(Base):
     """
-    Group model representing a user group or team.
+    SQLAlchemy model representing the 'groups' table.
     """
     __tablename__ = "groups"
     
-    # Primary key
-    if use_uuid:
-        id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-        owner_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-    else:
-        # For SQLite: store UUID as string
-        id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-        owner_id = Column(String(36), nullable=False, index=True)
+    # Primary Key: Integer. 
+    # In SQLite/SQLAlchemy, 'Integer' + 'primary_key=True' automatically creates an Auto-Incrementing ID.
+    id = Column(Integer, primary_key=True, index=True)
     
-    # Group information
+    # Owner ID is now an Integer to match the user service's likely integer IDs.
+    owner_id = Column(Integer, nullable=False, index=True)
+    
+    # Basic Group Info
     name = Column(String(255), nullable=False, index=True)
     description = Column(TEXT, nullable=True)
     
-    # Visibility settings
+    # Visibility using the Enum defined above
     visibility = Column(
         SQLEnum(GroupVisibility),
         default=GroupVisibility.PRIVATE,
@@ -57,25 +45,24 @@ class Group(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # 🔗 Relationships: One-to-Many
-    # This creates the list of Membership objects accessible via group.memberships
-    memberships: relationship[List["Membership"]] = relationship( # <-- UNCOMMENTED/FINALIZED
-        "Membership", 
-        back_populates="group", 
-        cascade="all, delete-orphan"
-    )
+    # Relationship: One-to-Many
+    # This links the Group to the Membership table.
+    # cascade="all, delete-orphan": If a group is deleted, delete all its memberships too.
+    memberships = relationship(
+        "Membership",
+        back_populates="group",
+        cascade="all, delete-orphan",
+        lazy="select"  # Load memberships only when accessed
+    ) 
     
+    # Calculated Property for Pydantic
+    # This allows the API to return 'member_count' without storing it in a database column.
+    @property
+    def member_count(self) -> int:
+        """Returns the number of members in this group."""
+        if self.memberships:
+            return len(self.memberships)
+        return 0
+
     def __repr__(self):
-        return f"<Group(id={self.id}, name={self.name}, owner_id={self.owner_id})>"
-    
-    def to_dict(self):
-        """Convert model to dictionary"""
-        return {
-            "id": str(self.id),
-            "name": self.name,
-            "description": self.description,
-            "visibility": self.visibility.value if isinstance(self.visibility, GroupVisibility) else self.visibility,
-            "owner_id": str(self.owner_id),
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+        return f"<Group(id={self.id}, name={self.name})>"

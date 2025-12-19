@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>File Service</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="fileService-styles.css">
+</head>
+
+<body>
+    <div class="stickyTopNavigationBar">
+        <div class="buttonsLeftGroup">
+            <div class="button" onclick="window.location.href='../../1-groupService/1-groupService/groupService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" alt="groupLogo" width="30px" height="30px">
+                Group Service
+            </div>
+
+            <div class="button" onclick="window.location.href='../../2-projectService/1-projectService/projectService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" alt="projectLogo" width="30px" height="30px">
+                Project Service
+            </div>
+
+            <div class="button currentPage">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="30px" height="30px">
+                File Service
+            </div>
+        </div>
+
+        <div class="buttonsRightGroup">
+            <div class="button" onclick="logout()">
+                Log out
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="40px" height="40px">
+        File Service
+    </div>
+
+    <div class="contentArea">    
+        <div class="sideBar">  
+            <div class="mainButtons">
+                <div class="button" onclick="window.location.href='forms/file/1-createFile/createFile.html'">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    Create File
+                </div>
+                <div class="button" onclick="window.location.href='forms/folder/1-createFolder/createFolder.html'">
+                    <i class="fa-solid fa-folder-plus"></i>
+                    Create Folder
+                </div>
+            </div>
+            
+            <div class="subButtons">
+                
+            </div>
+        </div>
+        
+        <div class="mainContent">
+            <div class="hello">
+                <div>Hello, <span id="username"></span>!</div>
+            </div>
+
+            <div class="content">
+                <div class="path" id="pathDisplay">
+                    <div class="pathSelect">File Service</div>
+                </div>
+                
+                <div id="mainContentContainer">
+                    <div class="projects" id="projectsContainer">
+                        <div class="loading">Loading projects...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="fileService-scripts.js"></script>
+</body>
+</html>

@@ -62,7 +62,7 @@ async def generate_invite_link(
     summary="Invite member to group"
 )
 async def invite_member(
-    group_id: UUID,
+    group_id: int,
     invitation_data: InvitationCreate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -88,7 +88,7 @@ async def invite_member(
     summary="Accept group invitation"
 )
 async def accept_invitation(
-    group_id: UUID,
+    group_id: int,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -107,7 +107,7 @@ async def accept_invitation(
     summary="Decline group invitation"
 )
 async def decline_invitation(
-    group_id: UUID,
+    group_id: int,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -127,7 +127,7 @@ async def decline_invitation(
     summary="Leave group"
 )
 async def leave_group(
-    group_id: UUID,
+    group_id: int,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

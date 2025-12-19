@@ -14,7 +14,17 @@ from app.routes.folder import router as folder_router
 from app.routes.folderFile import router as folder_file_router
 from app.routes.testing import router as testing_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="ProMan", version="1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # CREATE TABLES AFTER MODELS ARE IMPORTED

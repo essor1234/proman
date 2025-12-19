@@ -1,27 +1,15 @@
-# from typing import List
-# from pydantic import field_validator
-# from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
+class Settings(BaseSettings):
+    # REMOVE the hardcoded value. 
+    # By leaving it as just ': str', Pydantic forces it to be loaded from .env
+    SECRET_KEY: str 
+    ALGORITHM: str = "HS256"
 
-# class Settings(BaseSettings):
-#     # Match names with the .env file to avoid errors
-#     API_PREFIX: str = "/api"  # Corrected from API_PREFEX
-#     DEBUG: bool = False
+    # This tells Pydantic to read the .env file
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore"
+    )
 
-#     DATABASE_URL: str
-
-#     ALLOWED_ORIGINS: str = "" # Corrected from ALLOW_ORIGINS
-
-#     OPENAI_API_KEY: str
-
-#     @field_validator("ALLOWED_ORIGINS") # Validator now matches the corrected field name
-#     def parse_allow_origins(cls, v: str) -> List[str]:
-#         # Split ALLOWED_ORIGINS string from .env into a list
-#         return v.split(",") if v else []
-    
-#     class Config:
-#         env_file = ".env"
-#         env_file_encoding = "utf-8"
-#         case_sensitive = True
-
-# settings = Settings()
+settings = Settings()

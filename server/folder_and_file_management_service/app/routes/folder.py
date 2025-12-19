@@ -8,13 +8,18 @@ from app.controllers.folder import (
     create_folder_logic,
     get_folder_logic,
     list_folders_logic,
-    update_folder_logic,
-    delete_folder_logic,
+    delete_folder_in_project,
+    create_folder_in_project,
+    update_folder_in_project
 )
 from app.schemas.folder import FolderCreate, FolderRead, FolderUpdate
 from app.controllers.folder import create_folder_in_project, get_project_logic
 from app.models.folder import FolderDB
 from app.models.folderManager import FolderManager
+
+from app.routes.security import get_current_user_id
+
+
 
 router = APIRouter(prefix="/folders", tags=["folders"])
 
@@ -45,13 +50,14 @@ def share_folder_with_project(
     db.commit()
     return {"message": "Folder shared successfully"}
 
-@router.post("/project/{projectid}", response_model=FolderRead, status_code=201)
-def create_folder_in_project_route(
+@router.post("/project/{projectid}", response_model=FolderRead, status_code=status.HTTP_201_CREATED)
+def create_folder(
     projectid: str,
-    folder_in: FolderCreate,
+    folder_data: FolderCreate,
+    user_id: int = Depends(get_current_user_id),  # Get authenticated user
     db: Session = Depends(get_db)
 ):
-    return create_folder_in_project(folder_in, projectid, db)
+    return create_folder_in_project(folder_data, projectid, user_id, db)
 
 @router.get("/project/{projectid}", response_model=list[FolderRead])
 def get_folders_in_project(projectid: str, db: Session = Depends(get_db)):
@@ -67,26 +73,44 @@ def get_folders_in_project(projectid: str, db: Session = Depends(get_db)):
     return [FolderRead.from_orm(f) for f in folders]
 
 
-@router.post("/", response_model=FolderRead, status_code=status.HTTP_201_CREATED)
-def create_folder(folder_in: FolderCreate, db=Depends(get_db)):
-    return create_folder_logic(folder_in, db)
+# @router.post("/", response_model=FolderRead, status_code=status.HTTP_201_CREATED)
+# def create_folder(folder_in: FolderCreate, db=Depends(get_db)):
+#     return create_folder_logic(folder_in, db)
 
+"""
+READ FOLDER LOGIC
 
+"""
 @router.get("/{folder_id}", response_model=FolderRead)
 def read_folder(folder_id: int, db=Depends(get_db)):
     return get_folder_logic(folder_id, db)
 
 
 @router.get("/", response_model=list[FolderRead])
-def list_folders(skip: int = 0, limit: int = 100, db=Depends(get_db)):
-    return list_folders_logic(db, skip, limit)
+def list_folders(user_id: int = Depends(get_current_user_id), skip: int = 0, limit: int = 100, db=Depends(get_db)):
+    return list_folders_logic(user_id, db, skip, limit)
 
+"""
+UPDATE FOLDER LOGIC
 
-@router.patch("/{folder_id}", response_model=FolderRead)
-def update_folder(folder_id: int, folder_up: FolderUpdate, db=Depends(get_db)):
-    return update_folder_logic(folder_id, folder_up, db)
+"""
+@router.patch("/project/{projectid}/folder/{folder_id}")
+def update_folder(
+    folder_id: int,
+    projectid: str,           # ← required!
+    folder_up: FolderUpdate,
+    db: Session = Depends(get_db)
+):
+    return update_folder_in_project(folder_id, folder_up, projectid, db)
 
+"""
+DELETE FOLDER LOGIC
+"""
 
-@router.delete("/{folder_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_folder(folder_id: int, db=Depends(get_db)):
-    delete_folder_logic(folder_id, db)
+@router.delete("/project/{projectid}/folder/{folder_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_folder(
+    folder_id: int,
+    projectid: str,           # ← required!
+    db: Session = Depends(get_db)
+):
+    return delete_folder_in_project(folder_id, projectid, db)

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 from typing import List
-from uuid import UUID
+# removed UUID import
 
-from ..core.database import get_db
-from ..core.security import get_current_user
-from ..controllers.membership_controller import MembershipController
-from ..schemas.membership_schemas import (
+from app.core.database import get_db
+from app.core.security import get_current_user
+from app.controllers.membership_controller import MembershipController
+from app.schemas.membership_schemas import (
     MembershipCreate,
     MembershipUpdate,
     MembershipResponse
@@ -22,23 +22,16 @@ router = APIRouter(prefix="/groups/{group_id}/members", tags=["memberships"])
     summary="Add member to group"
 )
 async def add_member(
-    group_id: UUID,
+    group_id: int,  # <--- CHANGED
     membership_data: MembershipCreate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Add a new member to the group.
-    
-    Only group owner or admins can add members.
-    - **user_id**: ID of user to add
-    - **role**: member or admin (default: member)
-    """
     controller = MembershipController(db)
     return controller.add_member(
         group_id=group_id,
         membership_data=membership_data,
-        added_by=current_user["id"]
+        added_by=int(current_user["id"])
     )
 
 
@@ -48,20 +41,15 @@ async def add_member(
     summary="List group members"
 )
 async def list_members(
-    group_id: UUID,
+    group_id: int,  # <--- CHANGED
     status_filter: str = Query(None, description="Filter by status: active, pending"),
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    List all members of the group.
-    
-    User must be a member of the group to view members.
-    """
     controller = MembershipController(db)
     return controller.list_members(
         group_id=group_id,
-        user_id=current_user["id"],
+        user_id=int(current_user["id"]),
         status_filter=status_filter
     )
 
@@ -72,21 +60,17 @@ async def list_members(
     summary="Get member details"
 )
 async def get_member(
-    group_id: UUID,
-    user_id: UUID,
+    group_id: int,  # <--- CHANGED
+    user_id: int,   # <--- CHANGED
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Get details about a specific group member.
-    """
     controller = MembershipController(db)
     return controller.get_member(
         group_id=group_id,
         user_id=user_id,
-        requester_id=current_user["id"]
+        requester_id=int(current_user["id"])
     )
-
 
 @router.put(
     "/{user_id}",
@@ -94,26 +78,20 @@ async def get_member(
     summary="Update member role"
 )
 async def update_member(
-    group_id: UUID,
-    user_id: UUID,
+    group_id: int,
+    user_id: int,
     membership_data: MembershipUpdate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Update a member's role in the group.
-    
-    Only group owner or admins can update member roles.
-    Cannot change the owner's role.
-    """
     controller = MembershipController(db)
     return controller.update_member(
         group_id=group_id,
         user_id=user_id,
         membership_data=membership_data,
-        updated_by=current_user["id"]
+        # FIX: Change str(...) to int(...)
+        updated_by=int(current_user["id"]) 
     )
-
 
 @router.delete(
     "/{user_id}",
@@ -121,22 +99,15 @@ async def update_member(
     summary="Remove member from group"
 )
 async def remove_member(
-    group_id: UUID,
-    user_id: UUID,
+    group_id: int,  # <--- CHANGED
+    user_id: int,   # <--- CHANGED
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """
-    Remove a member from the group.
-    
-    - Owner and admins can remove members
-    - Members can remove themselves (leave group)
-    - Cannot remove the group owner
-    """
     controller = MembershipController(db)
     controller.remove_member(
         group_id=group_id,
         user_id=user_id,
-        removed_by=current_user["id"]
+        removed_by=int(current_user["id"])
     )
     return None

@@ -30,6 +30,7 @@ services:
       DATABASE_URL: ${DB_ACCOUNT}
     volumes:
       - ./server/account_management_service:/app
+      - ./server/account_management_service/data:/app/data
       - ./data:/data
     networks:
       - promannet
@@ -85,6 +86,7 @@ services:
       - "8004:8000"
     environment:
       DATABASE_URL: ${DB_PROJECT}
+      # SECRET_KEY: sdafefdfdsfa2312324
     volumes:
       - ./server/project_management_service:/app
       - ./data:/data
@@ -94,6 +96,26 @@ services:
     restart: unless-stopped
     profiles: ["dev", "prod"]
 
+  # -------------------------------------------------
+  # process Management Service
+  # -------------------------------------------------
+  process_service:
+    build: ./server/process_management_service
+    container_name: process_service
+    ports:
+      - "8005:8000"
+    environment:
+      DATABASE_URL: ${DB_PROCESS} # Fix here
+    volumes:
+      - ./server/process_management_service:/app
+      - ./data:/data
+    networks:
+      - promannet
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+  
   # -------------------------------------------------
   # API Gateway (entry point)
   # -------------------------------------------------
@@ -107,11 +129,28 @@ services:
       FILE_SERVICE_URL: http://file_service:8000
       GROUP_SERVICE_URL: http://group_service:8000
       PROJECT_SERVICE_URL: http://project_service:8000
+      PROCESS_SERVICE_URL: http://process_service:8000
     depends_on:
       - account_service
       - file_service
       - group_service
       - project_service
+      - frontend
+    networks:
+      - promannet
+    restart: unless-stopped
+    profiles: ["dev", "prod"]
+
+  # -------------------------------------------------
+  # Frontend
+  # -------------------------------------------------
+  frontend:
+    image: nginx
+    container_name: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./front-end/pages:/usr/share/nginx/html
     networks:
       - promannet
     restart: unless-stopped
