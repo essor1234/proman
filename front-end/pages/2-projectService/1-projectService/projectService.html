@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Project Service</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="projectService-styles.css">
+</head>
+
+<body>
+    <div class="stickyTopNavigationBar">
+        <div class="buttonsLeftGroup">
+            <div class="button" onclick="window.location.href='../../1-groupService/1-groupService/groupService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/groupLogo.png" alt="groupLogo" width="30px" height="30px">
+                Group Service
+            </div>
+
+            <div class="button currentPage">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" alt="projectLogo" width="30px" height="30px">
+                Project Service
+            </div>
+
+            <div class="button" onclick="window.location.href='../../3-fileService/1-fileService/fileService.html'">
+                <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="30px" height="30px">
+                File Service
+            </div>
+        </div>
+
+        <div class="buttonsRightGroup">
+            <div class="button" onclick="logout()">
+                Log out
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://winnie2802.github.io/Website-Visualization/images/projectLogo.png" alt="projectLogo" width="40px" height="40px">
+        Project Service
+    </div>
+
+    <div class="contentArea">    
+        <div class="sideBar">  
+            <div class="mainButtons">
+                <div class="button" onclick="window.location.href='forms/1-createProject/createProject.html'">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    Create a project
+                </div>
+            </div>
+            
+            <div class="subButtons">
+                <div class="button">
+                    <i class="fa-solid fa-arrow-up-right-dots"></i>
+                    MoSCoW
+                </div>
+
+                <div class="button">
+                    <i class="fa-solid fa-trophy"></i>
+                    MVP
+                </div>
+
+                <div class="button">
+                    <i class="fa-solid fa-list-check"></i>
+                    ToDo
+                </div>
+            </div>
+        </div>
+        
+        <div class="mainContent">
+            <div class="hello">
+                <div>Hello, <span id="username"></span>!</div>
+            </div>
+
+            <div class="content">
+                <div class="path" id="pathDisplay">
+                    <div class="pathSelect">Project Service</div>
+                </div>
+                
+                <div id="mainContentContainer">
+                    <div class="groups" id="groupsContainer">
+                        <div class="loading">Loading groups...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="projectService-scripts.js"></script>
+</body>
+</html>

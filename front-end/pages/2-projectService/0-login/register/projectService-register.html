@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Register</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="projectService-register-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../../0-home/home.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/homeLogo.png" alt="homeLogo" width="40px" height="40px">
+            Proman Micro-Services
+        </div>
+    </div>
+
+    <form class="registerForm" id="registerForm">
+        <div class="mainLabel">Register</div>
+        
+        <div class="email">
+            <div class="emailLabel">Email</div>
+            <input id="emailInput" name="emailInput" type="text" placeholder="email@example.com" required>
+        </div>
+        
+        <div class="username">
+            <div class="usernameLabel">Username</div>
+            <input id="usernameInput" name="usernameInput" type="text" placeholder="Username" required>
+        </div>
+        
+        <div class="password">
+            <div class="password-showHide">
+                <div class="passwordLabel">Password</div>
+                <div class="showHide" id="showHide">Show</div>
+            </div>    
+            
+            <input id="passwordInput" name="passwordInput" type="password" placeholder="Example@123" required>
+        </div>
+        
+        <button class="registerButton" type="submit">Register</button>
+
+        <div class="login">
+            <div class="loginLabel" onclick="window.location.href='../projectService-login.html'">Already have an account? Log in</div>
+        </div>
+    </form>
+
+    <script src="projectService-register-scripts.js"></script>
+</body>
+</html>
