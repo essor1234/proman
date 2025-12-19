@@ -43,10 +43,11 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         console.log("🔍 Response:", data);
 
         if (response.ok) {
-            window.sessionStorage.setItem("userId", data.user_id);
-            window.sessionStorage.setItem("username", data.username);
+            window.sessionStorage.setItem("token", data.token);
             
-            alert(`✅ Login successful! Welcome, ${data.username}!`);
+            alert(`✅ Login successful! Welcome, ${usernameInput}!`);
+
+            window.sessionStorage.setItem("username", usernameInput);
             window.location.href = '../1-groupService/groupService.html';
         } else {
             let errorMessage = "❌ Failed to login.";
