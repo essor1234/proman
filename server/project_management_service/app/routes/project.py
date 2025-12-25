@@ -13,6 +13,17 @@ from app.schemas.project import (
 # ✅ FIX: Import SQLAlchemy models for querying
 from app.models.project import Project, ProjectMember
 
+# ✅ FIX: Import Pydantic schemas with alias to avoid confusion
+from app.schemas.project import (
+    Project as ProjectSchema, 
+    ProjectCreate, 
+    ProjectMember as ProjectMemberSchema, 
+    ProjectMemberCreate, 
+    ProjectUpdate
+)
+# ✅ FIX: Import SQLAlchemy models for querying
+from app.models.project import Project, ProjectMember
+
 from app.controllers.project import (
     create_project, add_member, get_projects, get_project, get_members,
     update_project, delete_project, remove_member
@@ -21,6 +32,8 @@ from app.controllers.project import (
 from app.core.security import get_current_user
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
+
+# app/routes/project.py
 
 # app/routes/project.py
 
@@ -46,6 +59,8 @@ def create(
         owner_id=int(current_user["id"]), 
         token=token
     )
+
+@router.post("/members", response_model=ProjectMemberSchema)
 
 @router.post("/members", response_model=ProjectMemberSchema)
 def add_user(project_member: ProjectMemberCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
@@ -76,7 +91,29 @@ def read_all(
     ).offset(skip).limit(limit).all()
     
     return user_projects
+@router.get("/", response_model=list[ProjectSchema])
+def read_all(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  # ✅ Added authentication
+):
+    """
+    Get all projects where the current user is a member (any role).
+    """
+    user_id = int(current_user["id"])
+    
+    # ✅ FIX: Use SQLAlchemy models (not Pydantic schemas) for querying
+    user_projects = db.query(Project).join(
+        ProjectMember, 
+        Project.id == ProjectMember.projectId
+    ).filter(
+        ProjectMember.userId == user_id
+    ).offset(skip).limit(limit).all()
+    
+    return user_projects
 
+@router.get("/{project_id}", response_model=ProjectSchema)
 @router.get("/{project_id}", response_model=ProjectSchema)
 def read_one(project_id: int, db: Session = Depends(get_db)):
     project = get_project(db, project_id)
@@ -85,12 +122,14 @@ def read_one(project_id: int, db: Session = Depends(get_db)):
     return project
 
 @router.get("/{project_id}/members", response_model=list[ProjectMemberSchema])
+@router.get("/{project_id}/members", response_model=list[ProjectMemberSchema])
 def read_members(project_id: int, db: Session = Depends(get_db)):
     project = get_project(db, project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     return get_members(db, project_id)
 
+@router.put("/{project_id}", response_model=ProjectSchema)
 @router.put("/{project_id}", response_model=ProjectSchema)
 def update(project_id: int, update: ProjectUpdate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     # Pass current_user for permission checks if needed in future
@@ -100,12 +139,14 @@ def update(project_id: int, update: ProjectUpdate, db: Session = Depends(get_db)
     return updated
 
 @router.delete("/{project_id}", response_model=ProjectSchema)
+@router.delete("/{project_id}", response_model=ProjectSchema)
 def remove(project_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     deleted = delete_project(db, project_id, user_id=int(current_user["id"]))
     if not deleted:
         raise HTTPException(status_code=404, detail="Project not found")
     return deleted
 
+@router.delete("/{project_id}/members/{user_id}", response_model=ProjectMemberSchema)
 @router.delete("/{project_id}/members/{user_id}", response_model=ProjectMemberSchema)
 def remove_user(project_id: int, user_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     deleted = remove_member(db, project_id, user_id, requester_id=int(current_user["id"]))

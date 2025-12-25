@@ -24,9 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/", tags=["Root"])
-def read_root():
-    return {"message": "Welcome to the Project Management API"}
 
 # Removed: app.include_router(group.router, prefix="/groups")
 app.include_router(project.router)
