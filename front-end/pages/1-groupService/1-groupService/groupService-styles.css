@@ -1,0 +1,366 @@
+body {
+    font-family: Arial;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+.navigationBar {
+    background-color: black;
+    border-bottom: 1px solid white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+    .leftButtons {
+        display: flex;
+        flex-direction: row;
+    }
+        .leftButton {
+            color: white;
+            background-color: black;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .leftButton:hover{
+                color: black;
+                background-color: white;
+            }
+            
+            .leftButton.currentPage{
+                color: black;
+                background-color: white;
+                cursor: default;
+            }
+
+        .leftButton img {
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+    .rightButtons {
+        display: flex;
+        flex-direction: row-reverse;
+    }
+        .rightButton {
+            color: white;
+            background-color: black;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .rightButton:hover{
+                background-color: red;
+            }
+
+        .rightButton i {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+.header {
+    font-size: 30px;
+    font-weight: 900;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 30px;
+}
+    .header img {
+        border-radius: 40px;
+        margin-right: 10px;
+    }
+
+.contentArea {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+    .sideBar {
+        background-color: black;
+        width: max-content;
+        height: calc(100vh - 153px);
+        border-radius: 0px 30px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+        .mainButtons {
+            border-bottom: 1px solid white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+            .mainButton {
+                color: white;
+                background-color: #5865F2;
+                font-size: 20px;
+                font-weight: bold;
+                width: 200px;
+                border: 1px solid #5865F2;
+                border-radius: 40px;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                cursor: pointer;
+                transition: 300ms;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+                .mainButton:hover {
+                    color: #5865F2;
+                    background-color: white;
+                }
+
+            .mainButton i {
+                margin-right: 10px;
+            }
+
+        .subButtons {
+            max-height: calc(100vh - 361px);
+            border-top: 1px solid white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        } 
+            .group {
+                color: white;
+                background-color: black;
+                font-size: 20px;
+                font-weight: bold;
+                width: 200px;
+                border: 1px solid white;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                cursor: pointer;
+                transition: 300ms;
+            }
+                .group:hover {
+                    color: black;
+                    background-color: white;
+                }
+            
+                .group.active {
+                    color: black;
+                    background-color: white;
+                }
+                
+                .group.dragging {
+                    opacity: 70%;
+                }
+
+                .group i {
+                    margin-right: 10px;
+                }
+        
+        .deleteGroupButton {
+            color: white;
+            background-color: black;
+            font-size: 20px;
+            width: max-content;
+            height: max-content;
+            border: 1px solid white;
+            border-radius: 40px;
+            margin: 20px;
+            padding: 10px;
+            position: fixed;
+            bottom: 0px;
+            cursor: pointer;
+            transition: 300ms;
+        }
+            .deleteGroupButton:hover {
+                background-color: red;
+                border: 1px solid red;
+            }
+            
+            .deleteGroupButton.drag-over {
+                background-color: red;
+                border: 1px solid red;
+            }
+
+    .mainContent {
+        flex: 1;
+        background-color: black;
+        border-radius: 30px 0px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        min-width: 0;
+        overflow: hidden;
+        max-height: calc(100vh - 153px);
+    }
+        .hello {
+            background-color: white;
+            font-size: 20px;
+            font-weight: bold;
+            width: max-content;
+            height: max-content;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: row;
+            margin: 20px;
+            padding: 10px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .content {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px 10px 0px 0px;
+            display: flex;
+            flex-direction: column;
+            margin-top: 0px;
+            overflow: hidden;
+            min-width: 0px;
+            overflow-y: auto;
+        }
+            .noGroupSelect {
+                font-size: 20px;
+                font-weight: bold;
+                width: calc(100% - 20px);
+                display: flex;
+                margin: 20px;
+                margin-bottom: 0px;
+            }
+            
+            .groupDetails {
+                flex: 1;
+                color: white;
+                background-color: #5865F2;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                max-width: calc(100% - 20px);
+                box-sizing: border-box;
+                text-align: justify;
+            }
+                .groupDetailsLabel {
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                
+                .groupDetailsInformation {
+                    font-size: 16px;
+                    font-weight: normal;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                    white-space: normal;
+                    max-width: 100%;
+                }
+
+                .updateGroupButton {
+                    color: #5865F2;
+                    background-color: white;
+                    font-size: 20px;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    padding: 10px;
+                    cursor: pointer;
+                    transition: 300ms;
+                }
+                    .updateGroupButton:hover {
+                        opacity: 70%;
+                    }
+            
+            .messageBox {
+                background-color: #5865F2;
+                height: max-content;
+                border-radius: 0px 0px 10px 10px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                flex-shrink: 0;
+            }
+                .shareFileButton {
+                    color: white;
+                    background-color: #5865F2;
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                    border: none;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 10px;
+                    padding: 10px;
+                    cursor: pointer;
+                    transition: 300ms;
+                    flex-shrink: 0;
+                }
+                    .shareFileButton:hover {
+                        color: #5865F2;
+                        background-color: white;
+                    }
+
+                .messageBox input {
+                    color: black;
+                    background-color: white;
+                    font-size: 20px;
+                    width: 100%;
+                    border: none;
+                    border-radius: 10px;
+                    margin-top: 10px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    padding: 10px;
+                    min-width: 0;
+                }
+
+.content-messageBox {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 20px;
+    overflow: hidden;
+    margin-top: 0px;
+}
+    .contentBlank {
+        background-color: white;
+        height: 20px;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}

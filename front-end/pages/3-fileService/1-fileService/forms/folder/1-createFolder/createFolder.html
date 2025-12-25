@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Create Folder</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="createFolder-styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="brand" onclick="window.location.href='../../../fileService.html'">
+            <img src="https://winnie2802.github.io/Website-Visualization/images/fileLogo.png" alt="fileLogo" width="40px" height="40px">
+            <label class="logoLabel">File Service</label>
+        </div>
+    </div>
+
+    <form id="createFolderForm" class="createFolderForm" >
+        <label class="createFolderLabel">Create Folder</label>
+        
+        <label class="projectIdLabel">Project Id</label>
+        <input class="projectIdInput" id="projectId" name="projectId" type="text" placeholder="123..." required>
+
+        <label class="folderNameLabel">Folder Name</label>
+        <input class="folderNameInput" id="folderName" name="folderName" type="text" placeholder="Folder Name" required>
+
+        <button class="createFolderButton" type="submit">Create Folder</button>
+    </form>
+
+    <script src="createFolder-scripts.js"></script>
+</body>
+</html>

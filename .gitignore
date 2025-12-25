@@ -1,0 +1,67 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+promanenv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Environment variables and secrets
+.env
+.env.local
+*.env
+
+# Logs
+*.log
+
+# Testing and coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Backup files
+*.bak
+*.tmp
+*.temp
+
+# Cache
+.cache/
+
+# database
+*.db
+*.sqlite3
+data/*.db
+/data/*.db
+
+
+.txt
+server/folder_and_file_management_service/storage/**/*
+
+!/server/folder_and_file_management_service/storage/
+!/server/folder_and_file_management_service/storage/*/
