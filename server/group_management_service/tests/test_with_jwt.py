@@ -1,10 +1,12 @@
 import jwt
 import json
 from datetime import datetime, timedelta
+import os
 
-# Same secret as in group service
-SECRET_KEY = "your-secret-key-change-in-production-and-match-auth-service"
+# Load from env for security
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production-and-match-auth-service")
 ALGORITHM = "HS256"
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8003")
 
 # Create a JWT token
 payload = {
@@ -21,9 +23,15 @@ print(f"JWT Token: {token}\n")
 import requests
 
 headers = {"Authorization": f"Bearer {token}"}
-url = "http://localhost:8003/groups"
+url = f"{BASE_URL}/groups"
 
-response = requests.get(url, headers=headers)
-print(f"GET {url}")
-print(f"Status: {response.status_code}")
-print(f"Response:\n{json.dumps(response.json(), indent=2)}")
+try:
+    response = requests.get(url, headers=headers)
+    print(f"GET {url}")
+    print(f"Status: {response.status_code}")
+    if response.status_code == 200:
+        print(f"Response:\n{json.dumps(response.json(), indent=2)}")
+    else:
+        print(f"Error: {response.text}")
+except Exception as e:
+    print(f"Request failed: {e}")

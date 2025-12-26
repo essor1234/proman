@@ -1,16 +1,21 @@
 import requests
 import json
 import time
+import os
+
+AUTH_BASE_URL = os.getenv("AUTH_BASE_URL", "http://localhost:8001")
+GROUP_BASE_URL = os.getenv("GROUP_BASE_URL", "http://localhost:8003")
 
 # Give services time to start
 time.sleep(2)
 
-# 1. Register a user
+# 1. Register a user (use unique username to avoid duplicates)
 print("1. Registering user...")
-register_url = "http://localhost:8001/auth/register"
+register_url = f"{AUTH_BASE_URL}/auth/register"
+unique_username = f"testuser_{int(time.time())}"
 params = {
-    "username": "testuser",
-    "email": "test@example.com",
+    "username": unique_username,
+    "email": f"{unique_username}@example.com",
     "password": "testpass123"
 }
 
@@ -23,15 +28,15 @@ try:
         user_info = response.json()
         print("User registered successfully!\n")
     else:
-        print("Registration response received\n")
+        print("Registration may have failed (e.g., duplicate); proceeding with login attempt\n")
 except Exception as e:
     print(f"Error during registration: {e}\n")
 
-# 2. Login to get JWT token
+# 2. Login to get JWT token (use the unique username)
 print("2. Logging in...")
-login_url = "http://localhost:8001/auth/login"
+login_url = f"{AUTH_BASE_URL}/auth/login"
 login_params = {
-    "username": "testuser",
+    "username": unique_username,
     "password": "testpass123"
 }
 
@@ -46,7 +51,7 @@ try:
         
         # 3. Fetch groups with token
         print("3. Fetching groups...")
-        groups_url = "http://localhost:8003/groups"
+        groups_url = f"{GROUP_BASE_URL}/groups"
         headers = {"Authorization": f"Bearer {token}"}
         
         response = requests.get(groups_url, headers=headers)

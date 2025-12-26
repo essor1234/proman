@@ -1,16 +1,17 @@
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel, create_engine
 from pathlib import Path
+import os
 
-DB_DIR = Path("/app/data")
-DB_DIR.mkdir(exist_ok=True)
-"""CAUTION: I just change the dir of the database on 11.11.2025. 
-Use this new version incase of solving confilcts.
---Essor--
+# Place the database inside the service directory (server/account_management_service/data)
+BASE_DIR = Path(__file__).resolve().parents[2]
+DB_DIR = BASE_DIR / "data"
+DB_DIR.mkdir(parents=True, exist_ok=True)
 
-"""
-SQLITE_URL = f"sqlite:////data/account.db"
+DB_PATH = DB_DIR / "account.db"
+# Use a file-based sqlite URL that works across platforms
+SQLITE_URL = f"sqlite:///{DB_PATH.as_posix()}"
 
-engine = create_engine(SQLITE_URL, echo=True)  # SEE SQL LOGS
+engine = create_engine(SQLITE_URL, echo=True)
 
 def init_db():
     print("Creating tables...")
