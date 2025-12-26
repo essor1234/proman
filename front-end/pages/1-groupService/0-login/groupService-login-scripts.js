@@ -43,7 +43,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         console.log("🔍 Response:", data);
 
         if (response.ok) {
-            window.sessionStorage.setItem("token", data.token);
+            window.sessionStorage.setItem("token", data.access_token);
             
             alert(`✅ Login successful! Welcome, ${usernameInput}!`);
 

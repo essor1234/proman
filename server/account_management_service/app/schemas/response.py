@@ -1,5 +1,5 @@
 """Response schemas for Account Service - Standardized API responses"""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 from typing import Optional, List
 
 class UserResponse(BaseModel):
@@ -22,9 +22,9 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-class UserBatchResponse(BaseModel):
+class UserBatchResponse(RootModel):
     """Response for batch user fetch"""
-    __root__: dict[str, UserResponse]
+    root: dict[str, UserResponse]
 
 class UsersListResponse(BaseModel):
     """Response for user search"""

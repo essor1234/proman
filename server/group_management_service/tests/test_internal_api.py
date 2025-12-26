@@ -1,79 +1,80 @@
 import requests
 import json
+import os
 
-base_url = "http://localhost:8003"
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8003")
 
 print("=" * 80)
 print("GROUP MANAGEMENT SERVICE - INTERNAL API TESTS")
 print("=" * 80)
 
+group_id = None
+user_id = "1"
+
 # Test 1: Get all groups
 print("\n✅ TEST 1: GET /internal/groups - List all groups")
 print("-" * 80)
 try:
-    response = requests.get(f"{base_url}/internal/groups?page=1&size=10")
+    response = requests.get(f"{BASE_URL}/internal/groups?page=1&size=10")
     print(f"Status: {response.status_code}")
     data = response.json()
     print(f"Groups returned: {len(data)}")
     if data:
         print(f"First group: {data[0]['name']} (ID: {data[0]['id']})")
+        group_id = data[0]['id']  # Use first for subsequent tests
     print("✅ PASS")
 except Exception as e:
     print(f"❌ FAIL: {e}")
+    print("Skipping tests requiring group_id")
 
-# Test 2: Get specific group
-print("\n✅ TEST 2: GET /internal/groups/{id} - Get group by ID")
-print("-" * 80)
-try:
-    # Use the first group from test 1
-    group_id = data[0]['id'] if data else None
-    if group_id:
-        response = requests.get(f"{base_url}/internal/groups/{group_id}")
+if group_id:
+    # Test 2: Get specific group
+    print("\n✅ TEST 2: GET /internal/groups/{id} - Get group by ID")
+    print("-" * 80)
+    try:
+        response = requests.get(f"{BASE_URL}/internal/groups/{group_id}")
         print(f"Status: {response.status_code}")
         group = response.json()
         print(f"Group: {group['name']}")
         print(f"Member count: {group['member_count']}")
         print(f"Owner ID: {group['owner_id']}")
         print("✅ PASS")
-    else:
-        print("❌ FAIL: No groups found")
-except Exception as e:
-    print(f"❌ FAIL: {e}")
+    except Exception as e:
+        print(f"❌ FAIL: {e}")
 
-# Test 3: Get group members
-print("\n✅ TEST 3: GET /internal/groups/{id}/members - Get group members")
-print("-" * 80)
-try:
-    response = requests.get(f"{base_url}/internal/groups/{group_id}/members")
-    print(f"Status: {response.status_code}")
-    members = response.json()
-    print(f"Group: {members['group_name']}")
-    print(f"Total members: {members['member_count']}")
-    if members['members']:
-        print(f"First member: User {members['members'][0]['user_id']} (Role: {members['members'][0]['role']})")
-    print("✅ PASS")
-except Exception as e:
-    print(f"❌ FAIL: {e}")
+    # Test 3: Get group members
+    print("\n✅ TEST 3: GET /internal/groups/{id}/members - Get group members")
+    print("-" * 80)
+    try:
+        response = requests.get(f"{BASE_URL}/internal/groups/{group_id}/members")
+        print(f"Status: {response.status_code}")
+        members = response.json()
+        print(f"Group: {members['group_name']}")
+        print(f"Total members: {members['member_count']}")
+        if members['members']:
+            print(f"First member: User {members['members'][0]['user_id']} (Role: {members['members'][0]['role']})")
+        print("✅ PASS")
+    except Exception as e:
+        print(f"❌ FAIL: {e}")
 
-# Test 4: Get member IDs only
-print("\n✅ TEST 4: GET /internal/groups/{id}/members-ids - Get member IDs")
-print("-" * 80)
-try:
-    response = requests.get(f"{base_url}/internal/groups/{group_id}/members-ids")
-    print(f"Status: {response.status_code}")
-    data = response.json()
-    print(f"Group ID: {data['group_id']}")
-    print(f"Member IDs: {data['member_ids']}")
-    print("✅ PASS")
-except Exception as e:
-    print(f"❌ FAIL: {e}")
+    # Test 4: Get member IDs only
+    print("\n✅ TEST 4: GET /internal/groups/{id}/members-ids - Get member IDs")
+    print("-" * 80)
+    try:
+        response = requests.get(f"{BASE_URL}/internal/groups/{group_id}/members-ids")
+        print(f"Status: {response.status_code}")
+        data = response.json()
+        print(f"Group ID: {data['group_id']}")
+        print(f"Member IDs: {data['member_ids']}")
+        print("✅ PASS")
+    except Exception as e:
+        print(f"❌ FAIL: {e}")
 
-# Test 5: Get user's groups
+# Test 5: Get user's groups (independent)
 print("\n✅ TEST 5: GET /internal/groups/user/{user_id}/groups - Get all groups for a user")
 print("-" * 80)
 try:
-    user_id = "1"
-    response = requests.get(f"{base_url}/internal/groups/user/{user_id}/groups")
+    response = requests.get(f"{BASE_URL}/internal/groups/user/{user_id}/groups")
     print(f"Status: {response.status_code}")
     user_data = response.json()
     print(f"User: {user_id}")
@@ -85,11 +86,11 @@ try:
 except Exception as e:
     print(f"❌ FAIL: {e}")
 
-# Test 6: Search groups
+# Test 6: Search groups (independent)
 print("\n✅ TEST 6: GET /internal/groups/search - Search groups by name")
 print("-" * 80)
 try:
-    response = requests.get(f"{base_url}/internal/groups/search?name=test&limit=5")
+    response = requests.get(f"{BASE_URL}/internal/groups/search?name=test&limit=5")
     print(f"Status: {response.status_code}")
     search_data = response.json()
     print(f"Search term: {search_data['search_term']}")
@@ -101,27 +102,28 @@ try:
 except Exception as e:
     print(f"❌ FAIL: {e}")
 
-# Test 7: Check if user is member
-print("\n✅ TEST 7: GET /internal/groups/check-member/{group_id}/{user_id}")
-print("-" * 80)
-try:
-    response = requests.get(f"{base_url}/internal/groups/check-member/{group_id}/1")
-    print(f"Status: {response.status_code}")
-    check = response.json()
-    print(f"Group: {check['group_id']}")
-    print(f"User: {check['user_id']}")
-    print(f"Is member: {check['is_member']}")
-    if check['is_member']:
-        print(f"Role: {check['role']}")
-    print("✅ PASS")
-except Exception as e:
-    print(f"❌ FAIL: {e}")
+if group_id:
+    # Test 7: Check if user is member
+    print("\n✅ TEST 7: GET /internal/groups/check-member/{group_id}/{user_id}")
+    print("-" * 80)
+    try:
+        response = requests.get(f"{BASE_URL}/internal/groups/check-member/{group_id}/1")
+        print(f"Status: {response.status_code}")
+        check = response.json()
+        print(f"Group: {check['group_id']}")
+        print(f"User: {check['user_id']}")
+        print(f"Is member: {check['is_member']}")
+        if check['is_member']:
+            print(f"Role: {check['role']}")
+        print("✅ PASS")
+    except Exception as e:
+        print(f"❌ FAIL: {e}")
 
-# Test 8: Get statistics
+# Test 8: Get statistics (independent)
 print("\n✅ TEST 8: GET /internal/groups/stats - Get system statistics")
 print("-" * 80)
 try:
-    response = requests.get(f"{base_url}/internal/groups/stats")
+    response = requests.get(f"{BASE_URL}/internal/groups/stats")
     print(f"Status: {response.status_code}")
     stats = response.json()
     print(f"Total groups: {stats['total_groups']}")

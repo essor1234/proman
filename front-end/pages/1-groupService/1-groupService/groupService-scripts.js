@@ -74,7 +74,7 @@ async function listAllGroups() {
     const subButtons = document.getElementById('subButtons');
     
     try {
-        const token = window.sessionStorage.getItem('token');
+        const token = window.sessionStorage.getItem('access_token');
         
         const response = await fetch("http://localhost:8000/list/groups", {
             method: 'GET',
