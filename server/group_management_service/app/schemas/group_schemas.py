@@ -15,7 +15,7 @@ class GroupCreate(BaseModel):
     """Schema for creating a new group."""
     name: str = Field(..., min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
-    visibility: GroupVisibility = GroupVisibility.PRIVATE
+    visibility: GroupVisibility = Field(GroupVisibility.PRIVATE)
 
     # Custom validator to ensure name isn't just whitespace
     @validator("name")
