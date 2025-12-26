@@ -52,6 +52,5 @@ passlib==1.7.4
 bcrypt==4.2.0
 passlib[bcrypt]
 pytest==7.4.3
-httpx==0.25.2
 black==23.12.1
 ruff==0.1.9
