@@ -54,3 +54,4 @@ passlib[bcrypt]
 pytest==7.4.3
 black==23.12.1
 ruff==0.1.9
+PyJWT>=2.8.0
