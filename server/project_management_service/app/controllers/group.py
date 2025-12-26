@@ -52,7 +52,6 @@ def update_group(db: Session, group_id: int, update: GroupUpdate, current_user_i
     Updates group externally, then syncs local name.
     """
     # 1. Update Externally
-    # We assume 'name' is the only thing being updated for now
     updated_external = group_client.update_group(
         group_id=group_id, 
         name=update.name, 
