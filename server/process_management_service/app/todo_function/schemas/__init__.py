@@ -3,3 +3,5 @@
 from .todo import Todo, TodoCreate, TodoUpdate
 from .moscow import Moscow, MoscowCreate, MoscowUpdate
 from .task import Task, TaskCreate, TaskUpdate
+from .note import Note, NoteCreate, NoteUpdate
+from .mvp import MVP, MVPCreate, MVPUpdate
