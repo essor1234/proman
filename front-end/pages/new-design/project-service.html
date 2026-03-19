@@ -1,0 +1,1605 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Project Service • Proman</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial;
+        
+        margin: 0px;
+
+        flex: 1;
+    }
+
+/* Navigation Bar */
+    .navigation-bar {
+        background-color: white;
+
+        border-bottom: 1px solid #ff751f;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 10px 30px;
+
+        z-index: 10;
+    }
+
+    .navigation-bar label {
+        color: #ff751f;
+        
+        font-size: xx-large;
+        font-weight: 900;
+    }
+
+    .navigation-bar .buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .navigation-bar button {
+        background-color: transparent;
+        color: black;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .navigation-bar button:hover {
+        background-color: #5865f2;
+        color: white;
+    }
+
+    .themes {
+        color: #5865f2;
+        font-size: medium;
+
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .themes:hover {
+        background-color: #5865f2;
+        color: white;
+    }
+
+    .navigation-bar .buttons button.project-service-navigation:hover {
+        background-color: #5865f2;
+    }
+
+    .navigation-bar .buttons button.file-service-navigation:hover {
+        background-color: #38b6ff;
+    }
+
+    .navigation-bar .buttons button.log-out:hover {
+        background-color: red;
+    }
+
+/* Page Area */
+    .page-area {
+        height: calc(100vh - 66px);
+        
+        display: flex;
+        flex-direction: row;
+    }
+
+/* Side Bar */
+    .side-bar {
+        background-color: whitesmoke;
+
+        width: 260px;
+        
+        display: flex;
+        flex-direction: column;
+
+        white-space: nowrap;
+    }
+
+    .side-bar .buttons {
+        background-color: whitesmoke;
+        
+        padding: 10px 30px;
+    }
+
+    .side-bar .buttons button {
+        background-color: #ff751f;
+        color: white;
+        
+        font-size: medium;
+        font-weight: bold;
+        
+        border: none;
+        border-radius: 10px;
+        
+        padding: 10px 30px;
+        
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .side-bar .buttons button:hover {
+        box-shadow: 0px 0px 10px 0px #ff751f;
+    }
+
+    .side-bar .groups {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        overflow-y: auto;
+        overflow-x: auto;
+
+        scrollbar-width: thin;
+        scrollbar-color: #ff751f transparent;
+
+        flex: 1;
+    }
+
+    .side-bar .groups .group {
+        background-color: whitesmoke;
+        color: black;
+
+        width: 260px;
+        
+        font-size: medium;
+        font-weight: medium;
+        
+        border-left: 5px solid whitesmoke;
+        
+        padding: 10px 30px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .side-bar .groups .group:hover {
+        background-color: white;
+        color: #5865f2;
+        
+        border-left: 5px solid #5865f2;
+
+        box-shadow: 0px 0px 10px 0px #5865f2;
+    }
+
+    .side-bar .groups .group.active {
+        background-color: white;
+        color: #5865f2;
+        
+        border-left: 5px solid #5865f2;
+
+        box-shadow: 0px 0px 10px 0px #5865f2;
+    }
+
+/* Projects Area */
+    .projects-area {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        flex: 1;
+
+        padding: 30px;
+
+        overflow: auto;
+
+        scrollbar-width: thin;
+        scrollbar-color: #ff751f transparent;
+    }
+
+    .projects-view {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .projects-view label {
+        color: black;
+
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    .project-quantity {
+        background-color: whitesmoke;
+        color: gray;
+
+        font-size: small;
+
+        border: 1px solid lightgray;
+        border-radius: 20px;
+
+        padding: 10px 20px;
+    }
+
+    .projects-view button {
+        background-color: #ff751f;
+        color: white;
+        
+        width: fit-content;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .projects-view button:hover {
+        box-shadow: 0px 0px 10px 0px #ff751f;
+    }
+
+    .project-view button.tool {
+        background-color: whitesmoke;
+        color: black;
+
+        border: 1px solid lightgray;
+    }
+
+    .project-view button.tool:hover {
+        box-shadow: 0px 0px 10px 0px gray;
+    }
+
+    .project-view button.tool.mvp i {
+        color: gold;
+    }
+
+    .project-view button.tool.todo i {
+        color: cornflowerblue;
+    }
+
+    .project-view button.tool.moscow i {
+        color: violet;
+    }
+
+    .projects {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .project {
+        background-color: whitesmoke;
+
+        width: 218px;
+
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        padding: 30px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .project:hover {
+        transform: translateY(-3px);
+        
+        box-shadow: 0px 0px 10px 0px gray;
+    }
+
+    .project-tag {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        justify-content: space-between;
+    }
+
+    .project-tag i {
+        background-color: white;
+        color: black;
+
+        font-size: medium;
+        
+        border: 1px solid lightgray;
+        border-radius: 10px;
+
+        padding: 10px;
+    }
+
+    .project-tag i.fa-trophy {
+        color: gold;
+    }
+
+    .project-tag i.fa-list-check {
+        color: cornflowerblue;
+    }
+
+    .project-tag i.fa-chart-column {
+        color: violet;
+    }
+
+    .project-tag .tag {
+        background-color: white;
+        color: black;
+
+        font-size: small;
+        font-weight: bold;
+
+        border: 1px solid lightgray;
+        border-radius: 20px;
+
+        padding: 10px 20px;
+    }
+
+    .project-name {
+        color: black;
+
+        font-size: medium;
+        font-weight: bold;
+        text-align: justify;
+
+        white-space: wrap;
+    }
+
+    .project-view {
+        display: none;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .project-view.todo {
+        display: none;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .project-view input.todo {
+        background-color: white;
+        color: black;
+
+        width: 100%;
+
+        font-size: medium;
+
+        border: 1px solid lightgray;
+        border-radius: 10px;
+
+        padding: 10px;
+
+        transition: 0.3s;
+    }
+
+    .project-view input.todo:hover {
+        border: 1px solid black;
+    }
+
+    .project-view button {
+        background-color: #ff751f;
+        color: white;
+
+        width: fit-content;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .project-view button:hover {
+        box-shadow: 0px 0px 10px 0px #ff751f;
+    }
+
+    .project-view.mvp button {
+        background-color: gold;
+    }
+
+    .project-view.mvp button:hover {
+        box-shadow: 0px 0px 10px 0px gold;
+    }
+
+    .project-view.todo button {
+        background-color: cornflowerblue;
+    }
+
+    .project-view.todo button:hover {
+        box-shadow: 0px 0px 10px 0px cornflowerblue;
+    }
+
+    .project-view.moscow button {
+        background-color: violet;
+    }
+
+    .project-view.moscow button:hover {
+        box-shadow: 0px 0px 10px 0px violet;
+    }
+
+    .project-view label {
+        color: black;
+
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    .project-view label.path {
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .project-view label.path:hover {
+        color: #ff751f;
+
+        text-decoration: underline;
+    }
+
+    .project-view label.path.active {
+        color: #ff751f;
+
+        cursor: default;
+
+        text-decoration: none;
+    }
+
+    .columns {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .column {
+        background-color: whitesmoke;
+
+        width: 245px;
+
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        padding: 20px;
+
+        transition: 0.3s;
+    }
+
+    .column.drag-over {
+        box-shadow: 0px 0px 10px 0px gray;
+
+        transform: translateY(-3px);
+    }
+
+    .column.must.drag-over {
+        box-shadow: 0px 0px 10px 0px green;
+    }
+
+    .column.should.drag-over {
+        box-shadow: 0px 0px 10px 0px blue;
+    }
+
+    .column.could.drag-over {
+        box-shadow: 0px 0px 10px 0px purple;
+    }
+
+    .column i {
+        color: gray;
+        
+        font-size: xx-small;
+
+        padding: 5px;
+    }
+
+    .column i.must {
+        color: green;
+    }
+
+    .column i.should {
+        color: blue;
+    }
+
+    .column i.could {
+        color: purple;
+    }
+
+    .column label {
+        color: black;
+
+        font-size: medium;
+        font-weight: bold;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .divider-line {
+        background-color: black;
+
+        width: 100%;
+        height: 1px;
+    }
+
+    .todo-task-quantity {
+        background-color: cornflowerblue;
+        color: white;
+
+        width: fit-content;
+
+        font-size: small;
+        text-transform: uppercase;
+
+        border: 1px solid lightgray;
+        border-radius: 20px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        padding: 5px 10px;
+    }
+
+    .todo-task-quantity.done {
+        background-color: green;
+        color: white;
+    }
+
+    .todo-task-quantity.remaining {
+        background-color: red;
+        color: white;
+    }
+
+    .column-quantity {
+        background-color: white;
+        color: gray;
+
+        font-size: small;
+
+        border: 1px solid lightgray;
+        border-radius: 15px;
+
+        padding: 5px 10px;
+    }
+
+    .item {
+        background-color: white;
+        color: black;
+
+        font-size: medium;
+        font-weight: normal;
+
+        border: 1px solid lightgray;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 10px 0px 10px 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .item:hover {
+        border: 1px solid gray;
+
+        box-shadow: 0px 0px 10px 0px lightgray;
+    }
+
+    .item.todo {
+        justify-content: start;
+        gap: 10px;
+    }
+
+    .item i {
+        color: gray;
+        
+        font-size: small;
+        text-shadow: none;
+
+        padding: 0 10px;
+
+        cursor: grab;
+    }
+
+    .item i:active {
+        cursor: grabbing;
+    }
+
+    .item.dragging {
+        box-shadow: none;
+
+        opacity: 0.3;
+    }
+
+    .item.todo {
+        justify-content: start;
+        gap: 10px;
+    }
+
+    .drop-placeholder {
+        background-color: white;
+        
+        border: 2px dashed gray;
+        border-radius: 10px;
+    }
+
+    .drop-placeholder.must {
+        border: 2px dashed green;
+    }
+
+    .drop-placeholder.should {
+        border: 2px dashed blue;
+    }
+
+    .drop-placeholder.could {
+        border: 2px dashed purple;
+    }
+
+    .drop-placeholder.todo {
+        border: 2px dashed cornflowerblue;
+    }
+
+    .todo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .item.todo.checked span {
+        color: gray;
+        text-decoration: line-through;
+    }
+
+    /* MVP */
+    .project-view.mvp .column {
+        width: 349px;
+    }
+    
+    .column.mvp-todo.drag-over { 
+        box-shadow: 0px 0px 10px 0px gray; 
+    }
+    .column.mvp-inprogress.drag-over { 
+        box-shadow: 0px 0px 10px 0px cornflowerblue; 
+    }
+    .column.mvp-done.drag-over { 
+        box-shadow: 0px 0px 10px 0px green; 
+    }
+
+    .column i.mvp-todo-icon { 
+        color: gray; 
+    }
+    .column i.mvp-inprogress-icon { 
+        color: cornflowerblue; 
+    }
+    .column i.mvp-done-icon { 
+        color: green; 
+    }
+
+    .drop-placeholder.mvp-todo { 
+        border: 2px dashed gray; 
+    }
+    .drop-placeholder.mvp-inprogress { 
+        border: 2px dashed cornflowerblue; 
+    }
+    .drop-placeholder.mvp-done { 
+        border: 2px dashed green; 
+    }
+
+    /* MoSCoW badge on task items */
+    .item .moscow-badge {
+        font-size: small;
+        cursor: default;
+    }
+    .item .moscow-badge.must { 
+        color: green; 
+    }
+    .item .moscow-badge.should { 
+        color: blue; 
+    }
+    .item .moscow-badge.could { 
+        color: purple; 
+    }
+    .item .moscow-badge.wont {
+        color: gray; 
+    }
+
+    /* Sync toast notification */
+    .sync-toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: black;
+        color: white;
+        font-size: small;
+        font-weight: bold;
+        border-radius: 10px;
+        padding: 10px 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .sync-toast.show {
+        opacity: 1;
+    }
+    .sync-toast i {
+        color: #ff751f;
+        font-size: small;
+        padding: 0;
+    }
+</style>
+
+<body>
+    <div class="navigation-bar">
+        <label>Project Service</label>
+
+        <div class="buttons">
+            <button onclick="window.location.href='home.html'">Dashboard</button>
+            <button class="project-service-navigation" onclick="window.location.href='group-service.html'">Group Service</button>
+            <button class="file-service-navigation" onclick="window.location.href='file-service.html'">File Service</button>
+            <button class="log-out">Log out</button>
+
+            <div class="themes"><i class="fa-solid fa-moon"></i></div>
+        </div>
+    </div>
+
+    <div class="page-area">
+        <div class="side-bar">
+            <div class="groups">
+                <div class="group active">IT Solutions & Development Team</div>
+                <div class="group">Software Engineering Working Group</div>
+                <div class="group">Technology Operations Team</div>
+                <div class="group">Digital Systems & Infrastructure</div>
+                <div class="group">Product Engineering & Support Team</div>
+                <div class="group">Application Development Unit</div>
+                <div class="group">Platform & Services Engineering</div>
+                <div class="group">Information Systems Collaboration</div>
+                <div class="group">Enterprise Technology Team</div>
+                <div class="group">Research & Development - IT Division</div>
+                <div class="group">Backend Systems & API Team</div>
+                <div class="group">Frontend & User Experience Engineering</div>
+                <div class="group">Cloud Infrastructure & DevOps</div>
+                <div class="group">Data Engineering & Analytics Group</div>
+                <div class="group">Cybersecurity & Risk Management</div>
+                <div class="group">Quality Assurance & Testing Team</div>
+                <div class="group">AI & Intelligent Systems Lab</div>
+                <div class="group">Software Architecture & Design</div>
+                <div class="group">Internal Tools & Automation Team</div>
+                <div class="group">Technology Strategy & Innovation</div>
+            </div>
+        </div>
+
+        <div class="projects-area">
+            <div class="projects-view">
+                <div style="display: flex; flex-direction: row; align-items: start; justify-content: space-between;">
+                    <label>IT Solutions & Development Team</label>
+
+                    <div class="project-quantity">9 projects</div>
+                </div>
+
+                <button><i class="fa-solid fa-plus"></i>New Project</button>
+
+                <div class="projects">
+                    <div class="project" onclick="openProject()">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-tag">
+                            <i class="fa-solid fa-question"></i>
+                            <div class="tag">tag?</div>
+                        </div>
+                        <div class="project-name">Project Name</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-view">
+                <button onclick="closeProject()"><i class="fa-solid fa-arrow-left"></i>Back</button>
+
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
+                    <label class="path" onclick="closeProject()">IT Solutions & Development Team</label>
+                    <label><i class="fa-solid fa-chevron-right"></i></label>
+                    <label class="path active">Project Name</label>
+                </div>
+
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <button class="tool mvp" onclick="openProjectMVP()"><i class="fa-solid fa-trophy"></i>MVP</button>
+                    <button class="tool todo" onclick="openProjectToDo()"><i class="fa-solid fa-list-check"></i>ToDo</button>
+                    <button class="tool moscow" onclick="openProjectMoSCoW()"><i class="fa-solid fa-chart-column"></i>MoSCoW</button>
+                </div>
+            </div>
+
+            <!-- MVP View -->
+            <div class="project-view mvp">
+                <button class="mvp" onclick="closeProjectMVP()"><i class="fa-solid fa-arrow-left"></i>Back</button>
+
+                <label>MVP Project</label>
+
+                <div class="columns">
+                    <!-- To-Do Column -->
+                    <div class="column mvp-todo" id="mvp-todo-column" column-data="mvp-todo">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle mvp-todo-icon"></i>To-Do</label>
+                            <div class="column-quantity" id="quantity-mvp-todo">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <!-- In-Progress Column -->
+                    <div class="column mvp-inprogress" id="mvp-inprogress-column" column-data="mvp-inprogress">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle mvp-inprogress-icon"></i>In-Progress</label>
+                            <div class="column-quantity" id="quantity-mvp-inprogress">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <!-- Done Column -->
+                    <div class="column mvp-done" id="mvp-done-column" column-data="mvp-done">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle mvp-done-icon"></i>Done</label>
+                            <div class="column-quantity" id="quantity-mvp-done">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ToDo View -->
+            <div class="project-view todo">
+                <button class="todo" onclick="closeProjectToDo()"><i class="fa-solid fa-arrow-left"></i>Back</button>
+
+                <label>ToDo Project</label>
+
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px;">
+                    <button class="todo" onclick="addTodoTask()">Add</button>
+                    <input class="todo" id="todo-input" type="text" placeholder="Add a new task..." onkeydown="if(event.key==='Enter') addTodoTask()">
+                </div>
+
+                <div style="display: flex; flex-direction: row; gap: 5px;">
+                    <div class="todo-task-quantity">
+                        <span id="todo-task-count">0</span><span id="todo-task-label"> tasks</span>
+                    </div>
+                    <div class="todo-task-quantity done">
+                        <span id="todo-done-count">0</span><span> done</span>
+                    </div>
+                    <div class="todo-task-quantity remaining">
+                        <span id="todo-remaining-count">0</span><span> remaining</span>
+                    </div>
+                </div>
+
+                <div id="todo-list" style="background-color: whitesmoke; border: 1px solid lightgray; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; padding: 20px;">
+                </div>
+            </div>
+
+            <!-- MoSCoW View -->
+            <div class="project-view moscow">
+                <button class="moscow" onclick="closeProjectMoSCoW()"><i class="fa-solid fa-arrow-left"></i>Back</button>
+
+                <label>MoSCoW Project</label>
+
+                <div class="columns">
+                    <div class="column must" id="must-column" column-data="must">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle must"></i>Must</label>
+                            <div class="column-quantity" id="quantity-must">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="column should" id="should-column" column-data="should">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle should"></i>Should</label>
+                            <div class="column-quantity" id="quantity-should">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="column could" id="could-column" column-data="could">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle could"></i>Could</label>
+                            <div class="column-quantity" id="quantity-could">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="column" id="wont-column" column-data="wont">
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                            <label><i class="fa-solid fa-circle"></i>Won't</label>
+                            <div class="column-quantity" id="quantity-wont">0</div>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync Toast -->
+    <div class="sync-toast" id="sync-toast">
+        <i class="fa-solid fa-rotate"></i>
+        <span id="sync-toast-msg">Synced</span>
+    </div>
+</body>
+
+<script>
+    // ─────────────────────────────────────────────
+    // TASK ID GENERATOR
+    // ─────────────────────────────────────────────
+    let taskIdCounter = 0;
+    function newTaskId() {
+        return 'task-' + (++taskIdCounter);
+    }
+
+    // ─────────────────────────────────────────────
+    // TOAST
+    // ─────────────────────────────────────────────
+    let toastTimer = null;
+    function showToast(msg) {
+        const toast = document.getElementById('sync-toast');
+        document.getElementById('sync-toast-msg').textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ─────────────────────────────────────────────
+    // CREATE ITEM ELEMENTS
+    // ─────────────────────────────────────────────
+
+    function createMoSCoWItem(taskId, taskName) {
+        const item = document.createElement('div');
+        item.classList.add('item');
+        item.dataset.taskId = taskId;
+        item.innerHTML = `<span>${taskName}</span><i class="fa-solid fa-grip-vertical"></i>`;
+        initDragItem(item);
+        return item;
+    }
+
+    function createMVPItem(taskId, taskName) {
+        const item = document.createElement('div');
+        item.classList.add('item');
+        item.dataset.taskId = taskId;
+        item.innerHTML = `<span>${taskName}</span><div style="display:flex;flex-direction:row;align-items:center;"><i class="fa-solid fa-m moscow-badge must" title="Must"></i><i class="fa-solid fa-grip-vertical"></i></div>`;
+        initDragItem(item);
+        return item;
+    }
+
+    function createTodoItem(taskId, taskName) {
+        const item = document.createElement('div');
+        item.classList.add('item', 'todo');
+        item.dataset.taskId = taskId;
+        item.innerHTML = `
+            <input type="checkbox">
+            <div style="width:100%;display:flex;flex-direction:row;align-items:center;justify-content:space-between;">
+                <span>${taskName}</span>
+                <div style="display:flex;flex-direction:row;align-items:center;"><i class="fa-solid fa-m moscow-badge must" title="Must"></i><i class="fa-solid fa-grip-vertical"></i></div>
+            </div>`;
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', () => {
+            item.classList.toggle('checked', checkbox.checked);
+            updateTodoCount();
+            syncMVPFromTodoCheck(item.dataset.taskId, checkbox.checked);
+        });
+        initDragItem(item);
+        return item;
+    }
+
+    // ─────────────────────────────────────────────
+    // HELPER: Insert item at the top (after divider line)
+    // ─────────────────────────────────────────────
+    function insertAfterDivider(column, item) {
+        const divider = column.querySelector('.divider-line');
+        if (divider && divider.nextSibling) {
+            column.insertBefore(item, divider.nextSibling);
+        } else if (divider) {
+            column.appendChild(item);
+        } else {
+            column.prepend(item);
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // SYNC FUNCTIONS
+    // ─────────────────────────────────────────────
+
+    /**
+     * RULE 1: ToDo → MoSCoW Must
+     * When a task is added to ToDo, add it to MoSCoW Must.
+     */
+    function syncTodoToMoSCoW(taskId, taskName) {
+        const mustCol = document.getElementById('must-column');
+        // Avoid duplicate
+        if (mustCol.querySelector(`[data-task-id="${taskId}"]`)) return;
+        const item = createMoSCoWItem(taskId, taskName);
+        insertAfterDivider(mustCol, item);
+        updateCounts();
+    }
+
+    /**
+     * RULE 2: MoSCoW Must/Should → MVP To-Do
+     * When a task is in Must or Should, ensure it exists in MVP To-Do.
+     * Remove it from MVP if it was there before (re-add to To-Do).
+     */
+    function syncMoSCoWToMVP(taskId, taskName) {
+        const mvpTodoCol = document.getElementById('mvp-todo-column');
+        const mvpInprogressCol = document.getElementById('mvp-inprogress-column');
+        const mvpDoneCol = document.getElementById('mvp-done-column');
+
+        // Check if task already exists anywhere in MVP
+        const existing = document.querySelector(`.project-view.mvp [data-task-id="${taskId}"]`);
+        if (existing) return; // already in MVP, don't duplicate
+
+        const item = createMVPItem(taskId, taskName);
+        insertAfterDivider(mvpTodoCol, item);
+        updateCounts();
+    }
+
+    /**
+     * RULE 4: MVP Done ↔ ToDo checkbox sync
+     */
+    function syncTodoCheckState(taskId, checked) {
+        const todoItem = document.querySelector(`#todo-list [data-task-id="${taskId}"]`);
+        if (!todoItem) return;
+        const checkbox = todoItem.querySelector('input[type="checkbox"]');
+        if (!checkbox) return;
+        checkbox.checked = checked;
+        todoItem.classList.toggle('checked', checked);
+        updateTodoCount();
+        const taskName = todoItem.querySelector('span').textContent;
+        showToast(checked ? `"${taskName}" checked in ToDo` : `"${taskName}" unchecked in ToDo`);
+    }
+
+    /**
+     * Updates the MoSCoW letter badge on all ToDo and MVP items
+     * based on which MoSCoW column each task currently lives in.
+     */
+    function updateMoSCoWBadges() {
+        const colMap = {
+            must:   { letter: 'M', cls: 'must',   faClass: 'fa-m', title: 'Must' },
+            should: { letter: 'S', cls: 'should',  faClass: 'fa-s', title: 'Should' },
+            could:  { letter: 'C', cls: 'could',   faClass: 'fa-c', title: 'Could' },
+            wont:   { letter: 'W', cls: 'wont',    faClass: 'fa-w', title: "Won't" },
+        };
+
+        Object.entries(colMap).forEach(([colKey, cfg]) => {
+            const col = document.getElementById(colKey + '-column');
+            if (!col) return;
+            col.querySelectorAll('.item[data-task-id]').forEach(moscowItem => {
+                const taskId = moscowItem.dataset.taskId;
+                // Update badge in ToDo
+                const todoItem = document.querySelector(`#todo-list [data-task-id="${taskId}"]`);
+                if (todoItem) setBadge(todoItem, cfg);
+                // Update badge in MVP
+                const mvpItem = document.querySelector(`.project-view.mvp [data-task-id="${taskId}"]`);
+                if (mvpItem) setBadge(mvpItem, cfg);
+            });
+        });
+    }
+
+    function setBadge(item, cfg) {
+        const badge = item.querySelector('.moscow-badge');
+        if (!badge) return;
+        // Remove old letter/color classes
+        badge.className = `fa-solid ${cfg.faClass} moscow-badge ${cfg.cls}`;
+        badge.title = cfg.title;
+    }
+
+    /**
+     * RULE 5: ToDo checkbox → move MVP task to Done or To-Do
+     */
+    function syncMVPFromTodoCheck(taskId, checked) {
+        const mvpItem = document.querySelector(`.project-view.mvp [data-task-id="${taskId}"]`);
+        if (!mvpItem) return;
+        const destCol = document.getElementById(checked ? 'mvp-done-column' : 'mvp-todo-column');
+        insertAfterDivider(destCol, mvpItem);
+        updateCounts();
+        const taskName = mvpItem.querySelector('span').textContent;
+        showToast(checked ? `"${taskName}" moved to MVP Done` : `"${taskName}" moved to MVP To-Do`);
+    }
+
+    /**
+     * RULE 3: MoSCoW Could/Won't → Delete from MVP
+     */
+    function removeFromMVP(taskId) {
+        const existing = document.querySelector(`.project-view.mvp [data-task-id="${taskId}"]`);
+        if (existing) {
+            existing.remove();
+            updateCounts();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Called after any MoSCoW drag-drop to reconcile MVP state.
+     * Checks all items in each MoSCoW column and syncs.
+     */
+    function reconcileMVPFromMoSCoW() {
+        const mustCol = document.getElementById('must-column');
+        const shouldCol = document.getElementById('should-column');
+        const couldCol = document.getElementById('could-column');
+        const wontCol = document.getElementById('wont-column');
+
+        // Tasks in Must or Should → ensure they exist in MVP
+        const activeItems = [
+            ...mustCol.querySelectorAll('.item[data-task-id]'),
+            ...shouldCol.querySelectorAll('.item[data-task-id]')
+        ];
+        activeItems.forEach(item => {
+            const taskId = item.dataset.taskId;
+            const taskName = item.querySelector('span').textContent;
+            const existing = document.querySelector(`.project-view.mvp [data-task-id="${taskId}"]`);
+            if (!existing) {
+                const mvpItem = createMVPItem(taskId, taskName);
+                insertAfterDivider(document.getElementById('mvp-todo-column'), mvpItem);
+                showToast(`"${taskName}" added to MVP To-Do`);
+            }
+        });
+
+        // Tasks in Could or Won't → remove from MVP
+        const inactiveItems = [
+            ...couldCol.querySelectorAll('.item[data-task-id]'),
+            ...wontCol.querySelectorAll('.item[data-task-id]')
+        ];
+        inactiveItems.forEach(item => {
+            const taskId = item.dataset.taskId;
+            const taskName = item.querySelector('span').textContent;
+            const removed = removeFromMVP(taskId);
+            if (removed) {
+                showToast(`"${taskName}" removed from MVP (Could/Won't)`);
+            }
+        });
+
+        updateCounts();
+        updateMoSCoWBadges();
+    }
+
+    // ─────────────────────────────────────────────
+    // ADD TODO TASK
+    // ─────────────────────────────────────────────
+    function addTodoTask() {
+        const input = document.getElementById('todo-input');
+        const taskName = input.value.trim();
+        if (!taskName) return;
+
+        const taskId = newTaskId();
+
+        // Add to ToDo list
+        const todoList = document.getElementById('todo-list');
+        const todoItem = createTodoItem(taskId, taskName);
+        todoList.prepend(todoItem);
+        updateTodoCount();
+
+        // RULE 1: Sync to MoSCoW Must
+        syncTodoToMoSCoW(taskId, taskName);
+        showToast(`"${taskName}" added → MoSCoW Must`);
+
+        // RULE 2: Must → MVP To-Do (new Must task)
+        syncMoSCoWToMVP(taskId, taskName);
+
+        input.value = '';
+    }
+
+    // ─────────────────────────────────────────────
+    // VIEW NAVIGATION
+    // ─────────────────────────────────────────────
+    function openProject() {
+        document.querySelector('.projects-view').style.display = 'none';
+        document.querySelector('.project-view').style.display = 'flex';
+    }
+
+    function closeProject() {
+        document.querySelector('.projects-view').style.display = 'flex';
+        document.querySelector('.project-view').style.display = 'none';
+    }
+    
+    function openProjectMVP() {
+        document.querySelector('.project-view').style.display = 'none';
+        document.querySelector('.project-view.mvp').style.display = 'flex';
+    }
+
+    function closeProjectMVP() {
+        document.querySelector('.project-view').style.display = 'flex';
+        document.querySelector('.project-view.mvp').style.display = 'none';
+    }
+    
+    function openProjectToDo() {
+        document.querySelector('.project-view').style.display = 'none';
+        document.querySelector('.project-view.todo').style.display = 'flex';
+    }
+
+    function closeProjectToDo() {
+        document.querySelector('.project-view').style.display = 'flex';
+        document.querySelector('.project-view.todo').style.display = 'none';
+    }
+    
+    function openProjectMoSCoW() {
+        document.querySelector('.project-view').style.display = 'none';
+        document.querySelector('.project-view.moscow').style.display = 'flex';
+    }
+
+    function closeProjectMoSCoW() {
+        document.querySelector('.project-view').style.display = 'flex';
+        document.querySelector('.project-view.moscow').style.display = 'none';
+    }
+
+    // ─────────────────────────────────────────────
+    // DRAG & DROP
+    // ─────────────────────────────────────────────
+    let draggedItem = null;
+    let placeholder = null;     
+    let isDraggingAllowed = false;
+    let dragSourceColumn = null; // track where drag started
+
+    function createPlaceholder(height, column) {
+        const placeHolder = document.createElement('div');
+        placeHolder.classList.add('drop-placeholder');
+
+        if (column.classList.contains('must')) placeHolder.classList.add('must');
+        else if (column.classList.contains('should')) placeHolder.classList.add('should');
+        else if (column.classList.contains('could')) placeHolder.classList.add('could');
+        else if (column.id === 'todo-list') placeHolder.classList.add('todo');
+        else if (column.classList.contains('mvp-todo')) placeHolder.classList.add('mvp-todo');
+        else if (column.classList.contains('mvp-inprogress')) placeHolder.classList.add('mvp-inprogress');
+        else if (column.classList.contains('mvp-done')) placeHolder.classList.add('mvp-done');
+
+        placeHolder.style.height = (height) + 'px';
+        return placeHolder;
+    }
+
+    function updateCounts() {
+        document.querySelectorAll('.column').forEach(column => {
+            const columnId = column.id;
+            const key = columnId.replace('-column', '');
+            const quantity = column.querySelectorAll('.item').length;
+            const badge = document.getElementById('quantity-' + key);
+            if (badge) badge.textContent = quantity;
+        });
+    }
+
+    function updateTodoCount() {
+        const total = document.querySelectorAll('#todo-list .item').length;
+        const done = document.querySelectorAll('#todo-list .item.checked').length;
+        const remaining = total - done;
+
+        document.getElementById('todo-task-count').textContent = total;
+        document.getElementById('todo-task-label').textContent = total === 1 ? ' task' : ' tasks';
+        document.getElementById('todo-done-count').textContent = done;
+        document.getElementById('todo-remaining-count').textContent = remaining;
+    }
+
+    function getColumnForItem(item) {
+        return item.closest('.column') || item.closest('#todo-list');
+    }
+
+    function getColumnType(col) {
+        if (!col) return null;
+        if (col.classList.contains('must')) return 'must';
+        if (col.classList.contains('should')) return 'should';
+        if (col.classList.contains('could')) return 'could';
+        if (col.id === 'wont-column') return 'wont';
+        if (col.id === 'todo-list') return 'todo-list';
+        if (col.classList.contains('mvp-todo')) return 'mvp-todo';
+        if (col.classList.contains('mvp-inprogress')) return 'mvp-inprogress';
+        if (col.classList.contains('mvp-done')) return 'mvp-done';
+        return null;
+    }
+
+    function initDragItem(item) {
+        const grip = item.querySelector('.fa-grip-vertical');
+        if (!grip) return;
+
+        grip.addEventListener('mousedown', () => {
+            isDraggingAllowed = true;
+            item.setAttribute('draggable', 'true');
+        });
+
+        item.addEventListener('mouseup', () => {
+            isDraggingAllowed = false;
+            item.setAttribute('draggable', 'false');
+        });
+
+        item.addEventListener('dragstart', (e) => {
+            if (!isDraggingAllowed) {
+                e.preventDefault();
+                return;
+            }
+            draggedItem = item;
+            dragSourceColumn = getColumnForItem(item);
+            placeholder = null;
+
+            e.dataTransfer.effectAllowed = 'move';
+
+            requestAnimationFrame(() => {
+                item.classList.add('dragging');
+            });
+        });
+
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            item.setAttribute('draggable', 'false');
+            isDraggingAllowed = false;
+
+            if (placeholder && placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+
+            const destColumn = getColumnForItem(draggedItem);
+            const sourceType = getColumnType(dragSourceColumn);
+            const destType = getColumnType(destColumn);
+
+            // Only run sync logic if item moved to a different column
+            if (sourceType !== destType && destType !== null) {
+                const isMoSCoWSource = ['must','should','could','wont'].includes(sourceType);
+                const isMoSCoWDest = ['must','should','could','wont'].includes(destType);
+
+                if (isMoSCoWSource || isMoSCoWDest) {
+                    // Reconcile MVP based on new MoSCoW state (also calls updateMoSCoWBadges)
+                    setTimeout(() => reconcileMVPFromMoSCoW(), 0);
+                } else {
+                    // Non-MoSCoW move — still refresh badges in case needed
+                    setTimeout(() => updateMoSCoWBadges(), 0);
+                }
+
+                // RULE: MVP Done → check in ToDo; leaving Done → uncheck in ToDo
+                const taskId = draggedItem ? draggedItem.dataset.taskId : null;
+                if (taskId) {
+                    if (destType === 'mvp-done') {
+                        syncTodoCheckState(taskId, true);
+                    } else if (sourceType === 'mvp-done') {
+                        syncTodoCheckState(taskId, false);
+                    }
+                }
+            }
+
+            draggedItem = null;
+            placeholder = null;
+            dragSourceColumn = null;
+
+            document.querySelectorAll('.column').forEach(c => c.classList.remove('drag-over'));
+
+            updateCounts();
+        });
+    }
+
+    function initDropColumn(column) {
+        column.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+
+            if (!draggedItem) return;
+
+            column.classList.add('drag-over');
+
+            if (placeholder && placeholder.parentNode !== column) {
+                placeholder.parentNode.removeChild(placeholder);
+                placeholder = createPlaceholder(draggedItem.offsetHeight, column);
+            }
+
+            if (!placeholder) {
+                placeholder = createPlaceholder(draggedItem.offsetHeight, column);
+            }
+
+            const afterElement = getDragAfterElement(column, e.clientY);
+
+            if (afterElement == null) {
+                column.appendChild(placeholder);
+            } else {
+                column.insertBefore(placeholder, afterElement);
+            }
+        });
+
+        column.addEventListener('dragleave', (e) => {
+            if (!column.contains(e.relatedTarget)) {
+                column.classList.remove('drag-over');
+            }
+        });
+
+        column.addEventListener('drop', (e) => {
+            e.preventDefault();
+            column.classList.remove('drag-over');
+
+            if (!draggedItem || !placeholder) return;
+
+            column.insertBefore(draggedItem, placeholder);
+            placeholder.parentNode && placeholder.parentNode.removeChild(placeholder);
+
+            updateCounts();
+        });
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableItems = [...container.querySelectorAll('.item:not(.dragging)')];
+
+        return draggableItems.reduce((closest, child) => {
+            const box    = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+
+            if (offset < 0 && offset > closest.offset) {
+                return { offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function initDragDrop() {
+        document.querySelectorAll('.item').forEach(initDragItem);
+        document.querySelectorAll('.column').forEach(initDropColumn);
+
+        const todoList = document.getElementById('todo-list');
+        if (todoList) initDropTodoList(todoList);
+
+        function initDropTodoList(container) {
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (!draggedItem) return;
+
+                container.classList.add('drag-over');
+
+                if (placeholder && placeholder.parentNode !== container) {
+                    placeholder.parentNode.removeChild(placeholder);
+                    placeholder = createPlaceholder(draggedItem.offsetHeight, container);
+                }
+                if (!placeholder) {
+                    placeholder = createPlaceholder(draggedItem.offsetHeight, container);
+                }
+
+                const afterElement = getDragAfterElement(container, e.clientY);
+                if (afterElement == null) {
+                    container.appendChild(placeholder);
+                } else {
+                    container.insertBefore(placeholder, afterElement);
+                }
+            });
+
+            container.addEventListener('dragleave', (e) => {
+                if (!container.contains(e.relatedTarget)) {
+                    container.classList.remove('drag-over');
+                }
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                container.classList.remove('drag-over');
+                if (!draggedItem || !placeholder) return;
+                container.insertBefore(draggedItem, placeholder);
+                updateTodoCount();
+                placeholder.parentNode && placeholder.parentNode.removeChild(placeholder);
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initDragDrop();
+        updateCounts();
+        updateTodoCount();
+    });
+</script>
+</html>
