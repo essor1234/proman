@@ -121,16 +121,19 @@
         background-color: whitesmoke;
 
         width: 260px;
-        min-width: 260px;
         
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
 
         white-space: nowrap;
 
-        overflow: hidden;
+        overflow: auto;
+        
         transition: 0.3s;
-        flex-shrink: 0;
+
+        scrollbar-width: thin;
+        scrollbar-color: #5865f2 transparent;
     }
 
     .side-bar.closed {
@@ -139,14 +142,14 @@
     }
 
     .side-bar .buttons {
-        background-color: white;
+        background-color: whitesmoke;
         
         padding: 10px 30px;
     }
 
     .side-bar .buttons button {
-        background-color: #5865f2;
         color: white;
+        background-color: #5865f2;
         
         font-size: medium;
         font-weight: bold;
@@ -166,32 +169,26 @@
     }
 
     .side-bar .groups {
+        width: max-content;
+        min-width: 260px;
+        
         display: flex;
         flex-direction: column;
         gap: 10px;
+        flex: 1;
 
         padding-top: 10px;
         padding-bottom: 10px;
-
-        overflow-y: auto;
-        overflow-x: auto;
-
-        scrollbar-width: thin;
-        scrollbar-color: #5865f2 transparent;
-
-        flex: 1;
     }
 
     .side-bar .groups .group {
-        background-color: whitesmoke;
         color: black;
-
-        width: 260px;
+        background-color: whitesmoke;
         
         font-size: medium;
         font-weight: medium;
         
-        border-left: 5px solid whitesmoke;
+        border-left: 6px solid whitesmoke;
         
         padding: 10px 30px;
 
@@ -201,19 +198,19 @@
     }
 
     .side-bar .groups .group:hover {
-        background-color: white;
         color: #5865f2;
+        background-color: white;
         
-        border-left: 5px solid #5865f2;
+        border-left: 6px solid #5865f2;
 
         box-shadow: 0px 0px 10px 0px #5865f2;
     }
 
     .side-bar .groups .group.active {
-        background-color: white;
         color: #5865f2;
+        background-color: white;
         
-        border-left: 5px solid #5865f2;
+        border-left: 6px solid #5865f2;
 
         box-shadow: 0px 0px 10px 0px #5865f2;
     }

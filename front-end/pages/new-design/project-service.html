@@ -126,6 +126,11 @@
         flex-direction: column;
 
         white-space: nowrap;
+
+        overflow: auto;
+
+        scrollbar-width: thin;
+        scrollbar-color: #ff751f transparent;
     }
 
     .side-bar .buttons {
@@ -156,32 +161,26 @@
     }
 
     .side-bar .groups {
+        width: max-content;
+        min-width: 260px;
+        
         display: flex;
         flex-direction: column;
         gap: 10px;
+        flex: 1;
 
         padding-top: 10px;
         padding-bottom: 10px;
-
-        overflow-y: auto;
-        overflow-x: auto;
-
-        scrollbar-width: thin;
-        scrollbar-color: #ff751f transparent;
-
-        flex: 1;
     }
 
     .side-bar .groups .group {
         background-color: whitesmoke;
         color: black;
-
-        width: 260px;
         
         font-size: medium;
         font-weight: medium;
         
-        border-left: 5px solid whitesmoke;
+        border-left: 6px solid whitesmoke;
         
         padding: 10px 30px;
 
@@ -194,7 +193,7 @@
         background-color: white;
         color: #5865f2;
         
-        border-left: 5px solid #5865f2;
+        border-left: 6px solid #5865f2;
 
         box-shadow: 0px 0px 10px 0px #5865f2;
     }
@@ -203,7 +202,7 @@
         background-color: white;
         color: #5865f2;
         
-        border-left: 5px solid #5865f2;
+        border-left: 6px solid #5865f2;
 
         box-shadow: 0px 0px 10px 0px #5865f2;
     }
@@ -277,14 +276,34 @@
     }
 
     .project-view button.tool {
-        background-color: whitesmoke;
+        background-color: white;
         color: black;
 
         border: 1px solid lightgray;
     }
 
-    .project-view button.tool:hover {
-        box-shadow: 0px 0px 10px 0px gray;
+    .project-view button.tool.mvp:hover {
+        color: gold;
+        
+        border: 1px solid gold;
+        
+        box-shadow: 0px 0px 10px 0px gold;
+    }
+
+    .project-view button.tool.todo:hover {
+        color: cornflowerblue;
+        
+        border: 1px solid cornflowerblue;
+        
+        box-shadow: 0px 0px 10px 0px cornflowerblue;
+    }
+
+    .project-view button.tool.moscow:hover {
+        color: violet;
+        
+        border: 1px solid violet;
+        
+        box-shadow: 0px 0px 10px 0px violet;
     }
 
     .project-view button.tool.mvp i {
@@ -475,24 +494,21 @@
         font-weight: bold;
     }
 
-    .project-view label.path {
-        cursor: pointer;
-
-        transition: 0.3s;
+    .path {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px
     }
 
-    .project-view label.path:hover {
+    .path.active {
         color: #ff751f;
+    }
 
+    .path.choose:hover {
         text-decoration: underline;
-    }
 
-    .project-view label.path.active {
-        color: #ff751f;
-
-        cursor: default;
-
-        text-decoration: none;
+        cursor: pointer;
     }
 
     .columns {
@@ -835,12 +851,18 @@
         <div class="projects-area">
             <div class="projects-view">
                 <div style="display: flex; flex-direction: row; align-items: start; justify-content: space-between;">
-                    <label>IT Solutions & Development Team</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                            <i style="font-size: x-large; font-weight: bold;" class="fa-solid fa-chevron-right"></i>
+                            
+                            <label>IT Solutions & Development Team</label>
+                        </div>
 
+                        <button><i class="fa-solid fa-plus"></i>New Project</button>
+                    </div>
+                    
                     <div class="project-quantity">9 projects</div>
                 </div>
-
-                <button><i class="fa-solid fa-plus"></i>New Project</button>
 
                 <div class="projects">
                     <div class="project" onclick="openProject()">
@@ -920,10 +942,18 @@
             <div class="project-view">
                 <button onclick="closeProject()"><i class="fa-solid fa-arrow-left"></i>Back</button>
 
-                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px">
-                    <label class="path" onclick="closeProject()">IT Solutions & Development Team</label>
-                    <label><i class="fa-solid fa-chevron-right"></i></label>
-                    <label class="path active">Project Name</label>
+                <div class="path">
+                    <div class="path choose">
+                        <i style="color: black; font-size: x-large; font-weight: bold;" class="fa-solid fa-chevron-right"></i>
+
+                        <div style="color: black; font-size: x-large; font-weight: bold;" onclick="closeProject()">IT Solutions & Development Team</div>
+                    </div>
+
+                    <div class="path active">
+                        <i style="color: #ff751f; font-size: x-large; font-weight: bold;" class="fa-solid fa-chevron-right"></i>
+
+                        <div style="color: #ff751f; font-size: x-large; font-weight: bold;">Project 1</div>
+                    </div>
                 </div>
 
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
