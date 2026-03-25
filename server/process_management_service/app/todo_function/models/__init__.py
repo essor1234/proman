@@ -3,3 +3,5 @@ from .element import Element
 from .todo import Todo
 from .moscow import Moscow
 from .task import Task
+from .note import Note      # ✅ ADD
+from .mvp import MVP  

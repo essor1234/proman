@@ -28,6 +28,7 @@ services:
       - "8001:8000"
     environment:
       DATABASE_URL: ${DB_ACCOUNT}
+      
     volumes:
       - ./server/account_management_service:/app
       - ./server/account_management_service/data:/app/data
@@ -114,7 +115,8 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
     profiles: ["dev", "prod"]
-
+    depends_on:                    # ✅ ADD THIS
+    - project_service            # ✅ Wait for project service
   
   # -------------------------------------------------
   # API Gateway (entry point)

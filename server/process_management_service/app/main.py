@@ -8,7 +8,8 @@ from app.todo_function.core.database import engine
 from app.todo_function.routes.moscow import router as moscow_router
 from app.todo_function.routes.task import router as task_router
 from app.todo_function.routes.todo import router as todo_router
-
+from app.todo_function.routes.note import router as note_router
+from app.todo_function.routes.mvp import router as mvp_router
 from app.todo_function.core.database import engine, Base 
 import uvicorn
 
@@ -33,6 +34,8 @@ app.add_middleware(
 app.include_router(moscow_router)
 app.include_router(task_router)
 app.include_router(todo_router)
+app.include_router(note_router)
+app.include_router(mvp_router)
 
 @app.get("/")
 def root():
