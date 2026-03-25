@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Proman Micro-Services</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: #5865f2 black;
+        
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial;
+        
+        margin: 0px;
+
+        flex: 1;
+    }
+
+/* Navigation Bar */
+    .navigation-bar {
+        background-color: black;
+
+        border-bottom: 1px solid white;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        position: sticky;
+        top: 0px;
+
+        padding: 10px 30px;
+
+        z-index: 10;
+    }
+
+    .navigation-bar .label {
+        color: white;
+        
+        font-size: xx-large;
+        font-weight: 900;
+    }
+
+    .navigation-bar .buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .navigation-bar button {
+        background-color: transparent;
+        color: white;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .navigation-bar button:hover {
+        background-color: white;
+        color: #5865f2;
+    }
+
+    .themes {
+        color: white;
+        font-size: medium;
+
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .themes:hover {
+        background-color: white;
+        color: #5865f2;
+    }
+
+/* Header */
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+
+        padding: 60px;
+    }
+
+    .header .large {
+        font-size: xx-large;
+        font-weight: bold;
+    }
+
+    .header .small {
+        font-size: larger;
+
+        width: 700px;
+
+        text-align: center;
+    }
+
+    .header button {
+        background-color: #5865f2;
+        color: white;
+
+        font-size: large;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .header button:hover {
+        box-shadow: 0px 10px 0px 0px black;
+
+        transform: translateY(-3px);
+    }
+
+    .header button:active {
+        box-shadow: none;
+
+        transition: 0.1s;
+
+        transform: translateY(0px);
+    }
+
+/* Core Services */
+    .core-services {
+        background-color: black;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+
+        padding: 60px;
+    }
+
+    .core-services .label {
+        color: white;
+
+        font-size: xx-large;
+        font-weight: bold;
+    }
+
+    .services {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .service {
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: column;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .service:hover {
+        box-shadow: 0px 10px 0px 0px #5865f2;
+        
+        transform: translateY(-10px);
+    }
+
+    .service:active {
+        box-shadow: none;
+
+        transition: 0.1s;
+        
+        transform: translateY(0px);
+    }
+
+    .service label:hover {
+        cursor: pointer;
+    }
+    
+    .service .logo {
+        background-color: #5865f2;
+
+        border-radius: 10px 10px 0px 0px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        padding: 60px;
+    }
+
+    .logo .background {
+        background-color: white;
+
+        width: 60px;
+        height: 60px;
+
+        border-radius: 60px;
+
+        box-shadow: 5px 5px 0px 0px black;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .background label {
+        color: #5865f2;
+
+        font-size: xx-large;
+        font-weight: bold;
+    }
+
+    .service .introduction {
+        background-color: white;
+
+        border-radius: 0px 0px 10px 10px;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 30px;
+
+        padding: 60px;
+    }
+
+    .introduction .large {
+        color: black;
+        
+        font-size: xx-large;
+        font-weight: bold;
+    }
+
+    .introduction .small {
+        color: black;
+        
+        font-size: medium;
+        text-align: justify;
+    }
+
+    .service .access {
+        color: #5865f2;
+
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    /* Project Service - Orange Theme */
+    .service.project .logo {
+        background-color: #ff751f;
+    }
+
+    .service.project .background label {
+        color: #ff751f;
+    }
+
+    .service.project .introduction .access {
+        color: #ff751f;
+    }
+
+    .service.project:hover {
+        box-shadow: 0px 10px 0px 0px #ff751f;
+    }
+
+    .service.project:active {
+        box-shadow: none;
+    }
+
+    /* File Service - Blue Theme */
+    .service.file .logo {
+        background-color: #38b6ff;
+    }
+
+    .service.file .background label {
+        color: #38b6ff;
+    }
+
+    .service.file .introduction .access {
+        color: #38b6ff;
+    }
+
+    .service.file:hover {
+        box-shadow: 0px 10px 0px 0px #38b6ff;
+    }
+
+    .service.file:active {
+        box-shadow: none;
+    }
+
+/* Footer */
+    .footer {
+        background-color: #5865f2;
+        color: white;
+
+        border-top: 5px solid white;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+
+        padding: 60px;
+    }
+
+    .footer .labels {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        opacity: 0.7;
+    }
+
+    .footer .labels label {
+        font-size: medium;
+    }
+
+    .footer .buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .footer .buttons button {
+        background-color: transparent;
+        color: white;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .footer .buttons button:hover {
+        text-decoration: underline;
+
+        transform: scale(1.1);
+    }
+
+    .footer .label {
+        width: 700px;
+        
+        font-size: medium;
+        text-align: center;
+
+        opacity: 0.7;
+    }
+</style>
+
+<body>
+    <div class="navigation-bar">
+        <label class="label">Proman Micro-Services</label>
+
+        <div class="buttons">
+            <button onclick="window.location.href='#services'">Services</button>
+            <button onclick="window.location.href='#footer'">About</button>
+            <button onclick="window.location.href='login.html'">Log in</button>
+
+            <div class="themes"><i class="fa-solid fa-moon"></i></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <label class="large">Collaborative Workspace Platform</label>
+        <label class="small">Modern microservices for teams: organize groups, manage projects, and handle files - all in one secure, scalable system.</label>
+        <button onclick="window.location.href='#services'">Explore Services <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <div class="core-services" id="services">
+        <label class="label">Core Services</label>
+
+        <div class="services">
+            <div class="service" onclick="window.location.href='group-service.html'">
+                <div class="logo">
+                    <div class="background">
+                        <label>Gr</label>
+                    </div>
+                </div>
+                
+                <div class="introduction">
+                    <label class="large">Group Service</label>
+                    <label class="small">Create and manage teams, departments, classes or communities. Handle memberships, roles, permissions and group settings.</label>
+                    <label class="access">Access Group Service <i class="fa-solid fa-arrow-right"></i></label>
+                </div>
+            </div>
+
+            <div class="service project" onclick="window.location.href='project-service.html'">
+                <div class="logo">
+                    <div class="background">
+                        <label>Pr</label>
+                    </div>
+                </div>
+                
+                <div class="introduction">
+                    <label class="large">Project Service</label>
+                    <label class="small">Organize work with projects, tasks, milestones, assignments and progress tracking. Connects deeply with groups and files.</label>
+                    <label class="access">Access Project Service <i class="fa-solid fa-arrow-right"></i></label>
+                </div>
+            </div>
+
+            <div class="service file" onclick="window.location.href='file-service.html'">
+                <div class="logo">
+                    <div class="background">
+                        <label>F</label>
+                    </div>
+                </div>
+                
+                <div class="introduction">
+                    <label class="large">File Service</label>
+                    <label class="small">Secure file storage, upload, versioning, sharing, previews and organization. Attached to groups and projects.</label>
+                    <label class="access">Access File Service <i class="fa-solid fa-arrow-right"></i></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" id="footer">
+        <div class="labels">
+            <label>© 2024 Proman Micro-Services</label>
+            <label>•</label>
+            <label>All rights reserved.</label>
+        </div>
+
+        <div class="buttons">
+            <button>Privacy Policy</button>
+            <label>•</label>
+            <button>Terms of Service</button>
+            <label>•</label>
+            <button>Contact Us</button>
+            <label>•</label>
+            <button>Help Center</button>
+        </div>
+
+        <label class="label">Proman Micro-Services is a modern collaborative platform built with independent microservices. Our mission is to help teams stay organized, productive, and connected — no matter the size.</label>
+
+        <div class="labels">
+            <label>Built with passion</label>
+            <label>•</label>
+            <label>Designed for clarity</label>
+            <label>•</label>
+            <label>Powered by scalable architecture</label>
+        </div>
+    </div>
+</body>
+
+<script>
+    
+</script>
+</html>

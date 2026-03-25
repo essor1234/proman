@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Group Service • Proman</title>
+
+    <script src="https://kit.fontawesome.com/0b420d52a0.js" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial;
+        
+        margin: 0px;
+
+        flex: 1;
+    }
+
+/* Navigation Bar */
+    .navigation-bar {
+        background-color: white;
+
+        border-bottom: 1px solid #5865f2;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 10px 30px;
+
+        z-index: 10;
+    }
+
+    .navigation-bar label {
+        color: #5865f2;
+        
+        font-size: xx-large;
+        font-weight: 900;
+    }
+
+    .navigation-bar .buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .navigation-bar button {
+        background-color: transparent;
+        color: black;
+
+        font-size: medium;
+        font-weight: bold;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px 20px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .navigation-bar button:hover {
+        background-color: #5865f2;
+        color: white;
+    }
+
+    .themes {
+        color: #5865f2;
+        font-size: medium;
+
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .themes:hover {
+        background-color: #5865f2;
+        color: white;
+    }
+
+    .navigation-bar .buttons button.project-service-navigation:hover {
+        background-color: #ff751f;
+    }
+
+    .navigation-bar .buttons button.file-service-navigation:hover {
+        background-color: #38b6ff;
+    }
+
+    .navigation-bar .buttons button.log-out:hover {
+        background-color: red;
+    }
+
+/* Page Area */
+    .page-area {
+        height: calc(100vh - 66px);
+        
+        display: flex;
+        flex-direction: row;
+    }
+
+/* Side Bar */
+    .side-bar {
+        background-color: whitesmoke;
+
+        width: 260px;
+        
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+
+        white-space: nowrap;
+
+        overflow: auto;
+        
+        transition: 0.3s;
+
+        scrollbar-width: thin;
+        scrollbar-color: #5865f2 transparent;
+    }
+
+    .side-bar.closed {
+        width: 0;
+        min-width: 0;
+    }
+
+    .side-bar .buttons {
+        background-color: whitesmoke;
+        
+        padding: 10px 30px;
+    }
+
+    .side-bar .buttons button {
+        color: white;
+        background-color: #5865f2;
+        
+        font-size: medium;
+        font-weight: bold;
+        
+        border: none;
+        border-radius: 10px;
+        
+        padding: 10px 30px;
+        
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .side-bar .buttons button:hover {
+        box-shadow: 0px 0px 10px 0px #5865f2;
+    }
+
+    .side-bar .groups {
+        width: max-content;
+        min-width: 260px;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .side-bar .groups .group {
+        color: black;
+        background-color: whitesmoke;
+        
+        font-size: medium;
+        font-weight: medium;
+        
+        border-left: 6px solid whitesmoke;
+        
+        padding: 10px 30px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .side-bar .groups .group:hover {
+        color: #5865f2;
+        background-color: white;
+        
+        border-left: 6px solid #5865f2;
+
+        box-shadow: 0px 0px 10px 0px #5865f2;
+    }
+
+    .side-bar .groups .group.active {
+        color: #5865f2;
+        background-color: white;
+        
+        border-left: 6px solid #5865f2;
+
+        box-shadow: 0px 0px 10px 0px #5865f2;
+    }
+
+/* Message Area */
+    .message-area {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .message-area .top-bar {
+        background-color: #5865f2;
+        color: white;
+
+        border-bottom: 1px solid white;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        
+        padding: 10px;
+    }
+
+    .message-area .bottom-bar {
+        background-color: #5865f2;
+
+        border-top: 1px solid white;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        
+        padding: 10px 30px;
+    }
+
+    .attachment-button {
+        background-color: white;
+        color: black;
+        
+        font-size: medium;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .attachment-button:hover {
+        color: #5865f2;
+        
+        box-shadow: 0px 0px 10px 0px white;
+    }
+
+    .bottom-bar input {
+        font-size: medium;
+        
+        border-width: 0px;
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        transition: 0.3s;
+        
+        flex: 1;
+    }
+
+    .bottom-bar input:hover {
+        box-shadow: 0px 0px 10px 0px white;
+    }
+    
+    .send-button {
+        background-color: white;
+        color: black;
+        
+        font-size: medium;
+        font-weight: bold;
+        
+        border: none;
+        border-radius: 10px;
+        
+        padding: 10px 30px;
+        
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .send-button:hover {
+        color: #5865f2;
+        
+        box-shadow: 0px 0px 10px 0px white;
+    }
+
+    .texting-area {
+        background-color: white;
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        padding: 30px;
+
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #5865f2 transparent;
+        
+        flex: 1;
+    }
+
+/* Message Information */
+    .message-information-button {
+        background-color: #5865f2;
+        color: white;
+        
+        font-size: medium;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .message-information-button:hover {
+        background-color: white;
+        color: black;
+    }
+
+    .message-information-button.active {
+        background-color: white;
+        color: black;
+    }
+
+    .message-information-button.active:hover {
+        color: #5865f2;
+        
+        box-shadow: 0px 0px 10px 0px white;
+    }
+
+    .message-sidebar-button {
+        background-color: #5865f2;
+        color: white;
+        
+        font-size: medium;
+        
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .message-sidebar-button:hover {
+        background-color: white;
+        color: #5865f2;
+    }
+
+    .message-sidebar-button.active {
+        background-color: #5865f2;
+        color: white;
+    }
+
+    .message-sidebar-button.active:hover {
+        background-color: white;
+        color: #5865f2;
+    }
+
+    .message-information {
+        background-color: whitesmoke;
+        
+        width: 0;
+
+        border-left: 0px solid white;
+
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        
+        transition: 0.3s;
+
+        overflow: hidden;
+    }
+
+    .message-information.open {
+        width: 300px;
+        border-left: 1px solid white;
+    }
+
+    .message-information .info-inner {
+        width: 300px;
+        height: 100%;
+        
+        display: flex;
+        flex-direction: column;
+    }
+
+    .message-information .info-header {
+        background-color: #5865f2;
+        color: white;
+
+        min-height: 58px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        
+        padding: 10px 30px;
+        
+        white-space: nowrap;
+        
+        box-sizing: border-box;
+        
+        flex-shrink: 0;
+    }
+
+    .message-information .info-header label {
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    .close-info-button {
+        background-color: transparent;
+        color: white;
+
+        font-size: medium;
+        
+        border: none;
+        border-radius: 10px;
+
+        padding: 10px;
+        
+        cursor: pointer;
+        
+        transition: 0.3s;
+    }
+
+    .close-info-button:hover {
+        background-color: white;
+        color: red;
+    }
+
+    .message-information .info-body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        padding: 10px 30px;
+        
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        scrollbar-width: thin;
+        scrollbar-color: #5865f2 transparent;
+        
+        flex: 1;
+    }
+
+    .info-divider {
+        width: 100%;
+
+        border: none;
+        border-top: 1px solid black;
+
+        margin: 10px 0px;
+    }
+
+    .info-section-title {
+        color: #5865f2;
+        
+        font-size: x-small;
+        font-weight: bold;
+        
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        
+        margin-bottom: 10px;
+    }
+
+    .info-member {
+        border-radius: 10px;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+
+        padding: 10px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .info-member-avatar {
+        background-color: #5865f2;
+        color: white;
+        
+        width: 38px;
+        height: 38px;
+        border-radius: 38px;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        font-size: small;
+        font-weight: bold;
+        
+        flex-shrink: 0;
+    }
+
+    .info-member-name {
+        font-size: small;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .info-member-role {
+        font-size: x-small;
+        color: gray;
+        white-space: nowrap;
+    }
+
+    .info-stat {
+        font-size: small;
+        
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .info-stat-value {
+        font-weight: bold;
+        color: #5865f2;
+    }
+
+    .info-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-action-button {
+        background-color: transparent;
+        color: #5865f2;
+
+        width: 100%;
+        
+        font-size: small;
+        font-weight: bold;
+
+        border: 1px solid #5865f2;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        padding: 10px 30px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .info-action-button i {
+        text-align: center;
+    }
+
+    .info-action-button:hover {
+        background-color: #5865f2;
+        color: white;
+        
+        border-color: #5865f2;
+    }
+
+    .info-action-button.danger {
+        color: red;
+        border-color: red;
+    }
+
+    .info-action-button.danger:hover {
+        background-color: red;
+        color: white;
+        
+        border-color: red;
+    }
+
+    .info-action-button.warning {
+        color: darkorange;
+        border-color: darkorange;
+    }
+
+    .info-action-button.warning:hover {
+        background-color: darkorange;
+        color: white;
+        
+        border-color: darkorange;
+    }
+
+    .info-about-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-about-section label {
+        color: #5865f2;
+        
+        font-size: small;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-statistics-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-statistics-section label {
+        color: #5865f2;
+        
+        font-size: small;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-members-statistic, .info-created-statistic {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .info-members-statistic .label, .info-created-statistic .label {
+        color: black;
+
+        font-size: small;
+        font-weight: normal;
+        text-transform: none;
+        letter-spacing: 0px;
+    }
+
+    .info-members-statistic .info-statistic-value, .info-created-statistic .info-statistic-value {
+        color: #5865f2;
+
+        font-size: small;
+        font-weight: bold;
+        text-transform: none;
+    }
+
+    .info-members-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-members-section label {
+        color: #5865f2;
+        
+        font-size: small;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-actions-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .info-actions-section label {
+        color: #5865f2;
+        
+        font-size: small;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-member:hover {
+        background-color: white;
+    }
+</style>
+
+<body>
+    <div class="navigation-bar">
+        <label>Group Service</label>
+
+        <div class="buttons">
+            <button onclick="window.location.href='home.html'">Dashboard</button>
+            <button class="project-service-navigation" onclick="window.location.href='project-service.html'">Project Service</button>
+            <button class="file-service-navigation" onclick="window.location.href='file-service.html'">File Service</button>
+            <button class="log-out">Log out</button>
+
+            <div class="themes"><i class="fa-solid fa-moon"></i></div>
+        </div>
+    </div>
+
+    <div class="page-area">
+        <div class="side-bar" id="side-bar">
+            <div class="buttons">
+                <button>Create New Group</button>
+            </div>
+            
+            <div class="groups">
+                <div class="group active">IT Solutions & Development Team</div>
+                <div class="group">Software Engineering Working Group</div>
+                <div class="group">Technology Operations Team</div>
+                <div class="group">Digital Systems & Infrastructure</div>
+                <div class="group">Product Engineering & Support Team</div>
+                <div class="group">Application Development Unit</div>
+                <div class="group">Platform & Services Engineering</div>
+                <div class="group">Information Systems Collaboration</div>
+                <div class="group">Enterprise Technology Team</div>
+                <div class="group">Research & Development - IT Division</div>
+                <div class="group">Backend Systems & API Team</div>
+                <div class="group">Frontend & User Experience Engineering</div>
+                <div class="group">Cloud Infrastructure & DevOps</div>
+                <div class="group">Data Engineering & Analytics Group</div>
+                <div class="group">Cybersecurity & Risk Management</div>
+                <div class="group">Quality Assurance & Testing Team</div>
+                <div class="group">AI & Intelligent Systems Lab</div>
+                <div class="group">Software Architecture & Design</div>
+                <div class="group">Internal Tools & Automation Team</div>
+                <div class="group">Technology Strategy & Innovation</div>
+            </div>
+        </div>
+
+        <div class="message-area">
+            <div class="top-bar">
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                    <div class="message-sidebar-button" id="sidebar-button" onclick="toggleSidebar()">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+
+                    <img style="background-color: white; width: 38px; height: 38px; border-radius: 38px;" alt="avatar">
+
+                    <div style="height: 38px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <label style="font-size: medium; font-weight: bold;">IT Solutions & Development Team</label>
+                        <label style="font-size: small;">7 members • Active now</label>
+                    </div>
+                </div>
+
+                <div class="message-information-button" id="information-button" onclick="toggleInfo()">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+            </div>
+
+            <div class="texting-area">
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <label style="background-color: #5865f2; color: white; width: 38px; height: 38px; border: 1px solid #5865f2; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">AJ</label>
+                
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="font-weight: bold;">Alice Johnson</label>
+
+                        <div style="background-color: whitesmoke; color: black; border: 1px solid lightgray; border-radius: 0px 20px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline? Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline?</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row-reverse; gap: 10px;">
+                    <label style="background-color: white; color: #5865f2; width: 38px; height: 38px; border: 1px solid lightgray; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">M</label>
+                
+                    <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                        <label style="color: #5865f2; font-weight: bold;">Me</label>
+                        
+                        <div style="background-color: #5865f2; color: white; border: 1px solid #5865f2; border-radius: 20px 0px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi John! The project is progressing well. We are on track to meet the timeline, and the team is doing a great job. I'll share a detailed update in the next meeting.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row-reverse; gap: 10px;">
+                    <label style="background-color: white; color: #5865f2; width: 38px; height: 38px; border: 1px solid lightgray; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">M</label>
+                
+                    <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                        <label style="color: #5865f2; font-weight: bold;">Me</label>
+                        
+                        <div style="background-color: #5865f2; color: white; border: 1px solid #5865f2; border-radius: 20px 0px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi John! The project is progressing well. We are on track to meet the timeline, and the team is doing a great job. I'll share a detailed update in the next meeting.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row-reverse; gap: 10px;">
+                    <label style="background-color: white; color: #5865f2; width: 38px; height: 38px; border: 1px solid lightgray; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">M</label>
+                
+                    <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                        <label style="color: #5865f2; font-weight: bold;">Me</label>
+                        
+                        <div style="background-color: #5865f2; color: white; border: 1px solid #5865f2; border-radius: 20px 0px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi John!</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <label style="background-color: #5865f2; color: white; width: 38px; height: 38px; border: 1px solid #5865f2; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">DM</label>
+                
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="font-weight: bold;">David Marsh</label>
+
+                        <div style="background-color: whitesmoke; color: black; border: 1px solid lightgray; border-radius: 0px 20px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi everyone!</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <label style="background-color: #5865f2; color: white; width: 38px; height: 38px; border: 1px solid #5865f2; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">DM</label>
+                
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="font-weight: bold;">David Marsh</label>
+
+                        <div style="background-color: whitesmoke; color: black; border: 1px solid lightgray; border-radius: 0px 20px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline? Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline?</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row-reverse; gap: 10px;">
+                    <label style="background-color: white; color: #5865f2; width: 38px; height: 38px; border: 1px solid lightgray; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">M</label>
+                
+                    <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                        <label style="color: #5865f2; font-weight: bold;">Me</label>
+                        
+                        <div style="background-color: #5865f2; color: white; border: 1px solid #5865f2; border-radius: 20px 0px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi John! The project is progressing well. We are on track to meet the timeline, and the team is doing a great job. I'll share a detailed update in the next meeting.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row-reverse; gap: 10px;">
+                    <label style="background-color: white; color: #5865f2; width: 38px; height: 38px; border: 1px solid lightgray; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">M</label>
+                
+                    <div style="display: flex; flex-direction: column; align-items: end; gap: 10px;">
+                        <label style="color: #5865f2; font-weight: bold;">Me</label>
+                        
+                        <div style="background-color: #5865f2; color: white; border: 1px solid #5865f2; border-radius: 20px 0px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi John! The project is progressing well. We are on track to meet the timeline, and the team is doing a great job. I'll share a detailed update in the next meeting.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <label style="background-color: #5865f2; color: white; width: 38px; height: 38px; border: 1px solid #5865f2; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">GP</label>
+                
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="font-weight: bold;">Grace Park</label>
+
+                        <div style="background-color: whitesmoke; color: black; border: 1px solid lightgray; border-radius: 0px 20px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hi everyone!</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <label style="background-color: #5865f2; color: white; width: 38px; height: 38px; border: 1px solid #5865f2; border-radius: 38px; display: flex; flex-direction: row; align-items: center; justify-content: center; font-weight: bold;">GP</label>
+                
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="font-weight: bold;">Grace Park</label>
+
+                        <div style="background-color: whitesmoke; color: black; border: 1px solid lightgray; border-radius: 0px 20px 20px 20px; padding: 10px; max-width: 500px; text-align: justify;">Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline? Hey everyone! Just wanted to check in and see how the project is going. Any updates on the timeline?</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <div class="attachment-button">
+                    <i class="fa-solid fa-paperclip"></i>
+                </div>
+
+                <input placeholder="Type a message...">
+
+                <button class="send-button">Send</button>
+            </div>
+        </div>
+
+        <div class="message-information" id="information-panel">
+            <div class="info-inner">
+                <div class="info-header">
+                    <label>Group Info</label>
+                    
+                    <div class="close-info-button" onclick="toggleInfo()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                </div>
+                
+                <div class="info-body">
+                    <div class="info-about-section">
+                        <label>About</label>
+                        <div style="color: gray; font-size: small; text-align: justify;">IT Solutions & Development Team - collaboration hub for solutions & development discussions and updates.</div>
+                    </div>
+                    
+                    <div class="info-divider"></div>
+                    
+                    <div class="info-statistics-section">
+                        <label>Statistics</label>
+                        
+                        <div class="info-members-statistic">
+                            <div class="label">Members</div>
+                            <div class="info-statistic-value">7</div>
+                        </div>
+                        
+                        <div class="info-created-statistic">
+                            <div class="label">Created</div>
+                            <div class="info-statistic-value">01 Jan, 2026</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-divider"></div>
+                    
+                    <div class="info-members-section">
+                        <label>Members <span>(7)</span></label>
+                        
+                        <div class="info-member">
+                            <div class="info-member-avatar">AJ</div>
+                            
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px">
+                                <div class="info-member-name">Alice Johnson</div>
+                                <div class="info-member-role">Team Lead</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-member">
+                            <div class="info-member-avatar">BK</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">Bob Kim</div><div class="info-member-role">Backend Engineer</div></div>
+                        </div>
+                        <div class="info-member">
+                            <div class="info-member-avatar">CL</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">Clara Lee</div><div class="info-member-role">Frontend Engineer</div></div>
+                        </div>
+                        <div class="info-member">
+                            <div class="info-member-avatar">DM</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">David Marsh</div><div class="info-member-role">DevOps</div></div>
+                        </div>
+                        <div class="info-member">
+                            <div class="info-member-avatar">EN</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">Elena Novak</div><div class="info-member-role">QA Engineer</div></div>
+                        </div>
+                        <div class="info-member">
+                            <div class="info-member-avatar">FO</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">Frank Osei</div><div class="info-member-role">Full Stack</div></div>
+                        </div>
+                        <div class="info-member">
+                            <div class="info-member-avatar">GP</div>
+                            <div style="height: 38px; display: flex; flex-direction: column; gap: 5px"><div class="info-member-name">Grace Park</div><div class="info-member-role">Data Engineer</div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-divider"></div>
+                    
+                    <div class="info-actions-section">
+                        <label>Actions</label>
+                        
+                        <div class="info-actions">
+                            <button class="info-action-button">
+                                <i class="fa-solid fa-user-plus"></i>Add Members
+                            </button>
+                            
+                            <button class="info-action-button">
+                                <i class="fa-solid fa-pen-to-square"></i>Update Group
+                            </button>
+                            
+                            <button class="info-action-button warning">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>Leave This Group
+                            </button>
+                            
+                            <button class="info-action-button danger">
+                                <i class="fa-solid fa-trash"></i>Delete Group
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function toggleInfo() {
+        const panel = document.getElementById('information-panel');
+        const button = document.getElementById('information-button');
+        panel.classList.toggle('open');
+        button.classList.toggle('active');
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('side-bar');
+        const button = document.getElementById('sidebar-button');
+        sidebar.classList.toggle('closed');
+        button.classList.toggle('active');
+    }
+</script>
+</html>
